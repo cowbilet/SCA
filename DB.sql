@@ -122,7 +122,8 @@ DROP TABLE IF EXISTS public.users;
 CREATE TABLE IF NOT EXISTS public.users
 (
     "userId" uuid NOT NULL DEFAULT gen_random_uuid(),
-    role text COLLATE pg_catalog."default" NOT NULL,
+    role role NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY ("userId")
 );
 
