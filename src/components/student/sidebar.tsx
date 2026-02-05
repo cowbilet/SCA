@@ -4,8 +4,18 @@ import {
     BookOpen,
     HandPlatter
 } from 'lucide-react'
-import Tiers from './tiers'
-import { Activities } from '@/types/activities'
+import { Awards, Challenges } from '@/types/SCA'
+import SidebarTiers from './tiers'
+import { H1Title } from '../titles'
+
+// const activities: Record<Activities, { title: string, color: string, icon: React.ReactNode }> = {
+//     relationships: { title: 'Relationships', color: 'bg-blue-500', icon: <Users /> },
+//     challenge: { title: 'Challenge', color: 'bg-green-500', icon: <Zap /> },
+//     community: { title: 'Community', color: 'bg-red-500', icon: <BookOpen /> },
+//     service: { title: 'Service', color: 'bg-purple-500', icon: <HandPlatter /> },
+// }
+
+
 export default function Sidebar() {
     return <div className="w-82 flex flex-col h-full border-r border-gray-200 ">
         <SidebarHead />
@@ -24,29 +34,16 @@ function SidebarHead() {
     </div>
     )
 }
-function SidebarTiers() {
-    return (
-    <div 
-        className="w-full border-b border-gray-200 p-4">
-            <SidebarTitle title="Award Tiers" />
-            <Tiers />
-    </div>
-    )
-}
 
-const activities: Record<Activities, { title: string, color: string, icon: React.ReactNode }> = {
-    relationships: { title: 'Relationships', color: 'bg-blue-500', icon: <Users /> },
-    challenge: { title: 'Challenge', color: 'bg-green-500', icon: <Zap /> },
-    community: { title: 'Community', color: 'bg-red-500', icon: <BookOpen /> },
-    service: { title: 'Service', color: 'bg-purple-500', icon: <HandPlatter /> },
-}
+
+
 function SidebarCards() {
     return (
         <div 
             className="w-full border-b flex-1 border-gray-200 mb-4 p-4">
-                <SidebarTitle title="Activities" />
+                <H1Title title="Activities" />
                 <div className='flex flex-col items-center justify-center ml-2'>
-                    {
+                    {/* {
                         (Object.keys(activities) as Activities[]).map((activity) => (
                             <SidebarCard 
                                 key={activity}
@@ -55,19 +52,12 @@ function SidebarCards() {
                                 icon={activities[activity].icon}
                             />
                         ))
-                    }
+                    } */}
                 </div>
         </div>
     )
 }
-function SidebarTitle({title}: {title: string}) {
-    return (
-        <h1 
-            className="text-base font-bold text-gray-600 mb-2">
-                {title}
-        </h1>
-    )
-}
+
 interface SidebarCardProps {
     title: string
     color: string
@@ -82,7 +72,7 @@ function SidebarCard({ title, color, icon }: SidebarCardProps) {
 
                 </div>
                 <div className='flex flex-col'>
-                    <SidebarTitle title={title} />
+                    <H1Title title={title} />
                     <p className='text-gray-500 text-xs'>
                         Awaiting Proposal
                     </p>
