@@ -2,8 +2,10 @@ import {
     Users, 
     Zap,
     BookOpen,
+    HandPlatter
 } from 'lucide-react'
 import Tiers from './tiers'
+import { Activities } from '@/types/activities'
 export default function Sidebar() {
     return <div className="w-82 flex flex-col h-full border-r border-gray-200 ">
         <SidebarHead />
@@ -32,11 +34,12 @@ function SidebarTiers() {
     )
 }
 
-const activities = [
-    { title: 'Relationships', color: 'bg-blue-500', icon: <Users /> },
-    { title: 'Challenge', color: 'bg-green-500', icon: <Zap /> },
-    { title: 'Community', color: 'bg-red-500', icon: <BookOpen /> },
-]
+const activities: Record<Activities, { title: string, color: string, icon: React.ReactNode }> = {
+    relationships: { title: 'Relationships', color: 'bg-blue-500', icon: <Users /> },
+    challenge: { title: 'Challenge', color: 'bg-green-500', icon: <Zap /> },
+    community: { title: 'Community', color: 'bg-red-500', icon: <BookOpen /> },
+    service: { title: 'Service', color: 'bg-purple-500', icon: <HandPlatter /> },
+}
 function SidebarCards() {
     return (
         <div 
@@ -44,12 +47,12 @@ function SidebarCards() {
                 <SidebarTitle title="Activities" />
                 <div className='flex flex-col items-center justify-center ml-2'>
                     {
-                        activities.map((activity) => (
+                        (Object.keys(activities) as Activities[]).map((activity) => (
                             <SidebarCard 
-                                key={activity.title}
-                                title={activity.title}
-                                color={activity.color}
-                                icon={activity.icon}
+                                key={activity}
+                                title={activities[activity].title}
+                                color={activities[activity].color}
+                                icon={activities[activity].icon}
                             />
                         ))
                     }
@@ -73,9 +76,18 @@ interface SidebarCardProps {
 function SidebarCard({ title, color, icon }: SidebarCardProps) {
     return (
         <div 
-            className={`w-full border flex-1 border-gray-400 mb-4 p-4 rounded-lg flex items-center space-x-2 cursor-pointer hover:shadow-lg hover:bg-gray-100`}>
-                {icon}
-                <SidebarTitle title={title} />
+            className={`w-full border flex-1 border-gray-400 mb-4 p-4 rounded-lg flex items-center space-x-2 cursor-pointer hover:shadow-lg hover:bg-gray-100 text-white`}>
+                <div className={`p-2 rounded-full ${color} mr-2`}>
+                    {icon}
+
+                </div>
+                <div className='flex flex-col'>
+                    <SidebarTitle title={title} />
+                    <p className='text-gray-500 text-xs'>
+                        Awaiting Proposal
+                    </p>
+
+                </div>
         </div>
     )
 }

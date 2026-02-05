@@ -21,7 +21,6 @@ export default function Tiers() {
             <TierCard 
                 key={tier.award}
                 award={tier.award}
-                color={tier.color}
             />
         ))}
     </div>
