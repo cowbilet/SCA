@@ -1,1 +1,0 @@
-export type Activities = "challenge" | "service" | "relationships" | "community";

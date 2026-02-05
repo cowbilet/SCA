@@ -17,10 +17,6 @@ ALTER TABLE IF EXISTS public.student_challenge DROP CONSTRAINT IF EXISTS "studen
 
 ALTER TABLE IF EXISTS public.student_challenge DROP CONSTRAINT IF EXISTS "student_challenge_approvedSubmissionId_fkey";
 
-ALTER TABLE IF EXISTS public.student_challenge DROP CONSTRAINT IF EXISTS student_challenge_award_fkey;
-
-ALTER TABLE IF EXISTS public.student_challenge DROP CONSTRAINT IF EXISTS student_challenge_challenge_fkey;
-
 ALTER TABLE IF EXISTS public.student_challenge DROP CONSTRAINT IF EXISTS "student_challenge_mentorId_fkey";
 
 ALTER TABLE IF EXISTS public.student_challenge DROP CONSTRAINT IF EXISTS "student_challenge_studentId_fkey";
@@ -37,22 +33,14 @@ CREATE TABLE IF NOT EXISTS public.assessors
     CONSTRAINT assessors_pkey PRIMARY KEY ("assesorId")
 );
 
-DROP TABLE IF EXISTS public.awards;
-
-CREATE TABLE IF NOT EXISTS public.awards
-(
-    award text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT awards_pkey PRIMARY KEY (award)
-);
-
 DROP TABLE IF EXISTS public.challenge_proposals;
 
 CREATE TABLE IF NOT EXISTS public.challenge_proposals
 (
     "proposalId" uuid NOT NULL DEFAULT gen_random_uuid(),
     "studentId" uuid NOT NULL,
-    award text COLLATE pg_catalog."default" NOT NULL,
-    challenge text COLLATE pg_catalog."default" NOT NULL,
+    award award_tiers NOT NULL,
+    challenge challenge NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL,
     goal text COLLATE pg_catalog."default" NOT NULL,
     "assessorId" uuid NOT NULL,
@@ -68,8 +56,8 @@ CREATE TABLE IF NOT EXISTS public.challenge_submission
 (
     "submissionId" uuid NOT NULL DEFAULT gen_random_uuid(),
     "studentId" uuid NOT NULL,
-    award text COLLATE pg_catalog."default" NOT NULL,
-    challenge text COLLATE pg_catalog."default" NOT NULL,
+    award award_tiers NOT NULL,
+    challenge challenge NOT NULL,
     "assessorId" uuid,
     "studentReflection" text COLLATE pg_catalog."default" NOT NULL,
     "mentorReflection" text COLLATE pg_catalog."default",
@@ -78,27 +66,19 @@ CREATE TABLE IF NOT EXISTS public.challenge_submission
     CONSTRAINT challenge_submission_pkey PRIMARY KEY ("submissionId")
 );
 
-DROP TABLE IF EXISTS public.challenges;
-
-CREATE TABLE IF NOT EXISTS public.challenges
-(
-    challenge text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT challenge_pkey PRIMARY KEY (challenge)
-);
-
 DROP TABLE IF EXISTS public.logs;
 
 CREATE TABLE IF NOT EXISTS public.logs
 (
     "logId" uuid NOT NULL DEFAULT gen_random_uuid(),
     "studentId" uuid NOT NULL,
-    award text COLLATE pg_catalog."default" NOT NULL,
-    challenge text COLLATE pg_catalog."default" NOT NULL,
-    evidence bytea NOT NULL,
+    award award_tiers NOT NULL,
+    challenge challenge NOT NULL,
     date timestamp with time zone NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL,
     "mentorId" uuid NOT NULL,
     approved boolean,
+    evidence text COLLATE pg_catalog."default",
     CONSTRAINT logs_pkey PRIMARY KEY ("logId")
 );
 
@@ -108,8 +88,8 @@ CREATE TABLE IF NOT EXISTS public.student_challenge
 (
     "mentorId" uuid NOT NULL,
     "studentId" uuid NOT NULL,
-    award text COLLATE pg_catalog."default" NOT NULL,
-    challenge text COLLATE pg_catalog."default" NOT NULL,
+    award award_tiers NOT NULL,         -- <-- remove COLLATE
+    challenge challenge NOT NULL,       -- <-- remove COLLATE
     "approvedProposalId" uuid,
     "approvedSubmissionId" uuid,
     CONSTRAINT student_challenge_pkey PRIMARY KEY ("studentId", award, challenge),
@@ -178,20 +158,6 @@ ALTER TABLE IF EXISTS public.student_challenge
     ON DELETE NO ACTION;
 CREATE INDEX IF NOT EXISTS "student_challenge_approvedSubmissionId_key"
     ON public.student_challenge("approvedSubmissionId");
-
-
-ALTER TABLE IF EXISTS public.student_challenge
-    ADD CONSTRAINT student_challenge_award_fkey FOREIGN KEY (award)
-    REFERENCES public.awards (award) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-
-
-ALTER TABLE IF EXISTS public.student_challenge
-    ADD CONSTRAINT student_challenge_challenge_fkey FOREIGN KEY (challenge)
-    REFERENCES public.challenges (challenge) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
 
 
 ALTER TABLE IF EXISTS public.student_challenge
