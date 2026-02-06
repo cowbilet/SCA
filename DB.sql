@@ -88,8 +88,8 @@ CREATE TABLE IF NOT EXISTS public.student_challenge
 (
     "mentorId" uuid NOT NULL,
     "studentId" uuid NOT NULL,
-    award award_tiers NOT NULL,         -- <-- remove COLLATE
-    challenge challenge NOT NULL,       -- <-- remove COLLATE
+    award award_tiers NOT NULL,
+    challenge challenge NOT NULL,
     "approvedProposalId" uuid,
     "approvedSubmissionId" uuid,
     CONSTRAINT student_challenge_pkey PRIMARY KEY ("studentId", award, challenge),
