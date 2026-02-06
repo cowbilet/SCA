@@ -1,10 +1,4 @@
-import {
-    Users, 
-    Zap,
-    BookOpen,
-    HandPlatter
-} from 'lucide-react'
-import { Awards, Challenges } from '@/types/SCA'
+
 import SidebarTiers from './tiers'
 import { H1Title } from '../titles'
 

@@ -10,7 +10,7 @@ export const Route = createFileRoute('/student/$tier')({
     }
 })
 function validateTier(tier: string): tier is typeof ALL_AWARDS[number] {
-    return ALL_AWARDS.includes(tier as any)
+    return ALL_AWARDS.includes(tier as typeof ALL_AWARDS[number])
 }
 
 function RouteComponent() {
