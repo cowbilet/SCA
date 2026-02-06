@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '../../.env.local' });
-import {  users } from "~drizzle/schema.ts";
+import {  users } from "@/db/schema.server";
 import { db } from "./index.server";
 
 async function seed() {

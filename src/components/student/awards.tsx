@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router"
 import { H1Title } from "../titles"
-import { Awards, ALL_AWARDS, Challenges, ALL_CHALLENGES, AwardProgress } from '@/types/SCA'
+import { Awards, ALL_AWARDS, AwardProgress } from '@/types/SCA'
 const AwardStyling = {
     'bronze': {
         title: 'Bronze',
@@ -32,13 +32,13 @@ export default function SidebarAwards() {
     <div 
         className="w-full border-b border-gray-200 p-4">
             <H1Title title="Awards" />
-            <Awards />
+            <AwardCards />
     </div>
     )
 }
 
 
-function Awards() {
+function AwardCards() {
     return <div className="w-full h-fit flex flex-row justify-center gap-2 ">
         {ALL_AWARDS.map((award) => (
             <AwardCard 
@@ -95,5 +95,4 @@ function AwardStatus({status, isActive}: {status: Exclude<AwardProgress,'not sta
                 {AwardProgressStyling[status].display}
         </div>
     )
-    
 }

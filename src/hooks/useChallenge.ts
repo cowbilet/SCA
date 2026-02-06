@@ -6,6 +6,6 @@ export const challengesQueryOptions = (award: Awards) => (queryOptions({
     queryKey: ['challenges', award],
     queryFn: () => getUserAwardChallenges({data: {award}}),
 }))
-export function useChallenges(award: Awards) {
-    return useQuery(challengesQueryOptions(award))
+export function useChallenges(award: Awards, select?: (data: Awaited<ReturnType<typeof getUserAwardChallenges>>) => any) {
+    return useQuery({select, ...challengesQueryOptions(award)})
 }

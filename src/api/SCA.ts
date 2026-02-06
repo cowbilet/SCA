@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getDbUserAwardChallenges } from '@/db/SCA.server'
-import { getDbUserById, getDbUserByName } from '@/db/users.server'
+import { getDbUserByName } from '@/db/users.server'
 import { validateAward } from '@/guards/SCA'
 import { Awards } from '@/types/SCA'
 export const getUserAwardChallenges = createServerFn({ method: 'GET' }).inputValidator(async (data: {award: Awards}) => {
@@ -17,8 +17,9 @@ export const getUserAwardChallenges = createServerFn({ method: 'GET' }).inputVal
     // if (!user || user.length === 0) {
     //     throw new Response('User not found', { status: 404 })
     // }
-    return {user: await getDbUserByName("Seb"), award: data.award}
+
+    return {user: (await getDbUserByName("Seb"))[0], award: data.award}
 }).handler(async ({data}) => {
-    const challenges = await getDbUserAwardChallenges(data.user[0].userId, data.award)
+    const challenges = await getDbUserAwardChallenges(data.user.userId, data.award)
     return challenges
 })

@@ -1,4 +1,4 @@
-import { studentChallenge, users } from "~drizzle/schema";
+import { users } from "@/db/schema.server";
 import { db } from "./index.server";
 import { eq } from "drizzle-orm";
 

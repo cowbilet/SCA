@@ -1,5 +1,5 @@
-import { pgTable, uuid, text, type AnyPgColumn, foreignKey, boolean, timestamp, primaryKey, unique, pgEnum } from "drizzle-orm/pg-core"
-import { sql } from "drizzle-orm"
+import { pgTable, uuid, text, foreignKey, boolean, timestamp, primaryKey, pgEnum } from "drizzle-orm/pg-core"
+
 
 export const awardTiers = pgEnum("award_tiers", ['bronze', 'silver', 'gold'])
 export const challenge = pgEnum("challenge", ['challenge', 'service', 'relationships', 'community'])
