@@ -67,26 +67,26 @@ interface SidebarCardProps {
 }
 function ActivityCard({ title, iconStyle, cardStyle, icon, }: SidebarCardProps) {
     const matchRoute = useMatchRoute()
-    const isAwardTier = matchRoute({
-        to: '/student/$tier',
+    const isAwardIndex = matchRoute({
+        to: '/student/$award',
         fuzzy: true
     })
     const challenge = validateChallenge(title.toLowerCase()) ? title.toLowerCase() : undefined
-    const params = useParams({ from: '/student/$tier', strict: true }) 
+    const params = useParams({ from: '/student/$award', strict: true }) 
     return (
         <Link
-            to='/student/$tier/$challenge'
+            to='/student/$award/$challenge'
             params={{
-                tier: params.tier,
+                award: params.award,
                 challenge: challenge
             }}
-            disabled={!isAwardTier}
+            disabled={!isAwardIndex}
             className='w-full'
         >   
             {({ isActive }) => (
                 <div 
                     className={`w-full border-2 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex items-center space-x-2 cursor-pointer hover:shadow-lg hover:bg-gray-100 text-white
-                        ${!isAwardTier ? 'opacity-50 hover:cursor-not-allowed hover:shadow-none hover:bg-transparent' : ''}
+                        ${!isAwardIndex ? 'opacity-50 hover:cursor-not-allowed hover:shadow-none hover:bg-transparent' : ''}
                         ${isActive ? cardStyle : ''}
                     `}>
                         <div className={`p-2 rounded-full border-2  ${iconStyle} mr-2`}>

@@ -1,6 +1,6 @@
 
-import SidebarTiers from './tiers'
 import SidebarActivities from './activites'
+import SidebarAwards from './awards'
 
 
 
@@ -8,7 +8,7 @@ import SidebarActivities from './activites'
 export default function Sidebar() {
     return <div className="w-90 flex flex-col h-full border-r border-gray-200 ">
         <SidebarHead />
-        <SidebarTiers />
+        <SidebarAwards />
         <SidebarActivities />
     </div>
 }

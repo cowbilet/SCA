@@ -21,27 +21,27 @@ const AwardProgressStyling: Record<Exclude<AwardProgress,'not started'>, { displ
     'completed': { display: 'Completed', color: 'bg-green-500/45 border-green-500 text-green-700!' }, 
 
 }
-const TierStatuses: Record<Awards, AwardProgress> = {
+const AwardStatuses: Record<Awards, AwardProgress> = {
     'bronze': 'completed',
     'silver': 'not started',
     'gold': 'locked',
 }
 
-export default function SidebarTiers() {
+export default function SidebarAwards() {
     return (
     <div 
         className="w-full border-b border-gray-200 p-4">
-            <H1Title title="Award Tiers" />
-            <Tiers />
+            <H1Title title="Awards" />
+            <Awards />
     </div>
     )
 }
 
 
-function Tiers() {
+function Awards() {
     return <div className="w-full h-fit flex flex-row justify-center gap-2 ">
         {ALL_AWARDS.map((award) => (
-            <TierCard 
+            <AwardCard 
                 key={award}
                 award={award}
             />
@@ -50,19 +50,19 @@ function Tiers() {
 }
 
 
-function TierCard({award}: {award: Awards}) {
+function AwardCard({award}: {award: Awards}) {
     return (
         <Link
-            to='/student/$tier'
-            disabled={TierStatuses[award] === 'locked'}
+            to='/student/$award'
+            disabled={AwardStatuses[award] === 'locked'}
             params={{
-                tier: award
+                award: award
             }}
         >
             {({ isActive }) => (
                 <div 
                     className={`border-2 border-gray-300 flex-1 p-4 w-24 h-full gap-2 rounded-lg flex flex-col items-center space-x-2 
-                        ${TierStatuses[award] === 'locked' 
+                        ${AwardStatuses[award] === 'locked' 
                             ? 'opacity-50 hover:shadow-0! hover:cursor-not-allowed hover:shadow-none'
                             : 'hover:cursor-pointer hover:shadow-lg transition hover:border-gray-400 '
                         }
@@ -73,8 +73,8 @@ function TierCard({award}: {award: Awards}) {
                         className={`text-sm font-bold text-center mr-0 ${isActive ? 'text-white' : 'text-black'}`}>
                             {AwardStyling[award].title}
                     </h1>
-                    {TierStatuses[award] !== 'not started' && (
-                        <TierStatus status={TierStatuses[award]} isActive={isActive} />
+                    {AwardStatuses[award] !== 'not started' && (
+                        <AwardStatus status={AwardStatuses[award]} isActive={isActive} />
                     )}
                 </div>
             )}
@@ -86,7 +86,7 @@ function TierCard({award}: {award: Awards}) {
 //         {AwardStyling[award].title}
 // </h1>
 // <TierStatus status={TierStatuses[award]} />
-function TierStatus({status, isActive}: {status: Exclude<AwardProgress,'not started'>, isActive: boolean}) {
+function AwardStatus({status, isActive}: {status: Exclude<AwardProgress,'not started'>, isActive: boolean}) {
     return (
         <div 
             className={`px-2 w-18 py-1 border rounded-sm text-[0.65rem] text-center font-semibold text-white 
