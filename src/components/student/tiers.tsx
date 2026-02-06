@@ -39,7 +39,7 @@ export default function SidebarTiers() {
 
 
 function Tiers() {
-    return <div className="w-full h-fit flex flex-row gap-2 ">
+    return <div className="w-full h-fit flex flex-row justify-center gap-2 ">
         {ALL_AWARDS.map((award) => (
             <TierCard 
                 key={award}
@@ -58,14 +58,6 @@ function TierCard({award}: {award: Awards}) {
             params={{
                 tier: award
             }}
-            // className={`border-2 border-gray-300 flex-1 p-4 w-24 gap-2 rounded-lg flex flex-col items-center space-x-2 
-            //     ${TierStatuses[award] === 'locked' 
-            //         ? 'opacity-50 hover:shadow-0! hover:cursor-not-allowed hover:shadow-none'
-            //         : 'hover:cursor-pointer hover:shadow-lg transition hover:border-gray-400 '
-            //     }
-            //     ${isActive}
-            //     bg-linear-to-b ${AwardStyling[award].color} text-white
-            // `}
         >
             {({ isActive }) => (
                 <div 
@@ -74,7 +66,7 @@ function TierCard({award}: {award: Awards}) {
                             ? 'opacity-50 hover:shadow-0! hover:cursor-not-allowed hover:shadow-none'
                             : 'hover:cursor-pointer hover:shadow-lg transition hover:border-gray-400 '
                         }
-                        ${isActive ? 'bg-linear-to-b ' + AwardStyling[award].color : ''}
+                        ${isActive ? 'border-0! bg-linear-to-b ' + AwardStyling[award].color : ''}
                     `}
                 >
                     <h1 
