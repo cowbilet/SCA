@@ -1,8 +1,15 @@
-//  @ts-check
-
+// eslint.config.js
 import { tanstackConfig } from '@tanstack/eslint-config'
-import react from 'eslint-plugin-react'
+import pluginRouter from '@tanstack/eslint-plugin-router'
 
-export default [...tanstackConfig, {
-    extends: ['plugin:tanstack/recommended', 'plugin:react/recommended'],
-}]
+
+// https://eslint.org/docs/latest/use/configure/flat-config
+export default [
+  // base shared config
+  ...tanstackConfig,
+
+  // tanstack router rules (flat)
+  ...pluginRouter.configs['flat/recommended'],
+
+
+]
