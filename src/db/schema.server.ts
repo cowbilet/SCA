@@ -5,7 +5,7 @@ export const awardTiers = pgEnum("award_tiers", ['bronze', 'silver', 'gold'])
 export const challenge = pgEnum("challenge", ['challenge', 'service', 'relationships', 'community'])
 export const location = pgEnum("location", ['NSW', 'VIC', 'WA', 'QLD', 'TAS', 'SA', 'NAT'])
 export const role = pgEnum("role", ['student', 'mentor'])
-export const submissionStatus = pgEnum("submission_status", ['not started', 'pending mentor', 'rejected mentor', 'pending assessor', 'rejected assessor', 'completed'])
+export const status = pgEnum("submission_status", ['not started', 'pending mentor', 'rejected mentor', 'pending assessor', 'rejected assessor', 'completed'])
 
 
 export const assessors = pgTable("assessors", {
@@ -94,6 +94,8 @@ export const studentChallenge = pgTable("student_challenge", {
 	studentId: uuid().notNull(),
 	award: awardTiers().notNull(),
 	challenge: challenge().notNull(),
+	submissionStatus: status().notNull().default('not started'),
+	proposalStatus: status().notNull().default('not started'),
 }, (table) => [
 	foreignKey({
 			columns: [table.mentorId],
