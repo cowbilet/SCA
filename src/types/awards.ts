@@ -1,12 +1,12 @@
-import { awardTiers, submissionStatus } from "@/db/schema.server";
+import { awardTiers, status } from "@/db/schema.server";
 
 
-export type Awards = typeof awardTiers.enumValues[number]
+export type Award = typeof awardTiers.enumValues[number]
 
 
-export const ALL_AWARDS: Awards[] = awardTiers.enumValues
+export const ALL_AWARDS: Award[] = awardTiers.enumValues
 
 
 export type AwardProgress = 'completed' | 'ongoing' | 'locked' | "not started"
 
-export type SubmissionState = typeof submissionStatus.enumValues[number]
+export type SubmissionState = typeof status.enumValues[number]

@@ -2,11 +2,11 @@ import { createServerFn } from '@tanstack/react-start'
 import { getDbUserAwardChallenges } from '@/db/challenges.server'
 import { getDbUserByName } from '@/db/users.server'
 import { validateAward } from '@/types/guards/awards'
-import { Awards } from '@/types/awards'
+import { Award } from '@/types/awards'
 import { z } from 'zod'
 import { StudentChallenge } from '@/types/schemas/challenges'
 const inputSchema = z.object({
-    award: z.string().refine((award): award is Awards => validateAward(award), {
+    award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
     }),
 })

@@ -6,13 +6,13 @@ import {
     HandPlatter
 } from 'lucide-react'
 import { useMatchRoute, useParams } from '@tanstack/react-router'
-import { Challenges } from '@/types/challenges'
+import { Challenge } from '@/types/challenges'
 import { Link } from '@tanstack/react-router'
 import { validateChallenge } from '@/types/guards/challenges'
 import { useChallenges } from '@/hooks/useChallenge'
 import Skeleton from 'react-loading-skeleton'
 
-const activities: Record<Challenges, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
+const activities: Record<Challenge, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 
         title: 'Relationships', 
         iconStyle: 'text-blue-500 border-blue-500', 
@@ -47,7 +47,7 @@ export default function SidebarActivities() {
                 <H1Title title="Activities" />
                 <div className='flex flex-col items-center justify-center gap-4'>
                     {
-                        (Object.keys(activities) as Challenges[]).map((activity) => (
+                        (Object.keys(activities) as Challenge[]).map((activity) => (
                             <ActivityCard 
                                 key={activity}
                                 title={activities[activity].title}
@@ -101,7 +101,7 @@ function ActivityCard({ title, iconStyle, className, icon, }: SidebarCardProps) 
     
 }
 interface ActiveActivityCardProps extends GenericSidebarCardProps {
-    challenge: Challenges
+    challenge: Challenge
 }
 // Has to be a seperate component otherwhise there will be more hooks called in the component than in the parent which causes rules of hooks errors
 function ActiveActivityCard({ title, challenge, iconStyle, icon, className }: ActiveActivityCardProps) {
@@ -153,7 +153,7 @@ function GenericActivityCard({ title, iconStyle, icon, className, status }: Gene
                 </div>
                 <div className='flex flex-col'>
                     <H1Title title={title} />
-                    <p className='text-gray-500 text-xs min-h-[1.25rem]'>
+                    <p className='text-gray-500 text-xs min-h-5'>
                         {status}
                     </p>
 

@@ -1,9 +1,9 @@
-import { Awards } from "@/types/awards";
+import { Award } from "@/types/awards";
 import { studentChallenge, challengeProposals, challengeSubmission } from "@/db/schema.server";
 import { db } from "./index.server";
 import { and, eq } from "drizzle-orm/sql/expressions/conditions";
 import { StudentChallenge } from "@/types/schemas/challenges";
-export async function getDbUserAwardChallenges(userId: string, award: Awards, userType: "student"): Promise<StudentChallenge[]> {
+export async function getDbUserAwardChallenges(userId: string, award: Award, userType: "student"): Promise<StudentChallenge[]> {
     const rawChallenges = await db.select({
         award: studentChallenge.award,
         challenge: studentChallenge.challenge,
