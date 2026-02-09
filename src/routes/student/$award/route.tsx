@@ -1,10 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 import { validateAward } from '@/types/guards/awards'
 import { challengesQueryOptions } from '@/hooks/useChallenge'
-import { Awards } from '@/types/awards'
+import { Award } from '@/types/awards'
 import { z } from 'zod'
-const awardSchema = z.string().refine((award): award is Awards => validateAward(award), {
+
+const awardSchema = z.string().refine((award): award is Award => validateAward(award), {
     message: 'Invalid award',
 })
 export const Route = createFileRoute('/student/$award')({
@@ -22,10 +23,12 @@ export const Route = createFileRoute('/student/$award')({
         const { award } = params
         return queryClient.ensureQueryData(challengesQueryOptions(award))
     },
-    
 })
 
-
 function RouteComponent() {
-    return <div>Please select a challenge</div>
+    return (
+        <div className='flex-1'>
+            <Outlet />
+        </div>
+    )
 }

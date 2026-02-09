@@ -11,8 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentRouteRouteImport } from './routes/student/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as StudentAwardRouteImport } from './routes/student/$award'
-import { Route as StudentAwardChallengeRouteImport } from './routes/student/$award.$challenge'
+import { Route as StudentAwardRouteRouteImport } from './routes/student/$award/route'
+import { Route as StudentAwardIndexRouteImport } from './routes/student/$award/index'
+import { Route as StudentAwardChallengeRouteImport } from './routes/student/$award/$challenge'
 
 const StudentRouteRoute = StudentRouteRouteImport.update({
   id: '/student',
@@ -24,47 +25,60 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentAwardRoute = StudentAwardRouteImport.update({
+const StudentAwardRouteRoute = StudentAwardRouteRouteImport.update({
   id: '/$award',
   path: '/$award',
   getParentRoute: () => StudentRouteRoute,
 } as any)
+const StudentAwardIndexRoute = StudentAwardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudentAwardRouteRoute,
+} as any)
 const StudentAwardChallengeRoute = StudentAwardChallengeRouteImport.update({
   id: '/$challenge',
   path: '/$challenge',
-  getParentRoute: () => StudentAwardRoute,
+  getParentRoute: () => StudentAwardRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/student': typeof StudentRouteRouteWithChildren
-  '/student/$award': typeof StudentAwardRouteWithChildren
+  '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
+  '/student/$award/': typeof StudentAwardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/student': typeof StudentRouteRouteWithChildren
-  '/student/$award': typeof StudentAwardRouteWithChildren
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
+  '/student/$award': typeof StudentAwardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/student': typeof StudentRouteRouteWithChildren
-  '/student/$award': typeof StudentAwardRouteWithChildren
+  '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
+  '/student/$award/': typeof StudentAwardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/student' | '/student/$award' | '/student/$award/$challenge'
+  fullPaths:
+    | '/'
+    | '/student'
+    | '/student/$award'
+    | '/student/$award/$challenge'
+    | '/student/$award/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/student' | '/student/$award' | '/student/$award/$challenge'
+  to: '/' | '/student' | '/student/$award/$challenge' | '/student/$award'
   id:
     | '__root__'
     | '/'
     | '/student'
     | '/student/$award'
     | '/student/$award/$challenge'
+    | '/student/$award/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,37 +106,45 @@ declare module '@tanstack/react-router' {
       id: '/student/$award'
       path: '/$award'
       fullPath: '/student/$award'
-      preLoaderRoute: typeof StudentAwardRouteImport
+      preLoaderRoute: typeof StudentAwardRouteRouteImport
       parentRoute: typeof StudentRouteRoute
+    }
+    '/student/$award/': {
+      id: '/student/$award/'
+      path: '/'
+      fullPath: '/student/$award/'
+      preLoaderRoute: typeof StudentAwardIndexRouteImport
+      parentRoute: typeof StudentAwardRouteRoute
     }
     '/student/$award/$challenge': {
       id: '/student/$award/$challenge'
       path: '/$challenge'
       fullPath: '/student/$award/$challenge'
       preLoaderRoute: typeof StudentAwardChallengeRouteImport
-      parentRoute: typeof StudentAwardRoute
+      parentRoute: typeof StudentAwardRouteRoute
     }
   }
 }
 
-interface StudentAwardRouteChildren {
+interface StudentAwardRouteRouteChildren {
   StudentAwardChallengeRoute: typeof StudentAwardChallengeRoute
+  StudentAwardIndexRoute: typeof StudentAwardIndexRoute
 }
 
-const StudentAwardRouteChildren: StudentAwardRouteChildren = {
+const StudentAwardRouteRouteChildren: StudentAwardRouteRouteChildren = {
   StudentAwardChallengeRoute: StudentAwardChallengeRoute,
+  StudentAwardIndexRoute: StudentAwardIndexRoute,
 }
 
-const StudentAwardRouteWithChildren = StudentAwardRoute._addFileChildren(
-  StudentAwardRouteChildren,
-)
+const StudentAwardRouteRouteWithChildren =
+  StudentAwardRouteRoute._addFileChildren(StudentAwardRouteRouteChildren)
 
 interface StudentRouteRouteChildren {
-  StudentAwardRoute: typeof StudentAwardRouteWithChildren
+  StudentAwardRouteRoute: typeof StudentAwardRouteRouteWithChildren
 }
 
 const StudentRouteRouteChildren: StudentRouteRouteChildren = {
-  StudentAwardRoute: StudentAwardRouteWithChildren,
+  StudentAwardRouteRoute: StudentAwardRouteRouteWithChildren,
 }
 
 const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(

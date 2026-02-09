@@ -1,4 +1,4 @@
-import { H1Title } from '../titles'
+import { H1Title } from '../../titles'
 import {
     Users,
     Zap,
@@ -12,7 +12,7 @@ import { validateChallenge } from '@/types/guards/challenges'
 import { useChallenges } from '@/hooks/useChallenge'
 import Skeleton from 'react-loading-skeleton'
 
-const activities: Record<Challenge, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
+const challenges: Record<Challenge, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 
         title: 'Relationships', 
         iconStyle: 'text-blue-500 border-blue-500', 
@@ -40,20 +40,20 @@ const activities: Record<Challenge, { title: string, iconStyle: string, cardStyl
 }
 
 
-export default function SidebarActivities() {
+export default function SidebarChallenges() {
     return (
         <div 
             className="w-full border-b flex-1 border-gray-200 mb-4 p-4">
-                <H1Title title="Activities" />
+                <H1Title title="Challenges" />
                 <div className='flex flex-col items-center justify-center gap-4'>
                     {
-                        (Object.keys(activities) as Challenge[]).map((activity) => (
+                        (Object.keys(challenges) as Challenge[]).map((challenge) => (
                             <ActivityCard 
-                                key={activity}
-                                title={activities[activity].title}
-                                iconStyle={activities[activity].iconStyle}
-                                className={activities[activity].cardStyle}
-                                icon={activities[activity].icon}
+                                key={challenge}
+                                title={challenges[challenge].title}
+                                iconStyle={challenges[challenge].iconStyle}
+                                className={challenges[challenge].cardStyle}
+                                icon={challenges[challenge].icon}
                             />
                         ))
                     }
