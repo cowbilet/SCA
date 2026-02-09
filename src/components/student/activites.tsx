@@ -9,6 +9,8 @@ import { useMatchRoute, useParams } from '@tanstack/react-router'
 import { Challenges } from '@/types/challenges'
 import { Link } from '@tanstack/react-router'
 import { validateChallenge } from '@/types/guards/challenges'
+import { useChallenges } from '@/hooks/useChallenge'
+import Skeleton from 'react-loading-skeleton'
 
 const activities: Record<Challenges, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 
@@ -104,6 +106,14 @@ interface ActiveActivityCardProps extends GenericSidebarCardProps {
 // Has to be a seperate component otherwhise there will be more hooks called in the component than in the parent which causes rules of hooks errors
 function ActiveActivityCard({ title, challenge, iconStyle, icon, className }: ActiveActivityCardProps) {
     const params = useParams({ from: '/student/$award', strict: true }) 
+    const { data: Challenge, isLoading, isError } = useChallenges(params.award)
+    const status = isLoading ? 
+                    <Skeleton /> 
+                : isError ? 
+                    'Error loading challenge status' 
+                : Challenge[challenge]
+                    ? 'Completed' 
+                    : 'Not completed'
     return (
         <Link
             to='/student/$award/$challenge'
@@ -119,6 +129,7 @@ function ActiveActivityCard({ title, challenge, iconStyle, icon, className }: Ac
                     iconStyle={iconStyle}
                     icon={icon}
                     className={isActive ? className : ''}
+                    status={status}
                 />
             )}
         </Link>
@@ -129,7 +140,7 @@ interface GenericSidebarCardProps {
     iconStyle: string
     icon: React.ReactNode
     className?: string
-    status?: string
+    status?: React.ReactNode
 }
 function GenericActivityCard({ title, iconStyle, icon, className, status }: GenericSidebarCardProps) {
     return (
@@ -142,7 +153,7 @@ function GenericActivityCard({ title, iconStyle, icon, className, status }: Gene
                 </div>
                 <div className='flex flex-col'>
                     <H1Title title={title} />
-                    <p className='text-gray-500 text-xs '>
+                    <p className='text-gray-500 text-xs min-h-[1.25rem]'>
                         {status}
                     </p>
 
