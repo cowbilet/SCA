@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router"
 import { H1Title } from "../titles"
-import { Awards, ALL_AWARDS, AwardProgress } from '@/types/SCA'
+import type { Awards, AwardProgress } from '@/types/SCA'
+import {ALL_AWARDS} from '@/types/SCA'
 const AwardStyling = {
     'bronze': {
         title: 'Bronze',

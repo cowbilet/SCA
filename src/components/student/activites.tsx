@@ -72,6 +72,9 @@ function ActivityCard({ title, iconStyle, cardStyle, icon, }: SidebarCardProps) 
         fuzzy: true
     })
     const challenge = validateChallenge(title.toLowerCase()) ? title.toLowerCase() : undefined
+    if (!challenge) {
+        throw new Error('Invalid challenge')
+    }
     const params = useParams({ from: '/student/$award', strict: true }) 
     return (
         <Link
