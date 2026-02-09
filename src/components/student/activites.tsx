@@ -50,7 +50,7 @@ export default function SidebarActivities() {
                                 key={activity}
                                 title={activities[activity].title}
                                 iconStyle={activities[activity].iconStyle}
-                                cardStyle={activities[activity].cardStyle}
+                                className={activities[activity].cardStyle}
                                 icon={activities[activity].icon}
                             />
                         ))
@@ -62,19 +62,47 @@ export default function SidebarActivities() {
 interface SidebarCardProps {
     title: string
     iconStyle: string
-    cardStyle: string
+    className?: string
     icon: React.ReactNode
 }
-function ActivityCard({ title, iconStyle, cardStyle, icon, }: SidebarCardProps) {
+
+const lockedStyle = 'opacity-50 hover:cursor-not-allowed hover:shadow-none hover:bg-transparent'
+function ActivityCard({ title, iconStyle, className, icon, }: SidebarCardProps) {
     const matchRoute = useMatchRoute()
     const isAwardIndex = matchRoute({
         to: '/student/$award',
         fuzzy: true
     })
-    const challenge = validateChallenge(title.toLowerCase()) ? title.toLowerCase() : undefined
-    if (!challenge) {
+    const challenge = title.toLowerCase()
+    if (!validateChallenge(challenge)) {
         throw new Error('Invalid challenge')
     }
+    if (!isAwardIndex) {
+        return (
+            <GenericActivityCard
+                title={title}
+                iconStyle={iconStyle}
+                icon={icon}
+                className={lockedStyle}
+            />
+        )
+    }
+    return (
+        <ActiveActivityCard 
+            title={title}
+            iconStyle={iconStyle}
+            icon={icon}
+            className={className}
+            challenge={challenge}
+        />
+    )
+    
+}
+interface ActiveActivityCardProps extends GenericSidebarCardProps {
+    challenge: Challenges
+}
+// Has to be a seperate component otherwhise there will be more hooks called in the component than in the parent which causes rules of hooks errors
+function ActiveActivityCard({ title, challenge, iconStyle, icon, className }: ActiveActivityCardProps) {
     const params = useParams({ from: '/student/$award', strict: true }) 
     return (
         <Link
@@ -83,28 +111,42 @@ function ActivityCard({ title, iconStyle, cardStyle, icon, }: SidebarCardProps) 
                 award: params.award,
                 challenge: challenge
             }}
-            disabled={!isAwardIndex}
             className='w-full'
         >   
             {({ isActive }) => (
-                <div 
-                    className={`w-full border-2 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex items-center space-x-2 cursor-pointer hover:shadow-lg hover:bg-gray-100 text-white
-                        ${!isAwardIndex ? 'opacity-50 hover:cursor-not-allowed hover:shadow-none hover:bg-transparent' : ''}
-                        ${isActive ? cardStyle : ''}
-                    `}>
-                        <div className={`p-2 rounded-full border-2  ${iconStyle} mr-2`}>
-                            {icon}
-
-                        </div>
-                        <div className='flex flex-col'>
-                            <H1Title title={title} />
-                            <p className='text-gray-500 text-xs'>
-                                Awaiting Proposal
-                            </p>
-
-                        </div>
-                </div>
+                <GenericActivityCard 
+                    title={title}
+                    iconStyle={iconStyle}
+                    icon={icon}
+                    className={isActive ? className : ''}
+                />
             )}
         </Link>
+    )
+}
+interface GenericSidebarCardProps {
+    title: string
+    iconStyle: string
+    icon: React.ReactNode
+    className?: string
+    status?: string
+}
+function GenericActivityCard({ title, iconStyle, icon, className, status }: GenericSidebarCardProps) {
+    return (
+        <div 
+            className={`w-full border-2 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex items-center space-x-2 cursor-pointer hover:shadow-lg hover:bg-gray-100 text-white
+                ${className}
+            `}>
+                <div className={`p-2 rounded-full border-2  ${iconStyle} mr-2`}>
+                    {icon}
+                </div>
+                <div className='flex flex-col'>
+                    <H1Title title={title} />
+                    <p className='text-gray-500 text-xs '>
+                        {status}
+                    </p>
+
+                </div>
+        </div>
     )
 }
