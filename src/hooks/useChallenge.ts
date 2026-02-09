@@ -1,5 +1,5 @@
-import { getUserAwardChallenges } from "@/api/SCA";
-import { Awards } from "@/types/SCA";
+import { getUserAwardChallenges } from "@/api/challenges";
+import { Awards } from "@/types/awards";
 import { useQuery } from '@tanstack/react-query';
 import { queryOptions } from '@tanstack/react-query'
 export const challengesQueryOptions = (award: Awards) => (queryOptions({

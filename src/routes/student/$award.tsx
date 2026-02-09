@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { validateAward } from '@/guards/SCA'
+import { validateAward } from '@/types/guards/awards'
 import { challengesQueryOptions } from '@/hooks/useChallenge'
-import { Awards } from '@/types/SCA'
+import { Awards } from '@/types/awards'
 import { z } from 'zod'
 const awardSchema = z.string().refine((award): award is Awards => validateAward(award), {
     message: 'Invalid award',

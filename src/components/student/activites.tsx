@@ -6,9 +6,9 @@ import {
     HandPlatter
 } from 'lucide-react'
 import { useMatchRoute, useParams } from '@tanstack/react-router'
-import { Challenges } from '@/types/SCA'
+import { Challenges } from '@/types/challenges'
 import { Link } from '@tanstack/react-router'
-import { validateChallenge } from '@/guards/SCA'
+import { validateChallenge } from '@/types/guards/challenges'
 
 const activities: Record<Challenges, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 

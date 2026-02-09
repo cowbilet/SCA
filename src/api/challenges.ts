@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getDbUserAwardChallenges } from '@/db/SCA.server'
 import { getDbUserByName } from '@/db/users.server'
-import { validateAward } from '@/guards/SCA'
-import { Awards } from '@/types/SCA'
+import { validateAward } from '@/types/guards/awards'
+import { Awards } from '@/types/awards'
 import { z } from 'zod'
 const inputSchema = z.object({
     award: z.string().refine((award): award is Awards => validateAward(award), {

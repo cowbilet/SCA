@@ -1,4 +1,4 @@
-import { Awards } from "@/types/SCA";
+import { Awards } from "@/types/awards";
 import { studentChallenge } from "@/db/schema.server";
 import { db } from "./index.server";
 import { and, eq } from "drizzle-orm/sql/expressions/conditions";
