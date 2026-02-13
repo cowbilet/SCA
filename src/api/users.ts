@@ -3,7 +3,7 @@ import { getDbUserByEmail } from "@/db/users.server";
 import type { UserSchema } from "@/types/schemas/users";
 import { z } from "zod";
 const userEmailSchema = z.object({
-    email: z.string(),
+    email: z.email(),
 })
 //TODO: Ratelimit this endpoint to prevent scraping
 

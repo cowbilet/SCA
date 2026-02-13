@@ -38,7 +38,7 @@ function RouteComponent() {
             
             <ChallengeShell challenge={challenge}>
                 {!challengeData || !challengeData.length || challengeData[0]["proposalStatus"] === 'completed' ? (
-                    <SubmitProposal challenge={challenge} />
+                    <SubmitProposal key={challenge} challenge={challenge} />
                 ) : (
                     <div className='p-4 bg-green-100 border border-green-400 text-green-700 rounded'>
                         Challenge Completed!
