@@ -2,11 +2,16 @@ import { Challenge } from "@/types/challenges"
 import { BookOpen, HandPlatter, Users, Zap } from "lucide-react"
 interface ChallengeProps {
     challenge: Challenge
+    children?: React.ReactNode
 }
-export default function ChallengeShell({ challenge }: ChallengeProps) {
+export default function ChallengeShell({ challenge, children }: ChallengeProps) {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full">
             <ChallengeHeader challenge={challenge} />
+            <div className="flex-1 p-4">
+                { children }
+
+            </div>
         </div>
     )
 }

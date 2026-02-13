@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router"
 import { H1Title } from "../../titles"
-import type { Awards, AwardProgress } from '@/types/awards'
+import type { Award, AwardProgress } from '@/types/awards'
 import {ALL_AWARDS} from '@/types/awards'
 const AwardStyling = {
     'bronze': {
@@ -22,7 +22,7 @@ const AwardProgressStyling: Record<Exclude<AwardProgress,'not started'>, { displ
     'completed': { display: 'Completed', color: 'bg-green-500/45 border-green-500 text-green-700!' }, 
 
 }
-const AwardStatuses: Record<Awards, AwardProgress> = {
+const AwardStatuses: Record<Award, AwardProgress> = {
     'bronze': 'completed',
     'silver': 'not started',
     'gold': 'locked',
@@ -51,7 +51,7 @@ function AwardCards() {
 }
 
 
-function AwardCard({award}: {award: Awards}) {
+function AwardCard({award}: {award: Award}) {
     return (
         <Link
             to='/student/$award'
