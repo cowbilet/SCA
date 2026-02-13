@@ -1,10 +1,9 @@
 import { validateChallenge } from '@/types/guards/challenges'
 import { Challenge } from '@/types/challenges'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import ChallengeShell from '@/components/student/challenge'
 import {z} from 'zod'
-import { getUserAwardChallenges } from '@/api/challenges'
-import { challengesQueryOptions } from '@/hooks/useChallenge'
+import { challengeQueryOptions, useChallenge } from '@/hooks/useChallenge'
 
 import SubmitProposal from '@/features/proposals/components/studentProposal/submitProposal'
 const challengeSchema = z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
@@ -22,22 +21,19 @@ export const Route = createFileRoute('/student/$award/$challenge')({
         }
     },
     loader: async ({ params, context: { queryClient } }) => {
-        const { challenge, award } = params
-        const data = await queryClient.ensureQueryData(challengesQueryOptions(award, (data: Awaited<ReturnType<typeof getUserAwardChallenges>>) => data.find((c) => c.challenge === challenge)))
-
-        return data
+        const { award, challenge } = params
+        return await queryClient.fetchQuery(challengeQueryOptions(award, challenge))
     }
 })
 
 function RouteComponent() {
     const { challenge } = Route.useParams()
     const challengeData = Route.useLoaderData()
-    console.log(challengeData)
     return (
         <div className='h-full'>
             
             <ChallengeShell challenge={challenge}>
-                {!challengeData || !challengeData.length || challengeData[0]["proposalStatus"] === 'completed' ? (
+                {!challengeData || challengeData["proposalStatus"] === 'completed' ? (
                     <SubmitProposal key={challenge} challenge={challenge} />
                 ) : (
                     <div className='p-4 bg-green-100 border border-green-400 text-green-700 rounded'>

@@ -9,8 +9,9 @@ import { useMatchRoute, useParams } from '@tanstack/react-router'
 import { Challenge } from '@/types/challenges'
 import { Link } from '@tanstack/react-router'
 import { validateChallenge } from '@/types/guards/challenges'
-import { useChallenges } from '@/hooks/useChallenge'
+import { useChallenge } from '@/hooks/useChallenge'
 import Skeleton from 'react-loading-skeleton'
+import { SubmissionState } from '@/types/awards'
 
 const challenges: Record<Challenge, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 
@@ -51,6 +52,7 @@ export default function SidebarChallenges() {
                             <ActivityCard 
                                 key={challenge}
                                 title={challenges[challenge].title}
+                                challenge={challenge}
                                 iconStyle={challenges[challenge].iconStyle}
                                 className={challenges[challenge].cardStyle}
                                 icon={challenges[challenge].icon}
@@ -65,20 +67,17 @@ interface SidebarCardProps {
     title: string
     iconStyle: string
     className?: string
+    challenge: Challenge
     icon: React.ReactNode
 }
 
 const lockedStyle = 'opacity-50 hover:cursor-not-allowed hover:shadow-none hover:bg-transparent'
-function ActivityCard({ title, iconStyle, className, icon, }: SidebarCardProps) {
+function ActivityCard({ title, iconStyle, challenge, className, icon, }: SidebarCardProps) {
     const matchRoute = useMatchRoute()
     const isAwardIndex = matchRoute({
         to: '/student/$award',
         fuzzy: true
     })
-    const challenge = title.toLowerCase()
-    if (!validateChallenge(challenge)) {
-        throw new Error('Invalid challenge')
-    }
     if (!isAwardIndex) {
         return (
             <GenericActivityCard
@@ -93,9 +92,9 @@ function ActivityCard({ title, iconStyle, className, icon, }: SidebarCardProps) 
         <ActiveActivityCard 
             title={title}
             iconStyle={iconStyle}
+            challenge={challenge}
             icon={icon}
             className={className}
-            challenge={challenge}
         />
     )
     
@@ -103,17 +102,23 @@ function ActivityCard({ title, iconStyle, className, icon, }: SidebarCardProps) 
 interface ActiveActivityCardProps extends GenericSidebarCardProps {
     challenge: Challenge
 }
+const ChallengeStatuses: Record<SubmissionState, React.ReactNode> = {
+    'not started': 'Not started',
+    'pending assessor': 'Pending assessor review',
+    'pending mentor': 'Pending mentor review',
+    'rejected assessor': 'Rejected by assessor',
+    'rejected mentor': 'Rejected by mentor',
+    'completed': 'Completed',
+}
 // Has to be a seperate component otherwhise there will be more hooks called in the component than in the parent which causes rules of hooks errors
-function ActiveActivityCard({ title, challenge, iconStyle, icon, className }: ActiveActivityCardProps) {
+function ActiveActivityCard({ title, iconStyle, challenge, icon, className }: ActiveActivityCardProps) {
     const params = useParams({ from: '/student/$award', strict: true }) 
-    const { data: Challenge, isLoading, isError } = useChallenges(params.award)
+    const { data, isLoading, isError } = useChallenge(params.award, challenge)
     const status = isLoading ? 
-                    <Skeleton /> 
-                : isError ? 
-                    'Error loading challenge status' 
-                : Challenge[challenge]
-                    ? 'Completed' 
-                    : 'Not completed'
+        <Skeleton /> 
+        : isError ? 
+        'Error loading challenge status' 
+        : ChallengeStatuses[data?.proposalStatus ?? 'not started']
     return (
         <Link
             to='/student/$award/$challenge'
