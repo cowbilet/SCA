@@ -18,4 +18,4 @@ export const StudentChallengeSchema = z.object({
     proposalIds: z.array(z.uuid()).optional(),
     submissionIds: z.array(z.uuid()).optional(),
 })
-export type StudentChallenge = z.infer<typeof StudentChallengeSchema>
+export type StudentChallengeSchema = z.infer<typeof StudentChallengeSchema>

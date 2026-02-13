@@ -85,6 +85,7 @@ export const logs = pgTable("logs", {
 
 export const users = pgTable("users", {
 	userId: uuid().defaultRandom().primaryKey().notNull(),
+	email: text().notNull().unique(),
 	role: role().notNull(),
 	name: text().notNull(),
 });

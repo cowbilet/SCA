@@ -1,5 +1,5 @@
 import { FieldApi, useForm } from '@tanstack/react-form'
-import { CreateProposalSchema } from '../../types/forms'
+import { CreateProposalSchema } from '../../types/schema/forms'
 export default function ProposalForm() {
     const form = useForm({
         defaultValues: {

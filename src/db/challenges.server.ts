@@ -2,8 +2,9 @@ import { Award } from "@/types/awards";
 import { studentChallenge, challengeProposals, challengeSubmission } from "@/db/schema.server";
 import { db } from "./index.server";
 import { and, eq } from "drizzle-orm/sql/expressions/conditions";
-import { StudentChallenge } from "@/types/schemas/challenges";
-export async function getDbUserAwardChallenges(userId: string, award: Award, userType: "student"): Promise<StudentChallenge[]> {
+import type { StudentChallengeSchema } from "@/types/schemas/challenges";
+import { Challenge } from "@/types/challenges";
+export async function getDbUserAwardChallenges(userId: string, award: Award, userType: "student"): Promise<StudentChallengeSchema[]> {
     const rawChallenges = await db.select({
         award: studentChallenge.award,
         challenge: studentChallenge.challenge,
@@ -16,7 +17,7 @@ export async function getDbUserAwardChallenges(userId: string, award: Award, use
 
     const proposals = (await db.select({ proposalId: challengeProposals.proposalId }).from(challengeProposals).where(eq(challengeProposals.studentId, userId))).map(p => p.proposalId);
     const submissions = (await db.select({ submissionId: challengeSubmission.submissionId }).from(challengeSubmission).where(eq(challengeSubmission.studentId, userId))).map(s => s.submissionId);
-    const challenges: StudentChallenge[] = rawChallenges.map(challenge => ({
+    const challenges: StudentChallengeSchema[] = rawChallenges.map(challenge => ({
         award: challenge.award,
         challenge: challenge.challenge,
         proposalStatus: challenge.proposalStatus,
