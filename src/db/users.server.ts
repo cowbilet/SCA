@@ -13,6 +13,6 @@ export async function getDbUserByName(name: string) {
         .where(eq(users.name, name)).limit(1)
 }
 export async function getDbUserByEmail(email: string) {
-    return await db.select().from(users)
-        .where(eq(users.email, email)).limit(1)
+    return (await db.select().from(users)
+        .where(eq(users.email, email)))
 }

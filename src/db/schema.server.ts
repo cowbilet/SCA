@@ -21,7 +21,8 @@ export const challengeProposals = pgTable("challenge_proposals", {
 	challenge: challenge().notNull(),
 	description: text().notNull(),
 	goal: text().notNull(),
-	assessorId: uuid().notNull(),
+	mentorId: uuid().notNull(),
+	assessorId: uuid(),
 	mentorNote: text(),
 	assessorNote: text(),
 	accepted: boolean(),
@@ -30,6 +31,11 @@ export const challengeProposals = pgTable("challenge_proposals", {
 			columns: [table.assessorId],
 			foreignColumns: [assessors.assessorId],
 			name: "challenge_proposals_assessorId_fkey"
+		}),
+	foreignKey({
+			columns: [table.mentorId],
+			foreignColumns: [users.userId],
+			name: "challenge_proposals_mentorId_fkey"
 		}),
 	foreignKey({
 			columns: [table.studentId, table.award, table.challenge],

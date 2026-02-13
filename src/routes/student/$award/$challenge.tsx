@@ -32,7 +32,7 @@ export const Route = createFileRoute('/student/$award/$challenge')({
 function RouteComponent() {
     const { challenge } = Route.useParams()
     const challengeData = Route.useLoaderData()
-
+    console.log(challengeData)
     return (
         <div className='h-full'>
             

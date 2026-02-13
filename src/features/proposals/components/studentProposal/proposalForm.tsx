@@ -1,14 +1,19 @@
 import { useForm } from '@tanstack/react-form'
 import { CreateProposalSchema } from '../../types/schema/forms'
-
+import { useParams } from '@tanstack/react-router'
 import { getUserByEmail } from '@/api/users'
+import { useCreateChallenge } from '../../hooks/useCreateChallenge'
+import { clsx } from 'clsx'
+import { LoaderCircle } from 'lucide-react'
+
 export default function ProposalForm() {
+    const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
+    const { mutate: createChallenge, isPending, isError } = useCreateChallenge(award, challenge)
     const form = useForm({
         defaultValues: {
-            title: '',
             mentorEmail: '',
             description: '',
-            goals: '',
+            goal: '',
         },
         validators: {
             onSubmit: CreateProposalSchema,
@@ -42,6 +47,9 @@ export default function ProposalForm() {
                     }
                 }
             }
+        },
+        onSubmit: async ({value}) => {
+            createChallenge(value)
         }
     })
     return (
@@ -52,23 +60,6 @@ export default function ProposalForm() {
             }}
             className="flex flex-col gap-4 p-4 flex-1"
         >
-            <form.Field name="title">
-                {(field) => (
-                    <div className="flex flex-col">
-                        <FormLabel>Proposal Title</FormLabel>
-                        <input 
-                            type="text"
-                            value={field.state.value}
-                            onBlur={field.handleBlur}
-                            onChange={(e) => field.handleChange(e.target.value)}
-                            className="border border-gray-300 rounded p-2"
-                        />
-                        {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
-                        )}
-                    </div>
-                )}
-            </form.Field>
             <form.Field name="mentorEmail">
                 {(field) => (
                     <div className="flex flex-col">
@@ -78,6 +69,7 @@ export default function ProposalForm() {
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
+
                             className="border border-gray-300 rounded p-2"
                         />
                         {!field.state.meta.isValid && (
@@ -102,7 +94,7 @@ export default function ProposalForm() {
                     </div>
                 )}
             </form.Field>
-            <form.Field name="goals">
+            <form.Field name="goal">
                 {(field) => (
                     <div className="flex flex-col flex-1">
                         <FormLabel>Goals and Objectives</FormLabel>
@@ -120,9 +112,11 @@ export default function ProposalForm() {
             </form.Field>
             <button
                 type="submit"
-                className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition"
+                className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {
+                    "opacity-50 hover:cursor-not-allowed": isPending,
+                })}
             >
-                Submit Proposal
+                {isPending ? <LoaderCircle className="animate-spin" /> : 'Submit Proposal'}
             </button>
         </form>
     )
