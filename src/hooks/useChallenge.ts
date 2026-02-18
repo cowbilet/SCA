@@ -6,7 +6,6 @@ import { queryOptions } from '@tanstack/react-query'
 export const challengeQueryOptions = (award: Award, challenge: Challenge) => (queryOptions({
     queryKey: ['challenges', award, challenge],
     queryFn: () => getUserChallenge({data: {award, challenge}}),
-
 }))
 export function useChallenge(
     award: Award, 

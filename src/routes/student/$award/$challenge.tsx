@@ -26,7 +26,7 @@ export const Route = createFileRoute('/student/$award/$challenge')({
     loader: async ({ params, context: { queryClient } }) => {
         const { award, challenge } = params
         const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge))
-        if (data && data['proposalStatus'] === 'not started') {
+        if (data && data['proposalStatus'] !== 'not started') {
             await queryClient.ensureQueryData(proposalQueryOptions(award, challenge))
         }
         return data

@@ -4,7 +4,7 @@ import { Award } from "@/types/awards";
 import { Challenge } from "@/types/challenges";
 
 export const proposalQueryOptions = (award: Award, challenge: Challenge) => (queryOptions({
-    queryKey: ['challenges', award, challenge],
+    queryKey: ['proposals', award, challenge],
     queryFn: () => getUserProposal({data: {award, challenge}}),
 }))
 export function useProposal(award: Award, challenge: Challenge) {
