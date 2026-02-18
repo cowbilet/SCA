@@ -5,7 +5,7 @@ export const awardTiers = pgEnum("award_tiers", ['bronze', 'silver', 'gold'])
 export const challenge = pgEnum("challenge", ['challenge', 'service', 'relationships', 'community'])
 export const location = pgEnum("location", ['NSW', 'VIC', 'WA', 'QLD', 'TAS', 'SA', 'NAT'])
 export const role = pgEnum("role", ['student', 'mentor'])
-export const status = pgEnum("submission_status", ['not started', 'pending mentor', 'rejected mentor', 'pending assessor', 'rejected assessor', 'completed'])
+export const status = pgEnum("submission_status", ['not started', 'withdrawn', 'pending mentor', 'rejected mentor', 'pending assessor', 'rejected assessor', 'completed'])
 
 
 export const assessors = pgTable("assessors", {

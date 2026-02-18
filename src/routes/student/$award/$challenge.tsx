@@ -5,8 +5,7 @@ import ChallengeShell from '@/components/student/challenge'
 import {z} from 'zod'
 import { challengeQueryOptions } from '@/hooks/useChallenge'
 import type { JSX } from 'react'
-import ViewProposal from '@/features/proposals/components/studentProposal/viewProposal'
-import SubmitProposal from '@/features/proposals/components/studentProposal/submitProposal'
+import { ActiveProposal, SubmitProposal } from '@/features/proposals/components/studentProposal/proposal'
 import { SubmissionState } from '@/types/awards'
 import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
 const challengeSchema = z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
@@ -34,11 +33,11 @@ export const Route = createFileRoute('/student/$award/$challenge')({
 })
 const proposalComponents: Record<SubmissionState, (props: {proposalStatus: SubmissionState}) => JSX.Element> = {
     'not started': ({proposalStatus}) => <SubmitProposal proposalStatus={proposalStatus} />,
-
-    'pending mentor': ({proposalStatus}) => <ViewProposal proposalStatus={proposalStatus} />,
-    'pending assessor': ({proposalStatus}) => <div className='p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded'>Your proposal has been approved by your mentor and is now pending review by the assessor.</div>,
-    'rejected mentor': ({proposalStatus}) => <div className='p-4 bg-red-100 border border-red-400 text-red-700 rounded'>Your proposal has been rejected. Please review the feedback from your mentor and submit a new proposal.</div>,
-    'rejected assessor': ({proposalStatus}) => <div className='p-4 bg-red-100 border border-red-400 text-red-700 rounded'>Your proposal has been rejected by the assessor. Please review the feedback and submit a new proposal.</div>,
+    'withdrawn': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
+    'pending mentor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
+    'pending assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
+    'rejected mentor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
+    'rejected assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
     'completed': ({proposalStatus}) => <div className='p-4 bg-green-100 border border-green-400 text-green-700 rounded'>Your proposal has been approved! You can now start logging activities for this challenge.</div>,
 }
 function RouteComponent() {
@@ -48,7 +47,6 @@ function RouteComponent() {
     
     return (
         <div className='h-full'>
-            
             <ChallengeShell challenge={challenge}>
                 {proposalComponents[challengeData?.proposalStatus ?? 'not started']({proposalStatus: challengeData?.proposalStatus ?? 'not started'})}
             </ChallengeShell>

@@ -108,6 +108,7 @@ const ChallengeStatuses: Record<SubmissionState, React.ReactNode> = {
     'pending mentor': 'Pending mentor review',
     'rejected assessor': 'Rejected by assessor',
     'rejected mentor': 'Rejected by mentor',
+    'withdrawn': 'Withdrawn',
     'completed': 'Completed',
 }
 // Has to be a seperate component otherwhise there will be more hooks called in the component than in the parent which causes rules of hooks errors

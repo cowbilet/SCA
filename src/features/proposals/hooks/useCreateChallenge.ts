@@ -1,4 +1,4 @@
-import { createUserProposal } from '../api/proposals';
+import { createUserProposal } from '../api/createProposals';
 import { Award } from "@/types/awards";
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';

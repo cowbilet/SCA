@@ -5,11 +5,18 @@ import { getUserByEmail } from '@/api/users'
 import { useCreateChallenge } from '../../hooks/useCreateChallenge'
 import { clsx } from 'clsx'
 import { LoaderCircle } from 'lucide-react'
-
-export default function ProposalForm({values}: {values?: {mentorEmail: string, description: string, goal: string}}) {
+interface ProposalFormProps {
+    values?: {
+        mentorEmail: string,
+        description: string,
+        goal: string,
+    }
+    disabled?: boolean,
+}
+export default function ProposalForm({values, disabled}: ProposalFormProps) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
     const { mutate: createChallenge, isPending } = useCreateChallenge(award, challenge)
-    const isDisabled = values !== undefined ? true : isPending
+    const isDisabled = disabled || isPending
     const form = useForm({
         defaultValues: {
             mentorEmail: values?.mentorEmail ?? '',
