@@ -1,8 +1,9 @@
 import { Card } from "@/components/card";
 import { NotificationBody, NotificationHeader, Notification } from "@/components/notification";
 import ProposalForm from "./proposalForm";
+import { SubmissionState } from "@/types/awards";
 
-export default function SubmitProposal({challenge}: {challenge: string}) {
+export default function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
         <Card className="h-full flex flex-col">
             <Notification className="bg-blue-100 border-blue-500">

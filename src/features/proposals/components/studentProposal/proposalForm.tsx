@@ -6,14 +6,15 @@ import { useCreateChallenge } from '../../hooks/useCreateChallenge'
 import { clsx } from 'clsx'
 import { LoaderCircle } from 'lucide-react'
 
-export default function ProposalForm() {
+export default function ProposalForm({values}: {values?: {mentorEmail: string, description: string, goal: string}}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
-    const { mutate: createChallenge, isPending, isError } = useCreateChallenge(award, challenge)
+    const { mutate: createChallenge, isPending } = useCreateChallenge(award, challenge)
+    const isDisabled = values !== undefined ? true : isPending
     const form = useForm({
         defaultValues: {
-            mentorEmail: '',
-            description: '',
-            goal: '',
+            mentorEmail: values?.mentorEmail ?? '',
+            description: values?.description ?? '',
+            goal: values?.goal ?? '',
         },
         validators: {
             onSubmit: CreateProposalSchema,
@@ -70,7 +71,10 @@ export default function ProposalForm() {
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
 
-                            className="border border-gray-300 rounded p-2"
+                            className={clsx("border border-gray-300 rounded p-2", {
+                                "opacity-50 cursor-not-allowed": isDisabled,
+                            })}
+                            disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
                             <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
@@ -86,7 +90,10 @@ export default function ProposalForm() {
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
-                            className="border border-gray-300 rounded p-2 flex-auto resize-y"
+                            className={clsx("border border-gray-300 rounded p-2 flex-auto resize-y", {
+                                "opacity-50 cursor-not-allowed": isDisabled,
+                            })}
+                            disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
                             <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
@@ -102,7 +109,10 @@ export default function ProposalForm() {
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
-                            className="border border-gray-300 rounded p-2 flex-auto resize-y"
+                            className={clsx("border border-gray-300 rounded p-2 flex-auto resize-y", {
+                                "opacity-50 cursor-not-allowed": isDisabled,
+                            })}
+                            disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
                             <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
@@ -113,12 +123,25 @@ export default function ProposalForm() {
             <button
                 type="submit"
                 className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {
-                    "opacity-50 hover:cursor-not-allowed": isPending,
+                    "opacity-50 hover:cursor-not-allowed": isPending || isDisabled,
                 })}
+                disabled={isPending || isDisabled}
             >
                 {isPending ? <LoaderCircle className="animate-spin" /> : 'Submit Proposal'}
             </button>
         </form>
+    )
+}
+export function ProposalFormButton({disabled}: {disabled?: boolean}) {
+    return (
+        <button
+            className={clsx("text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {
+                "opacity-50 hover:cursor-not-allowed": disabled,
+            })}
+            disabled={disabled}
+        >
+            {disabled ? 'Proposal Under Review' : 'Edit Proposal'}
+        </button>
     )
 }
 function FormLabel({children}: {children: React.ReactNode}) {
