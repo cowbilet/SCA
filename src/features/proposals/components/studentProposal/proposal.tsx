@@ -5,9 +5,11 @@ import { SubmissionState } from "@/types/awards";
 import { useParams } from "@tanstack/react-router";
 import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { LoaderCircle } from "lucide-react";
+import Notifications from "./notifications";
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
         <Card className="h-full flex flex-col">
+            <Notifications state={proposalStatus} />
             <ProposalForm />
         </Card>
     )
@@ -32,6 +34,7 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
     }
     return (
         <Card className="h-full flex flex-col">
+            <Notifications proposal={proposalData} state={proposalStatus} />
             <ProposalForm values={proposalData} disabled={disabledStates.includes(proposalStatus)} />
         </Card>
     )

@@ -3,7 +3,7 @@ import clsx from "clsx"
 
 export function Notification({ className, ...props }: ComponentProps<'div'>) {
     return (
-        <div className={clsx(" shadow border-l-4 p-4", className)} {...props}>
+        <div className={clsx(" shadow border-l-4 p-4 mb-4", className)} {...props}>
             {props.children}
         </div>
     )

@@ -22,7 +22,7 @@ export async function editDbChallengeProposal(proposalId: string, description: s
     }).where(eq(challengeProposals.proposalId, proposalId)).returning({ proposalId: challengeProposals.proposalId });
 }
 export async function getDbChallengeProposal(studentId: string, award: Award, challenge: Challenge): Promise<Proposal[]> {
-    return await db.select({
+    const current = await db.select({
         proposalId: challengeProposals.proposalId,
         studentId: challengeProposals.studentId,
         award: challengeProposals.award,
@@ -38,10 +38,11 @@ export async function getDbChallengeProposal(studentId: string, award: Award, ch
             eq(challengeProposals.studentId, studentId),
             eq(challengeProposals.award, award),
             eq(challengeProposals.challenge, challenge),
-            isNull(challengeProposals.accepted),
+            // TODO: Assuming that there will only be 1 proposal per challenge per student, but we may want to allow multiple proposals in the future
+            // isNull(challengeProposals.accepted),
         )
     ).innerJoin(users, eq(challengeProposals.mentorId, users.userId)).limit(1);
-
+    return current
 }
 export async function dbChangeProposalStatus(proposalId: string, status: 'rejected mentor' | 'pending assessor' , note?: string): Promise<void>;
 export async function dbChangeProposalStatus(proposalId: string, status: 'completed' | 'rejected assessor', note?: string, assessorId?: string): Promise<void>;

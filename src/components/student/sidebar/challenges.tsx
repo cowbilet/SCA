@@ -127,6 +127,7 @@ function ActiveActivityCard({ title, iconStyle, challenge, icon, className }: Ac
                 award: params.award,
                 challenge: challenge
             }}
+            draggable={false}
             className='w-full'
         >   
             {({ isActive }) => (

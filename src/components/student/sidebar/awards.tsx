@@ -59,6 +59,7 @@ function AwardCard({award}: {award: Award}) {
             params={{
                 award: award
             }}
+            draggable={false}
         >
             {({ isActive }) => (
                 <div 
