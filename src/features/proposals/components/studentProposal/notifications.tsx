@@ -90,7 +90,6 @@ const rejectedClasses: Record<Exclude<SubmissionState, 'not started' | 'pending 
 }
 function generateFeedbackNotifications(proposal: Proposal, state: Exclude<SubmissionState, 'not started' | 'pending mentor'>) {
     const notifications = []
-    
     if (proposal.mentorNote) {
         // TODO: This is hacky
         let newState: SubmissionState = state

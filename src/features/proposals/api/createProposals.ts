@@ -21,7 +21,7 @@ const createUserProposalSchema = CreateProposalSchema.extend({
         message: 'Invalid challenge',
     }),
 })
-export const createUserProposal = createServerFn({ method: 'POST' }).inputValidator(createUserProposalSchema).handler(async ({data}): Promise<void> => {
+export const createUserProposal = createServerFn({ method: 'POST' }).inputValidator(createUserProposalSchema).handler(async ({data}): Promise<Proposal> => {
     const { description, goal, mentorEmail, award, challenge } = data
     // Validate mentor email
     const mentor = await getDbUserByEmail(mentorEmail)
@@ -48,7 +48,7 @@ export const createUserProposal = createServerFn({ method: 'POST' }).inputValida
         await dbChangeProposalStatus(proposal[0].proposalId, 'pending mentor')
     }
 
-    await createDbChallengeProposal(studentId, mentorId, award, challenge, description, goal)
+    return (await createDbChallengeProposal(studentId, mentorId, award, challenge, description, goal))[0]
 })
 const getUserProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {

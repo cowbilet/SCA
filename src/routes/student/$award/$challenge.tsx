@@ -3,7 +3,7 @@ import { Challenge } from '@/types/challenges'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import ChallengeShell from '@/components/student/challenge'
 import {z} from 'zod'
-import { challengeQueryOptions } from '@/hooks/useChallenge'
+import { challengeQueryOptions, useChallenge } from '@/hooks/useChallenge'
 import type { JSX } from 'react'
 import { ActiveProposal, SubmitProposal } from '@/features/proposals/components/studentProposal/proposal'
 import { SubmissionState } from '@/types/awards'
@@ -41,8 +41,8 @@ const proposalComponents: Record<SubmissionState, (props: {proposalStatus: Submi
     'completed': ({proposalStatus}) => <div className='p-4 bg-green-100 border border-green-400 text-green-700 rounded'>Your proposal has been approved! You can now start logging activities for this challenge.</div>,
 }
 function RouteComponent() {
-    const { challenge } = Route.useParams()
-    const challengeData = Route.useLoaderData()
+    const { challenge, award } = Route.useParams()
+    const {data: challengeData} = useChallenge(award, challenge)
     
     
     return (

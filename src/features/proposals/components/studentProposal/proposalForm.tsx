@@ -15,7 +15,7 @@ interface ProposalFormProps {
 }
 export default function ProposalForm({values, disabled}: ProposalFormProps) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
-    const { mutate: createChallenge, isPending } = useCreateChallenge(award, challenge)
+    const { mutate: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
     const isDisabled = disabled || isPending
     const form = useForm({
         defaultValues: {
@@ -127,6 +127,12 @@ export default function ProposalForm({values, disabled}: ProposalFormProps) {
                     </div>
                 )}
             </form.Field>
+            {/* //TODO: Add error handling for submission failure (e.g. network error, server error) */}
+            {isError && (
+                <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {error instanceof Error ? error.message : 'An error occurred while submitting your proposal. Please try again.'}
+                </div>
+            )}
             <button
                 type="submit"
                 className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {

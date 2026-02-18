@@ -5,15 +5,32 @@ import { Award, SubmissionState } from "@/types/awards";
 import { eq, and, isNull } from "drizzle-orm";
 import { Proposal } from "@/types/proposal";
 
-export async function createDbChallengeProposal(studentId: string, mentorId: string, award: Award, challenge: Challenge, description: string, goal: string) {
-    return await db.insert(challengeProposals).values({
+export async function createDbChallengeProposal(studentId: string, mentorId: string, award: Award, challenge: Challenge, description: string, goal: string): Promise<Proposal[]> {
+    const inserted = await db.insert(challengeProposals).values({
         challenge,
         studentId,
         award,
         description,
         goal,
         mentorId
-    }).returning({ proposalId: challengeProposals.proposalId });
+    }).returning({
+        proposalId: challengeProposals.proposalId,
+        studentId: challengeProposals.studentId,
+        award: challengeProposals.award,
+        challenge: challengeProposals.challenge,
+        description: challengeProposals.description,
+        goal: challengeProposals.goal,
+        mentorNote: challengeProposals.mentorNote,
+        assessorNote: challengeProposals.assessorNote,
+        accepted: challengeProposals.accepted,
+    });
+    
+    const mentor = await db.select({ email: users.email }).from(users).where(eq(users.userId, mentorId)).limit(1);
+    
+    return inserted.map(proposal => ({
+        ...proposal,
+        mentorEmail: mentor[0].email,
+    }));
 }
 export async function editDbChallengeProposal(proposalId: string, description: string, goal: string) {
     return await db.update(challengeProposals).set({
