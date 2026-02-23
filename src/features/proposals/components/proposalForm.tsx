@@ -1,10 +1,13 @@
 import { useForm } from '@tanstack/react-form'
-import { CreateProposalSchema } from '../../types/schema/forms'
+import { CreateProposalSchema } from '../types/schema/forms'
 import { useParams } from '@tanstack/react-router'
 import { getUserByEmail } from '@/api/users/getUserByEmail'
-import { useCreateChallenge } from '../../hooks/useCreateChallenge'
+import { useCreateChallenge } from '../hooks/useCreateChallenge'
 import { clsx } from 'clsx'
-import { LoaderCircle } from 'lucide-react'
+import { FunctionComponent } from 'react'
+import type { Award } from '@/types/awards'
+import type { Challenge } from '@/types/challenges'
+
 interface ProposalFormProps {
     values?: {
         mentorEmail: string,
@@ -12,9 +15,18 @@ interface ProposalFormProps {
         goal: string,
     }
     disabled?: boolean,
+    Button?: FunctionComponent<{isDisabled: boolean, isPending: boolean}>,
+    award?: Award,
+    challenge?: Challenge,
 }
-export default function ProposalForm({values, disabled}: ProposalFormProps) {
-    const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
+export default function ProposalForm({values, disabled, Button, award: awardProp, challenge: challengeProp}: ProposalFormProps) {
+    let award: Award, challenge: Challenge
+    if (awardProp && challengeProp) {
+        award = awardProp
+        challenge = challengeProp
+    } else {
+        ({ award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true }))
+    }
     const { mutate: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
     const isDisabled = disabled || isPending
     const form = useForm({
@@ -133,15 +145,7 @@ export default function ProposalForm({values, disabled}: ProposalFormProps) {
                     {error instanceof Error ? error.message : 'An error occurred while submitting your proposal. Please try again.'}
                 </div>
             )}
-            <button
-                type="submit"
-                className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {
-                    "opacity-50 hover:cursor-not-allowed": isPending || isDisabled,
-                })}
-                disabled={isPending || isDisabled}
-            >
-                {isPending ? <LoaderCircle className="animate-spin" /> : 'Submit Proposal'}
-            </button>
+            {Button && <Button isDisabled={isDisabled} isPending={isPending} />}
         </form>
     )
 }

@@ -11,7 +11,7 @@ import { z } from 'zod'
 
 
 import { validateChallenge } from '@/types/guards/challenges'
-import { Proposal } from '@/types/proposal'
+import { Proposal } from '@/types/schemas/proposal'
 
 
 const getUserProposalSchema = z.object({

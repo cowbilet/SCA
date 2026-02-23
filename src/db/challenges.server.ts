@@ -22,7 +22,7 @@ export async function dbGetUserChallenge(userId: string, award: Award, challenge
     )).leftJoin(challengeProposalsSubquery, and(
         eq(studentChallenge.challenge, challengeProposalsSubquery.challenge),
         eq(challengeProposalsSubquery.award, award),
-        eq(challengeProposalsSubquery.studentId, challenge),
+        eq(challengeProposalsSubquery.studentId, userId),
     ))
     if (results.length === 0) {
         return null

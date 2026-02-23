@@ -2,7 +2,9 @@ import { Award } from "@/types/awards"
 import { usePendingProposals } from "@/hooks/usePendingProposals"
 import Skeleton from "react-loading-skeleton"
 import { Proposal, ProposalWithStudent } from "@/types/schemas/proposal"
+import { Challenge } from "@/types/challenges"
 export default function StudentList() {
+
     const {data: pendingProposals, isLoading, isError} = usePendingProposals()
     return (
         <div className="w-full h-full flex flex-col p-4 gap-4">
@@ -34,14 +36,18 @@ export default function StudentList() {
 }
 function StudentListItem({proposal}: {proposal: ProposalWithStudent}) {
     return (
-        <div className="w-full border-2  transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
-            <h1 className="text-base font-bold mr-0 text-black">{proposal.student.name}</h1>
+        <div className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
+            <div className="flex items-center gap-2">
+                <h1 className="text-base font-bold mr-0 text-black">{proposal.student.name}</h1>
+
+            </div>
             <p className="text-gray-500 text-xs min-h-5">
                 {proposal.student.email}
             </p>
-            <div className="flex flex-row justify-between">
-                <PendingProposalTag />
+            <div className="flex flex-row justify-start gap-2">
+                <ChallengeTag challenge={proposal.proposal.challenge} />
                 <AwardTag award={proposal.proposal.award} />
+                <PendingProposalTag />
             </div>
         </div>
     )
@@ -50,6 +56,32 @@ function PendingProposalTag() {
     return (
         <span className="text-yellow-700 bg-yellow-100 border border-yellow-500 px-2 py-1 rounded text-xs font-semibold">
             Pending Proposal
+        </span>
+    )
+}
+const challenges: Record<Challenge, { title: string, cardStyle: string }> = {
+    relationships: { 
+        title: 'Relationships', 
+        cardStyle: 'bg-blue-500/25 border-blue-500! hover:bg-blue-500/25!',
+    },
+    challenge: { 
+        title: 'Challenge', 
+        cardStyle: 'bg-green-500/25 border-green-500! hover:bg-green-500/25!',
+    },
+    community: { 
+        title: 'Community', 
+        cardStyle: 'bg-red-500/25 border-red-500! hover:bg-red-500/25!', 
+    },
+    service: { 
+        title: 'Service', 
+        cardStyle: 'bg-purple-500/25 border-purple-500! hover:bg-purple-500/25!',
+    },
+}
+function ChallengeTag({challenge}: {challenge: Challenge}) {
+    const challengeData = challenges[challenge]
+    return (
+        <span className={`text-gray-700 bg-gray-100 border ${challengeData.cardStyle} px-2 py-1 rounded text-xs font-semibold`}>
+            {challengeData.title}
         </span>
     )
 }

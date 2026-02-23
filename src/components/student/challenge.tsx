@@ -1,5 +1,6 @@
 import { Challenge } from "@/types/challenges"
 import { BookOpen, HandPlatter, Users, Zap } from "lucide-react"
+import MainHeaderShell from "../mainHeaderShell"
 interface ChallengeProps {
     challenge: Challenge
     children?: React.ReactNode
@@ -41,15 +42,6 @@ const ChallengeStyles: Record<Challenge, { title: string, style: string, icon: R
 function ChallengeHeader({ challenge }: ChallengeProps) {
     const { title, style, icon } = ChallengeStyles[challenge]
     return (
-        <div className={`flex gap-4 w-full h-32 ${style} flex-col p-8 justify-center`}>
-            <div className="flex items-center gap-4">
-                {icon}
-                <div className="flex flex-col">
-                    <h1 className="text-2xl font-bold capitalize text-white">{title}</h1>
-                    <p className="text-white/90">View your progress and awards for the {title} challenge.</p>
-                </div>
-            </div>
-            
-        </div>
+        <MainHeaderShell title={title} icon={icon} description={`View your progress and awards for the ${title} challenge.`} className={style} />
     )
 }

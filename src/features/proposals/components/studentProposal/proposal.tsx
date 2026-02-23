@@ -1,15 +1,19 @@
 import { Card } from "@/components/card";
-import ProposalForm from "./proposalForm";
+import ProposalForm from "../proposalForm";
 import { SubmissionState } from "@/types/awards";
 import { useParams } from "@tanstack/react-router";
 import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { LoaderCircle } from "lucide-react";
 import Notifications from "./notifications";
+import { clsx } from "clsx";
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
         <Card className="h-full flex flex-col">
             <Notifications state={proposalStatus} />
-            <ProposalForm />
+            <ProposalForm 
+                disabled={true}
+                Button={SubmitButton}
+            />
         </Card>
     )
 }
@@ -34,7 +38,24 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
     return (
         <Card className="h-full flex flex-col">
             <Notifications proposal={proposalData} state={proposalStatus} />
-            <ProposalForm values={proposalData} disabled={disabledStates.includes(proposalStatus)} />
+            <ProposalForm 
+                values={proposalData} 
+                disabled={disabledStates.includes(proposalStatus)} 
+                Button={SubmitButton}
+            />
         </Card>
+    )
+}
+function SubmitButton({isDisabled, isPending}: {isDisabled: boolean, isPending: boolean}) {
+    return (
+        <button
+            type="submit"
+            className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {
+                "opacity-50 hover:cursor-not-allowed": isPending || isDisabled,
+            })}
+            disabled={isPending || isDisabled}
+        >
+            {isPending ? <LoaderCircle className="animate-spin" /> : 'Submit Proposal'}
+        </button>
     )
 }

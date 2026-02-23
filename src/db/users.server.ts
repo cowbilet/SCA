@@ -29,3 +29,11 @@ export async function dbGetUserByEmail(email: string): Promise<User | null> {
     }
     return user[0]
 }
+export async function dbGetUserById(userId: string): Promise<User | null> {
+    const user = await db.select().from(users)
+        .where(eq(users.userId, userId)).limit(1)
+    if (user.length === 0) {
+        return null
+    }
+    return user[0]
+}
