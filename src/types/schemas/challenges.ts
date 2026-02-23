@@ -1,21 +1,22 @@
 import { z } from "zod";
 import { validateChallenge } from "@/types/guards/challenges";
-import { status } from "@/db/schema.server";
+import { challenge, status } from "@/db/schema.server";
 import { validateAward } from "../guards/awards";
+import { ProposalSchema } from "./proposal";
 export const StudentChallengeSchema = z.object({
-    award: z.string().refine((award) => validateAward(award), {
+    mentorId: z.uuid(),
+    studentId: z.uuid(),
+    award: z.string().refine((award): award is string => validateAward(award), {
         message: 'Invalid award',
     }),
-    challenge: z.string().refine((challenge) => validateChallenge(challenge), {
+    challenge: z.string().refine((challenge): challenge is string => validateChallenge(challenge), {
         message: 'Invalid challenge',
     }),
-    proposalStatus: z.string().refine((state): state is typeof status.enumValues[number] => status.enumValues.includes(state as typeof status.enumValues[number]), {
-        message: 'Invalid proposal status',
-    }),
-    submissionStatus: z.string().refine((state): state is typeof status.enumValues[number] => status.enumValues.includes(state as typeof status.enumValues[number]), {
-        message: 'Invalid submission status',
-    }),
-    proposalIds: z.array(z.uuid()).optional(),
-    submissionIds: z.array(z.uuid()).optional(),
 })
-export type StudentChallengeSchema = z.infer<typeof StudentChallengeSchema>
+export const StudentChallengeWithProposalAndSubmissionSchema = z.object({
+    student_challenge: StudentChallengeSchema,
+    proposals: ProposalSchema.nullable(),
+    // submissionStatus: null,
+})
+export type StudentChallengeWithProposalAndSubmission = z.infer<typeof StudentChallengeWithProposalAndSubmissionSchema>
+export type StudentChallenge = z.infer<typeof StudentChallengeSchema>

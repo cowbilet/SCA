@@ -1,0 +1,20 @@
+import { createServerFn } from '@tanstack/react-start'
+import { dbGetUserByEmail,  } from "@/db/users.server";
+import type { User } from "@/types/schemas/users";
+import { z } from "zod";
+const userEmailSchema = z.object({
+    email: z.email(),
+})
+//TODO: Ratelimit this endpoint to prevent scraping
+
+export const getUserByEmail = createServerFn({ method: 'GET' }).inputValidator(userEmailSchema).handler(async ({data}): Promise<User> => {
+    const user = await dbGetUserByEmail(data.email)
+    if (!user) {
+        throw new Error("User not found")
+    }
+    return {
+        userId: user.userId,
+        email: user.email,
+        role: user.role,
+    }
+})

@@ -1,30 +1,24 @@
-import { StudentChallengeSchema } from '@/types/schemas/challenges';
-import { createUserProposal } from '../api/createProposals';
+import { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges';
+import { createUserProposal } from '../api/createUserProposal';
 import { Award } from "@/types/awards";
+import { Challenge } from "@/types/challenges";
+import { Proposal } from '@/types/proposal';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
-export function useCreateChallenge(award: Award, challenge: string) {
+export function useCreateChallenge(award: Award, challenge: Challenge) {
     const queryClient = useQueryClient();
     const router = useRouter()
     return useMutation({
         mutationFn: (data: { mentorEmail: string, description: string, goal: string }) => createUserProposal({ data: { ...data, award, challenge } }),
         onMutate: async (newProposal) => {
-            // Optionally, you can perform optimistic updates here if you want the UI to reflect the new proposal immediately
-            // For example, you could add the new proposal to the cache with a temporary ID
             await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge] })
-            const tempId = `temp-${Date.now()}`
-            queryClient.setQueryData(['challenges', award, challenge], (oldData: StudentChallengeSchema): StudentChallengeSchema => {
-                if (!oldData) return oldData
-                return {
-                    ...oldData,
-                    proposalIds: [...(oldData.proposalIds || []), tempId],
-                    submissionStatus: 'pending mentor', // Assuming the new proposal starts with 'pending mentor' status
-                }
-            })
-            queryClient.setQueryData(['proposals', award, challenge], {
-                proposalId: tempId,
-                studentId: -1, // You might want to set this to the actual student ID if available
+            await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge] })
+
+            const previousChallenge = queryClient.getQueryData<StudentChallengeWithProposalAndSubmission | null>(['challenges', award, challenge])
+            const previousProposal = queryClient.getQueryData<Proposal | null>(['proposals', award, challenge])
+
+            const optimisticProposal: Proposal = {
                 award,
                 challenge,
                 description: newProposal.description,
@@ -33,38 +27,49 @@ export function useCreateChallenge(award: Award, challenge: string) {
                 assessorNote: null,
                 accepted: null,
                 mentorEmail: newProposal.mentorEmail,
-            })
-            return { tempId }
-        },
-        onError: async (error, newProposal, context) => {
-            // If the mutation fails, you can roll back the optimistic update using the context returned from onMutate
-            if (context?.tempId) {
-                await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge] })
-
-                queryClient.setQueryData(['challenges', award, challenge], (oldData: StudentChallengeSchema): StudentChallengeSchema => {
-                    if (!oldData) return oldData
-                    return {
-                        ...oldData,
-                        proposalIds: oldData.proposalIds?.filter(id => id !== context.tempId) || [],
-                    }
-                })
-                queryClient.removeQueries({ queryKey: ['proposals', award, challenge] })
+                status: 'pending mentor',
             }
-        },
-        onSuccess: async (data, variables, context) => {
-            // Invalidate any queries related to proposals to ensure fresh data
-            await queryClient.invalidateQueries({ queryKey: ['proposals', award, challenge] })
-            await queryClient.invalidateQueries({ queryKey: ['challenges', award, challenge] })
-            await router.invalidate({sync: true})
-            await queryClient.setQueryData(['proposals', award, challenge], data)
-            queryClient.setQueryData(['challenges', award, challenge], (oldData: StudentChallengeSchema): StudentChallengeSchema => {
+
+            queryClient.setQueryData(['challenges', award, challenge], (oldData: StudentChallengeWithProposalAndSubmission | null): StudentChallengeWithProposalAndSubmission | null => {
                 if (!oldData) return oldData
                 return {
                     ...oldData,
-                    proposalIds: data.proposalId ? [...(oldData.proposalIds || []), data.proposalId] : oldData.proposalIds,
+                    proposals: {
+                        ...(oldData.proposals ?? optimisticProposal),
+                        ...optimisticProposal,
+                    },
                 }
             })
 
+            queryClient.setQueryData<Proposal | null>(['proposals', award, challenge], optimisticProposal)
+
+            return { previousChallenge, previousProposal }
+        },
+        onError: async (_error, _newProposal, context) => {
+            await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge] })
+            await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge] })
+
+            if (context) {
+                queryClient.setQueryData(['challenges', award, challenge], context.previousChallenge ?? null)
+                queryClient.setQueryData(['proposals', award, challenge], context.previousProposal ?? null)
+            } else {
+                queryClient.removeQueries({ queryKey: ['proposals', award, challenge], exact: true })
+            }
+        },
+        onSuccess: async (data) => {
+            await queryClient.setQueryData(['proposals', award, challenge], data)
+
+            queryClient.setQueryData(['challenges', award, challenge], (oldData: StudentChallengeWithProposalAndSubmission | null): StudentChallengeWithProposalAndSubmission | null => {
+                if (!oldData) return oldData
+                return {
+                    ...oldData,
+                    proposals: data,
+                }
+            })
+
+            await router.invalidate({sync: true})
+            await queryClient.invalidateQueries({ queryKey: ['proposals', award, challenge] })
+            await queryClient.invalidateQueries({ queryKey: ['challenges', award, challenge] })
         }
     })
 }

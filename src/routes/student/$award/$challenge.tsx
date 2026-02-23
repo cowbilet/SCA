@@ -25,7 +25,7 @@ export const Route = createFileRoute('/student/$award/$challenge')({
     loader: async ({ params, context: { queryClient } }) => {
         const { award, challenge } = params
         const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge))
-        if (data && data['proposalStatus'] !== 'not started') {
+        if (data && data.proposals?.status !== 'not started') {
             await queryClient.ensureQueryData(proposalQueryOptions(award, challenge))
         }
         return data
@@ -48,7 +48,11 @@ function RouteComponent() {
     return (
         <div className='h-full'>
             <ChallengeShell challenge={challenge}>
-                {proposalComponents[challengeData?.proposalStatus ?? 'not started']({proposalStatus: challengeData?.proposalStatus ?? 'not started'})}
+                {/* To prevent persistance of form */}
+                <div key={`${award}-${challenge}`} className='h-full'>
+                    {proposalComponents[challengeData?.proposals?.status ?? 'not started']({proposalStatus: challengeData?.proposals?.status ?? 'not started'})}
+
+                </div>
             </ChallengeShell>
         </div>
     )

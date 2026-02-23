@@ -1,4 +1,4 @@
-import { getUserChallenge } from "@/api/challenges";
+import { getUserChallenge } from "@/api/challenges/getStudentChallenge";
 import { Award } from "@/types/awards";
 import { Challenge } from "@/types/challenges";
 import { useQuery } from '@tanstack/react-query';

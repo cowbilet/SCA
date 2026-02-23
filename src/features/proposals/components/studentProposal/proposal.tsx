@@ -1,5 +1,4 @@
 import { Card } from "@/components/card";
-import { NotificationBody, NotificationHeader, Notification } from "@/components/notification";
 import ProposalForm from "./proposalForm";
 import { SubmissionState } from "@/types/awards";
 import { useParams } from "@tanstack/react-router";

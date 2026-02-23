@@ -1,5 +1,5 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { getUserProposal } from '../api/createProposals';
+import { getUserProposal } from '../api/getUserProposal';
 import { Award } from "@/types/awards";
 import { Challenge } from "@/types/challenges";
 

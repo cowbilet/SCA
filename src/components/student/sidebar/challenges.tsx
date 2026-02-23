@@ -119,7 +119,7 @@ function ActiveActivityCard({ title, iconStyle, challenge, icon, className }: Ac
         <Skeleton /> 
         : isError ? 
         'Error loading challenge status' 
-        : ChallengeStatuses[data?.proposalStatus ?? 'not started']
+        : ChallengeStatuses[data?.proposals?.status ?? 'not started'] ?? 'Unknown status'
     return (
         <Link
             to='/student/$award/$challenge'

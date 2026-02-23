@@ -5,7 +5,7 @@ export const awardTiers = pgEnum("award_tiers", ['bronze', 'silver', 'gold'])
 export const challenge = pgEnum("challenge", ['challenge', 'service', 'relationships', 'community'])
 export const location = pgEnum("location", ['NSW', 'VIC', 'WA', 'QLD', 'TAS', 'SA', 'NAT'])
 export const role = pgEnum("role", ['student', 'mentor'])
-export const status = pgEnum("submission_status", ['not started', 'withdrawn', 'pending mentor', 'rejected mentor', 'pending assessor', 'rejected assessor', 'completed'])
+export const status = pgEnum("application_states", ['not started', 'withdrawn', 'pending mentor', 'rejected mentor', 'pending assessor', 'rejected assessor', 'completed'])
 
 
 export const assessors = pgTable("assessors", {
@@ -15,7 +15,6 @@ export const assessors = pgTable("assessors", {
 });
 
 export const challengeProposals = pgTable("challenge_proposals", {
-	proposalId: uuid().defaultRandom().primaryKey().notNull(),
 	studentId: uuid().notNull(),
 	award: awardTiers().notNull(),
 	challenge: challenge().notNull(),
@@ -26,7 +25,9 @@ export const challengeProposals = pgTable("challenge_proposals", {
 	mentorNote: text(),
 	assessorNote: text(),
 	accepted: boolean(),
+	status: status().notNull(),
 }, (table) => [
+	primaryKey({ columns: [table.studentId, table.award, table.challenge], name: "challenge_proposals_pkey"}),
 	foreignKey({
 			columns: [table.assessorId],
 			foreignColumns: [assessors.assessorId],
@@ -45,7 +46,6 @@ export const challengeProposals = pgTable("challenge_proposals", {
 ]);
 
 export const challengeSubmission = pgTable("challenge_submission", {
-	submissionId: uuid().defaultRandom().primaryKey().notNull(),
 	studentId: uuid().notNull(),
 	award: awardTiers().notNull(),
 	challenge: challenge().notNull(),
@@ -55,6 +55,7 @@ export const challengeSubmission = pgTable("challenge_submission", {
 	assessorReflection: text(),
 	accepted: boolean(),
 }, (table) => [
+	primaryKey({ columns: [table.studentId, table.award, table.challenge], name: "challenge_submission_pkey"}),
 	foreignKey({
 			columns: [table.assessorId],
 			foreignColumns: [assessors.assessorId],
@@ -101,8 +102,6 @@ export const studentChallenge = pgTable("student_challenge", {
 	studentId: uuid().notNull(),
 	award: awardTiers().notNull(),
 	challenge: challenge().notNull(),
-	submissionStatus: status().notNull().default('not started'),
-	proposalStatus: status().notNull().default('not started'),
 }, (table) => [
 	foreignKey({
 			columns: [table.mentorId],

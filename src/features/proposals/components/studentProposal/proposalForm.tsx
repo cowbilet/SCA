@@ -1,7 +1,7 @@
 import { useForm } from '@tanstack/react-form'
 import { CreateProposalSchema } from '../../types/schema/forms'
 import { useParams } from '@tanstack/react-router'
-import { getUserByEmail } from '@/api/users'
+import { getUserByEmail } from '@/api/users/getUserByEmail'
 import { useCreateChallenge } from '../../hooks/useCreateChallenge'
 import { clsx } from 'clsx'
 import { LoaderCircle } from 'lucide-react'
