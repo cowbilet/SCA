@@ -1,0 +1,77 @@
+import { Award } from "@/types/awards"
+import { usePendingProposals } from "@/hooks/usePendingProposals"
+import Skeleton from "react-loading-skeleton"
+import { Proposal, ProposalWithStudent } from "@/types/schemas/proposal"
+export default function StudentList() {
+    const {data: pendingProposals, isLoading, isError} = usePendingProposals()
+    return (
+        <div className="w-full h-full flex flex-col p-4 gap-4">
+            <p className="text-gray-500 font-semibold">Pending</p>
+            <div className="flex flex-col gap-4">
+                {
+                    (() => {
+                        if (isLoading) {
+                            return <Skeleton count={3} height={80} className="mb-2" />
+                        }
+                        if (isError) {
+                            return (
+                                <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                                    Error loading pending proposals. Please try again later.
+                                </div>
+                            )
+                        }
+                        if (pendingProposals && pendingProposals.length > 0) {
+                            return pendingProposals.map((proposal) => (
+                                <StudentListItem proposal={proposal} key={`${proposal.student.userId}-${proposal.proposal.award}-${proposal.proposal.challenge}`} />
+                            ))
+                        }
+                    })()
+                }
+                
+            </div>
+        </div>
+    )
+}
+function StudentListItem({proposal}: {proposal: ProposalWithStudent}) {
+    return (
+        <div className="w-full border-2  transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
+            <h1 className="text-base font-bold mr-0 text-black">{proposal.student.name}</h1>
+            <p className="text-gray-500 text-xs min-h-5">
+                {proposal.student.email}
+            </p>
+            <div className="flex flex-row justify-between">
+                <PendingProposalTag />
+                <AwardTag award={proposal.proposal.award} />
+            </div>
+        </div>
+    )
+}
+function PendingProposalTag() {
+    return (
+        <span className="text-yellow-700 bg-yellow-100 border border-yellow-500 px-2 py-1 rounded text-xs font-semibold">
+            Pending Proposal
+        </span>
+    )
+}
+const AwardStyling: Record<Award, {title: string, color: string}> = {
+    'bronze': {
+        title: 'Bronze',
+        color: 'from-amber-600 to-amber-700'
+    },
+    'silver': {
+        title: 'Silver',
+        color: 'from-gray-400 to-gray-500'
+    },
+    'gold': {
+        title: 'Gold',
+        color: 'from-yellow-400 to-yellow-500'
+    }
+}
+function AwardTag({award}: {award: Award}) {
+    const styling = AwardStyling[award]
+    return (
+        <span className={`text-white bg-gradient-to-r ${styling.color} px-2 py-1 rounded text-xs font-semibold`}>
+            {styling.title}
+        </span>
+    )
+}

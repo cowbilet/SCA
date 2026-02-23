@@ -14,6 +14,7 @@ export const getUserByEmail = createServerFn({ method: 'GET' }).inputValidator(u
     }
     return {
         userId: user.userId,
+        name: user.name,
         email: user.email,
         role: user.role,
     }

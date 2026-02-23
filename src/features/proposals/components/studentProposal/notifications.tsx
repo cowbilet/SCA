@@ -1,5 +1,5 @@
 import { SubmissionState } from '@/types/awards'
-import type { Proposal } from '@/types/proposal'
+import type { Proposal } from '@/types/schemas/proposal'
 import { Notification, NotificationHeader, NotificationBody } from '@/components/notification'
 const Instructions: Record<SubmissionState, React.ReactNode> = {
     'not started': (

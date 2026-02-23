@@ -10,7 +10,7 @@ import { z } from "zod"
 import { CreateProposalSchema } from "../types/schema/forms"
 import { validateChallenge } from "@/types/guards/challenges"
 
-import { Proposal } from "@/types/proposal"
+import { Proposal } from "@/types/schemas/proposal"
 import { dbCreateUserChallenge, dbGetUserChallenge } from "@/db/challenges.server"
 import { dbChangeProposalStatus, dbCreateChallengeProposal, dbEditProposal } from "@/db/proposals.server"
 const createUserProposalSchema = CreateProposalSchema.extend({

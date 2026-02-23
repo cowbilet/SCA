@@ -3,11 +3,12 @@ import { db } from "@/db/index.server";
 import { Challenge } from "@/types/challenges";
 import { Award, SubmissionState } from "@/types/awards";
 import { eq, and } from "drizzle-orm";
-import { Proposal } from "@/types/proposal";
+import { Proposal } from "@/types/schemas/proposal";
 import { determineState } from "@/utils/state.server";
 
 export function dbGetAllProposals() {
     return db.select({
+        studentId: challengeProposals.studentId,
         award: challengeProposals.award,
         challenge: challengeProposals.challenge,
         description: challengeProposals.description,
@@ -21,6 +22,7 @@ export function dbGetAllProposals() {
 }
 export async function dbGetProposal(studentId: string, award: Award, challenge: Challenge): Promise<Proposal | null> {
     const proposal = await db.select({
+        studentId: challengeProposals.studentId,
         award: challengeProposals.award,
         challenge: challengeProposals.challenge,
         description: challengeProposals.description,

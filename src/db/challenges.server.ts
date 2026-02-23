@@ -19,14 +19,21 @@ export async function dbGetUserChallenge(userId: string, award: Award, challenge
         eq(studentChallenge.studentId, userId),
         eq(studentChallenge.award, award),
         eq(studentChallenge.challenge, challenge)
-    )).leftJoin(challengeProposalsSubquery, eq(studentChallenge.challenge, challengeProposalsSubquery.challenge))
+    )).leftJoin(challengeProposalsSubquery, and(
+        eq(studentChallenge.challenge, challengeProposalsSubquery.challenge),
+        eq(challengeProposalsSubquery.award, award),
+        eq(challengeProposalsSubquery.studentId, challenge),
+    ))
     if (results.length === 0) {
         return null
     }
     return results[0]
     
 }
-
+export function dbGetAllChallenges() {
+    const challengeProposalsSubquery = dbGetAllProposals()
+    return db.select().from(studentChallenge).leftJoin(challengeProposalsSubquery, eq(studentChallenge.challenge, challengeProposalsSubquery.challenge)).as("challenges");
+}
 export async function dbCreateUserChallenge(studentId: string, mentorId: string, award: Award, challenge: Challenge) {
     await db.insert(studentChallenge).values({
         studentId,

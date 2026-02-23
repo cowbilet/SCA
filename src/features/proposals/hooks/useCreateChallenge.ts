@@ -2,7 +2,7 @@ import { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/chall
 import { createUserProposal } from '../api/createUserProposal';
 import { Award } from "@/types/awards";
 import { Challenge } from "@/types/challenges";
-import { Proposal } from '@/types/proposal';
+import { Proposal } from '@/types/schemas/proposal';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
@@ -19,6 +19,7 @@ export function useCreateChallenge(award: Award, challenge: Challenge) {
             const previousProposal = queryClient.getQueryData<Proposal | null>(['proposals', award, challenge])
 
             const optimisticProposal: Proposal = {
+                studentId: '',
                 award,
                 challenge,
                 description: newProposal.description,

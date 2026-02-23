@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentRouteRouteImport } from './routes/student/route'
+import { Route as MentorRouteRouteImport } from './routes/mentor/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentAwardRouteRouteImport } from './routes/student/$award/route'
 import { Route as StudentAwardIndexRouteImport } from './routes/student/$award/index'
@@ -18,6 +19,11 @@ import { Route as StudentAwardChallengeRouteImport } from './routes/student/$awa
 const StudentRouteRoute = StudentRouteRouteImport.update({
   id: '/student',
   path: '/student',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorRouteRoute = MentorRouteRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,6 +49,7 @@ const StudentAwardChallengeRoute = StudentAwardChallengeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/mentor': typeof MentorRouteRoute
   '/student': typeof StudentRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/mentor': typeof MentorRouteRoute
   '/student': typeof StudentRouteRouteWithChildren
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
   '/student/$award': typeof StudentAwardIndexRoute
@@ -57,6 +65,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/mentor': typeof MentorRouteRoute
   '/student': typeof StudentRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
@@ -66,15 +75,22 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/mentor'
     | '/student'
     | '/student/$award'
     | '/student/$award/$challenge'
     | '/student/$award/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/student' | '/student/$award/$challenge' | '/student/$award'
+  to:
+    | '/'
+    | '/mentor'
+    | '/student'
+    | '/student/$award/$challenge'
+    | '/student/$award'
   id:
     | '__root__'
     | '/'
+    | '/mentor'
     | '/student'
     | '/student/$award'
     | '/student/$award/$challenge'
@@ -83,6 +99,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MentorRouteRoute: typeof MentorRouteRoute
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
 }
 
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/student'
       fullPath: '/student'
       preLoaderRoute: typeof StudentRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentor': {
+      id: '/mentor'
+      path: '/mentor'
+      fullPath: '/mentor'
+      preLoaderRoute: typeof MentorRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -153,6 +177,7 @@ const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MentorRouteRoute: MentorRouteRoute,
   StudentRouteRoute: StudentRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
