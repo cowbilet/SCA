@@ -26,8 +26,8 @@ function RouteComponent() {
     return (
         <div className="flex flex-col h-full flex-1">
             <MainHeaderShell title={student.name} description={student.email} icon={<User className='h-12 w-12 text-white bg-white/20 rounded p-2' />} className='bg-gray-500' />
-            <div className="flex-1 flex-col flex p-4">
-                <MentorNavigation />
+            <MentorNavigation />
+            <div className="flex-1 flex-col flex p-4 bg-gray-50">
                 <Outlet />
 
             </div>

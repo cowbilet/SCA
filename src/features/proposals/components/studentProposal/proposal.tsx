@@ -11,7 +11,6 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
         <Card className="h-full flex flex-col">
             <Notifications state={proposalStatus} />
             <ProposalForm 
-                disabled={true}
                 Button={SubmitButton}
             />
         </Card>
