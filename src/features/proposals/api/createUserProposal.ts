@@ -29,7 +29,7 @@ export const createUserProposal = createServerFn({ method: 'POST' }).inputValida
         throw new Error("Invalid mentor email")
     }
 
-    const student = await dbGetUserByName("Seb")
+    const student = await dbGetUserByName("Student")
     if (!student) {
         throw new Error("User not found")
     }

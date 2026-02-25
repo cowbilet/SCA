@@ -83,15 +83,15 @@ export async function dbChangeProposalStatus(
     award: Award,
     challenge: Challenge,
     status: 'rejected mentor' | 'pending assessor',
-    note?: string,
+    note: string,
 ): Promise<void>;
 export async function dbChangeProposalStatus(
     studentId: string,
     award: Award,
     challenge: Challenge,
     status: 'completed' | 'rejected assessor',
-    note?: string,
-    assessorId?: string,
+    note: string,
+    assessorId: string,
 ): Promise<void>;
 export async function dbChangeProposalStatus(
     studentId: string,

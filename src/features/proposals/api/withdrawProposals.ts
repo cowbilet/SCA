@@ -17,7 +17,7 @@ const withdrawProposalSchema = z.object({
 })
 export const withdrawProposal = createServerFn({ method: 'GET' }).inputValidator(withdrawProposalSchema).handler(async ({data}) => {
     const { award, challenge } = data
-    const student = await dbGetUserByName("Seb")
+    const student = await dbGetUserByName("Student")
     if (!student) {
         throw new Error("User not found")
     }

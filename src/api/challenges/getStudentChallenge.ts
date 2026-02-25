@@ -18,7 +18,7 @@ const inputSchema = z.object({
 })
 export const getUserChallenge = createServerFn({ method: 'GET' }).inputValidator(inputSchema).handler(async ({data}): Promise<StudentChallengeWithProposalAndSubmission | null> => {
     const { award, challenge } = data
-    const user = await dbGetUserByName("Seb")
+    const user = await dbGetUserByName("Student")
     if (!user) {
         throw new Error("User not found")
     }

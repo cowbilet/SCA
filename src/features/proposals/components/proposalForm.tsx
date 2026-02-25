@@ -78,7 +78,7 @@ export default function ProposalForm({values, disabled, Button, award: awardProp
                 e.preventDefault()
                 form.handleSubmit()
             }}
-            className="flex flex-col gap-4 p-4 flex-1"
+            className="flex flex-col gap-4 flex-1"
         >
             <form.Field name="mentorEmail">
                 {(field) => (
