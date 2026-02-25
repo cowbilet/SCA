@@ -36,6 +36,9 @@ export const Route = createFileRoute(
 function RouteComponent() {
     const proposalData = Route.useLoaderData()
     return (
-        <ReviewProposal proposal={proposalData} />
+        <div className="flex flex-col h-full flex-1 p-4 bg-white rounded-lg shadow">
+            <ReviewProposal proposal={proposalData} />
+            
+        </div>
     )
 }

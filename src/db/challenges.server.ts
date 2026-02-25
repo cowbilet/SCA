@@ -42,3 +42,9 @@ export async function dbCreateUserChallenge(studentId: string, mentorId: string,
         challenge,
     });
 }
+export async function dbGetStudentAwardsAndChallenges(studentId: string): Promise<{award: Award, challenges: Challenge}[]> {
+    return await db.select({
+        award: studentChallenge.award,
+        challenges: studentChallenge.challenge,
+    }).from(studentChallenge).where(eq(studentChallenge.studentId, studentId))
+}

@@ -2,7 +2,7 @@ import MentorSidebar from '@/components/mentor/sidebar/sidebar'
 import { createFileRoute } from '@tanstack/react-router'
 import { Outlet } from '@tanstack/react-router'
 export const Route = createFileRoute('/mentor')({
-  component: RouteComponent,
+    component: RouteComponent,
 })
 
 function RouteComponent() {
