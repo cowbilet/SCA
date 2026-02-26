@@ -16,6 +16,7 @@ import { Route as StudentAwardRouteRouteImport } from './routes/student/$award/r
 import { Route as MentorStudentIdRouteRouteImport } from './routes/mentor/$studentId/route'
 import { Route as StudentAwardIndexRouteImport } from './routes/student/$award/index'
 import { Route as StudentAwardChallengeRouteImport } from './routes/student/$award/$challenge'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MentorStudentIdAwardRouteRouteImport } from './routes/mentor/$studentId/$award/route'
 import { Route as MentorStudentIdAwardChallengeRouteImport } from './routes/mentor/$studentId/$award/$challenge'
 
@@ -54,6 +55,11 @@ const StudentAwardChallengeRoute = StudentAwardChallengeRouteImport.update({
   path: '/$challenge',
   getParentRoute: () => StudentAwardRouteRoute,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MentorStudentIdAwardRouteRoute =
   MentorStudentIdAwardRouteRouteImport.update({
     id: '/$award',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
   '/student/$award/': typeof StudentAwardIndexRoute
   '/mentor/$studentId/$award/$challenge': typeof MentorStudentIdAwardChallengeRoute
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/student': typeof StudentRouteRouteWithChildren
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
   '/student/$award': typeof StudentAwardIndexRoute
   '/mentor/$studentId/$award/$challenge': typeof MentorStudentIdAwardChallengeRoute
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
   '/student/$award/': typeof StudentAwardIndexRoute
   '/mentor/$studentId/$award/$challenge': typeof MentorStudentIdAwardChallengeRoute
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/mentor/$studentId'
     | '/student/$award'
     | '/mentor/$studentId/$award'
+    | '/api/auth/$'
     | '/student/$award/$challenge'
     | '/student/$award/'
     | '/mentor/$studentId/$award/$challenge'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/mentor/$studentId'
     | '/mentor/$studentId/$award'
+    | '/api/auth/$'
     | '/student/$award/$challenge'
     | '/student/$award'
     | '/mentor/$studentId/$award/$challenge'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/mentor/$studentId'
     | '/student/$award'
     | '/mentor/$studentId/$award'
+    | '/api/auth/$'
     | '/student/$award/$challenge'
     | '/student/$award/'
     | '/mentor/$studentId/$award/$challenge'
@@ -139,6 +151,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MentorRouteRoute: typeof MentorRouteRouteWithChildren
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/$award/$challenge'
       preLoaderRoute: typeof StudentAwardChallengeRouteImport
       parentRoute: typeof StudentAwardRouteRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/mentor/$studentId/$award': {
       id: '/mentor/$studentId/$award'
@@ -275,6 +295,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MentorRouteRoute: MentorRouteRouteWithChildren,
   StudentRouteRoute: StudentRouteRouteWithChildren,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
