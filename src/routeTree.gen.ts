@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as StudentRouteRouteImport } from './routes/student/route'
 import { Route as MentorRouteRouteImport } from './routes/mentor/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +22,16 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MentorStudentIdAwardRouteRouteImport } from './routes/mentor/$studentId/$award/route'
 import { Route as MentorStudentIdAwardChallengeRouteImport } from './routes/mentor/$studentId/$award/$challenge'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentRouteRoute = StudentRouteRouteImport.update({
   id: '/student',
   path: '/student',
@@ -77,6 +89,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/mentor': typeof MentorRouteRouteWithChildren
   '/student': typeof StudentRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
@@ -89,6 +103,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/mentor': typeof MentorRouteRouteWithChildren
   '/student': typeof StudentRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -101,6 +117,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/mentor': typeof MentorRouteRouteWithChildren
   '/student': typeof StudentRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
@@ -115,6 +133,8 @@ export interface FileRouteTypes {
     | '/'
     | '/mentor'
     | '/student'
+    | '/login'
+    | '/signup'
     | '/mentor/$studentId'
     | '/student/$award'
     | '/mentor/$studentId/$award'
@@ -127,6 +147,8 @@ export interface FileRouteTypes {
     | '/'
     | '/mentor'
     | '/student'
+    | '/login'
+    | '/signup'
     | '/mentor/$studentId'
     | '/mentor/$studentId/$award'
     | '/api/auth/$'
@@ -138,6 +160,8 @@ export interface FileRouteTypes {
     | '/'
     | '/mentor'
     | '/student'
+    | '/login'
+    | '/signup'
     | '/mentor/$studentId'
     | '/student/$award'
     | '/mentor/$studentId/$award'
@@ -151,11 +175,27 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MentorRouteRoute: typeof MentorRouteRouteWithChildren
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/student': {
       id: '/student'
       path: '/student'
@@ -295,6 +335,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MentorRouteRoute: MentorRouteRouteWithChildren,
   StudentRouteRoute: StudentRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

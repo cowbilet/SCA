@@ -36,7 +36,7 @@ export const challengeProposals = pgTable("challenge_proposals", {
 		}),
 	foreignKey({
 			columns: [table.mentorId],
-			foreignColumns: [users.userId],
+			foreignColumns: [users.id],
 			name: "challenge_proposals_mentorId_fkey"
 		}),
 	foreignKey({
@@ -100,12 +100,12 @@ export const studentChallenge = pgTable("student_challenge", {
 }, (table) => [
 	foreignKey({
 			columns: [table.mentorId],
-			foreignColumns: [users.userId],
+			foreignColumns: [users.id],
 			name: "student_challenge_mentorId_fkey"
 		}),
 	foreignKey({
 			columns: [table.studentId],
-			foreignColumns: [users.userId],
+			foreignColumns: [users.id],
 			name: "student_challenge_studentId_fkey"
 		}),
 	primaryKey({ columns: [table.studentId, table.award, table.challenge], name: "student_challenge_pkey"}),
@@ -114,9 +114,11 @@ export const studentChallenge = pgTable("student_challenge", {
 
 
 //Auth stuff
-export const users = pgTable("user", {
-	userId: text("id").primaryKey(),
+export const users = pgTable("users", {
+	id: uuid("userId").defaultRandom().primaryKey(),
 	name: text("name").notNull(),
+	state: location("state").notNull(),
+	role: role("role").notNull(),
 	email: text("email").notNull().unique(),
 	emailVerified: boolean("email_verified").default(false).notNull(),
 	image: text("image"),
@@ -128,9 +130,9 @@ export const users = pgTable("user", {
 });
 
 export const sessions = pgTable(
-  "session",
+  "sessions",
   {
-		id: text("id").primaryKey(),
+		id: uuid("id").defaultRandom().primaryKey(),
 		expiresAt: timestamp("expires_at").notNull(),
 		token: text("token").notNull().unique(),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -139,22 +141,22 @@ export const sessions = pgTable(
 			.notNull(),
 		ipAddress: text("ip_address"),
 		userAgent: text("user_agent"),
-		userId: text("user_id")
+		userId: uuid("userId")
 			.notNull()
-			.references(() => users.userId, { onDelete: "cascade" }),
+			.references(() => users.id, { onDelete: "cascade" }),
 	},
 	(table) => [index("session_userId_idx").on(table.userId)],
 );
 
 export const accounts = pgTable(
-	"account",
+	"accounts",
 	{
-		id: text("id").primaryKey(),
+		id: uuid("id").defaultRandom().primaryKey(),
 		accountId: text("account_id").notNull(),
 		providerId: text("provider_id").notNull(),
-		userId: text("user_id")
+		userId: uuid("userId")
 			.notNull()
-			.references(() => users.userId, { onDelete: "cascade" }),
+			.references(() => users.id, { onDelete: "cascade" }),
 		accessToken: text("access_token"),
 		refreshToken: text("refresh_token"),
 		idToken: text("id_token"),
@@ -171,9 +173,9 @@ export const accounts = pgTable(
 );
 
 export const verifications = pgTable(
-	"verification",
+	"verifications",
 	{
-		id: text("id").primaryKey(),
+		id: uuid("id").defaultRandom().primaryKey(),
 		identifier: text("identifier").notNull(),
 		value: text("value").notNull(),
 		expiresAt: timestamp("expires_at").notNull(),
@@ -194,13 +196,13 @@ export const userRelations = relations(users, ({ many }) => ({
 export const sessionRelations = relations(sessions, ({ one }) => ({
 	user: one(users, {
 		fields: [sessions.userId],
-		references: [users.userId],
+		references: [users.id],
 	}),
 }));
 
 export const accountRelations = relations(accounts, ({ one }) => ({
 	user: one(users, {
 		fields: [accounts.userId],
-		references: [users.userId],
+		references: [users.id],
 	}),
 }));
