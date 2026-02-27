@@ -12,6 +12,7 @@ import { z } from 'zod'
 
 import { validateChallenge } from '@/types/guards/challenges'
 import { Proposal } from '@/types/schemas/proposal'
+import { restrictStudentData } from '@/utils/server/auth.server'
 
 
 const getUserProposalSchema = z.object({
@@ -21,15 +22,12 @@ const getUserProposalSchema = z.object({
     challenge: z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
         message: 'Invalid challenge',
     }),
+    studentId: z.uuid(),
 })
 export const getUserProposal = createServerFn({ method: 'GET' }).inputValidator(getUserProposalSchema).handler(async ({data}): Promise<Proposal | null> => {
-    const { award, challenge } = data
-    const student = await dbGetUserByName("Student")
-    if (!student) {
-        throw new Error("User not found")
-    }
-    const studentId = student.userId
-    
+    const { award, challenge, studentId } = data
+    await restrictStudentData({data: studentId})
+
     const proposalData = await dbGetProposal(studentId, award, challenge,)
     return proposalData
 })

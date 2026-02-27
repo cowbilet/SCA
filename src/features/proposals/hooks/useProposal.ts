@@ -3,10 +3,10 @@ import { getUserProposal } from '../api/getUserProposal';
 import { Award } from "@/types/awards";
 import { Challenge } from "@/types/challenges";
 
-export const proposalQueryOptions = (award: Award, challenge: Challenge) => (queryOptions({
-    queryKey: ['proposals', award, challenge],
-    queryFn: () => getUserProposal({data: {award, challenge}}),
+export const proposalQueryOptions = (award: Award, challenge: Challenge, studentId: string) => (queryOptions({
+    queryKey: ['proposals', award, challenge, studentId],
+    queryFn: () => getUserProposal({data: {award, challenge, studentId}}),
 }))
-export function useProposal(award: Award, challenge: Challenge) {
-    return useQuery(proposalQueryOptions(award, challenge))
+export function useProposal(award: Award, challenge: Challenge, studentId: string) {
+    return useQuery(proposalQueryOptions(award, challenge, studentId))
 }

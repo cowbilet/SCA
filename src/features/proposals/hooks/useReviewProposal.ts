@@ -6,6 +6,6 @@ import { Challenge } from "@/types/challenges";
 
 export function useReviewProposal(studentId: string, award: Award, challenge: Challenge) {
     return useMutation({
-        mutationFn: (data: { mentorName: string, notes: string, accepted: boolean }) => reviewProposal({data: { studentId, award, challenge, ...data }}),
+        mutationFn: (data: {notes: string, accepted: boolean }) => reviewProposal({data: { studentId, award, challenge, ...data }}),
     })
 }

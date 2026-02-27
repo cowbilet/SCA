@@ -18,7 +18,7 @@ export async function dbGetMentorPendingProposals(mentorId: string): Promise<Pro
         accepted: challengeProposals.accepted,
         mentorEmail: users.email,
         status: challengeProposals.status,
-    }).from(challengeProposals).innerJoin(users, eq(challengeProposals.mentorId, users.userId)).as("proposals");
+    }).from(challengeProposals).innerJoin(users, eq(challengeProposals.mentorId, users.id)).as("proposals");
     
     return await db.select({
         student: {
@@ -43,16 +43,15 @@ export async function dbGetMentorPendingProposals(mentorId: string): Promise<Pro
     .where(and(
         eq(challengeProposalsSubquery.mentorId, mentorId),
         eq(challengeProposalsSubquery.status, 'pending mentor'),
-    )).innerJoin(users, eq(challengeProposalsSubquery.studentId, users.userId))
+    )).innerJoin(users, eq(challengeProposalsSubquery.studentId, users.id))
 }
 export function dbGetMentorStudents(mentorId: string) {
     return db.select({
-        userId: users.userId,
+        userId: users.id,
         email: users.email,
         role: users.role,
         name: users.name,
-    }).from(users).innerJoin(challengeProposals, eq(challengeProposals.studentId, users.userId)).where(and(
+    }).from(users).innerJoin(challengeProposals, eq(challengeProposals.studentId, users.id)).where(and(
         eq(challengeProposals.mentorId, mentorId),
-        eq(challengeProposals.accepted, true),
-    )).groupBy(users.userId)
+    )).groupBy(users.id)
 }

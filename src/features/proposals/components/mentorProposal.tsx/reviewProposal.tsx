@@ -29,7 +29,7 @@ function ProposalFeedbackForm() {
             //Get the button that was clicked (approve or reject) and the feedback from the form
             const action = (document.activeElement as HTMLButtonElement).id
             console.log("Submitting proposal review with action:", action, "and feedback:", feedback, value)
-            submitProposal({ mentorName: "Mentor", notes: feedback, accepted: action === "approve" })
+            submitProposal({ notes: feedback, accepted: action === "approve" })
             // Handle approve/reject logic here, using value.feedback for the mentor's feedback
         }
     })

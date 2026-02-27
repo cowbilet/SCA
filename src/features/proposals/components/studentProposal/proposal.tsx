@@ -6,6 +6,8 @@ import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { LoaderCircle } from "lucide-react";
 import Notifications from "./notifications";
 import { clsx } from "clsx";
+import { useSession } from "@/integrations/better-auth/authClient";
+import { Route } from "@/routes/student/route";
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
         <Card className="h-full flex flex-col">
@@ -19,7 +21,8 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
 const disabledStates: SubmissionState[] = ['pending mentor', 'pending assessor']
 export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge)
+    const student = Route.useRouteContext()
+    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, student.user.userId)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">

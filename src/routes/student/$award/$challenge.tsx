@@ -22,11 +22,11 @@ export const Route = createFileRoute('/student/$award/$challenge')({
             return { challenge: result.data }
         }
     },
-    loader: async ({ params, context: { queryClient } }) => {
+    loader: async ({ params, context: { queryClient, user } }) => {
         const { award, challenge } = params
         const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge))
         if (data && data.proposals?.status !== 'not started') {
-            await queryClient.ensureQueryData(proposalQueryOptions(award, challenge))
+            await queryClient.ensureQueryData(proposalQueryOptions(award, challenge, user.userId))
         }
         return data
     }

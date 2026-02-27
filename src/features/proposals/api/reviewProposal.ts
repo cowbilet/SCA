@@ -6,6 +6,7 @@ import { validateAward } from "@/types/guards/awards";
 import { validateChallenge } from "@/types/guards/challenges";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { restrictRoles } from "@/utils/server/auth.server";
 const submitProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
@@ -15,24 +16,20 @@ const submitProposalSchema = z.object({
     }),
     studentId: z.uuid(),
     //TODO: Get rid of this
-    mentorName: z.string(),
     notes: z.string(),
     accepted: z.boolean(),
 })
-export const reviewProposal = createServerFn().inputValidator(submitProposalSchema).handler(async ({data: {award, challenge, studentId, mentorName, notes, accepted}}) => {
-    if (mentorName === "Assessor") {
-        const advisor = await dbGetUserByName("Assessor")
-        if (!advisor) {
-            throw new Error("User not authenticated")
-        }
+export const reviewProposal = createServerFn().inputValidator(submitProposalSchema).handler(async ({data: {award, challenge, studentId, notes, accepted}}) => {
+    const user = await restrictRoles({ data: ["mentor", "assessor"] })
+    if (user.role === "assessor") {
         if (accepted) {
-            dbChangeProposalStatus(studentId, award, challenge, "completed", notes, advisor.userId)
+            dbChangeProposalStatus(studentId, award, challenge, "completed", notes, user.userId)
         }
         else {
-            dbChangeProposalStatus(studentId, award, challenge, "rejected assessor", notes, advisor.userId)
+            dbChangeProposalStatus(studentId, award, challenge, "rejected assessor", notes, user.userId)
         }
     }
-    else if (mentorName === "Mentor") {
+    else if (user.role === "mentor") {
         if (accepted) {
             dbChangeProposalStatus(studentId, award, challenge, "pending assessor", notes)
         }

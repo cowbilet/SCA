@@ -4,7 +4,7 @@ import { Challenge } from "@/types/challenges";
 import { Award, SubmissionState } from "@/types/awards";
 import { eq, and } from "drizzle-orm";
 import { Proposal } from "@/types/schemas/proposal";
-import { determineState } from "@/utils/state.server";
+import { determineState } from "@/utils/server/state.server";
 
 export function dbGetAllProposals() {
     return db.select({
@@ -18,7 +18,7 @@ export function dbGetAllProposals() {
         accepted: challengeProposals.accepted,
         mentorEmail: users.email,
         status: challengeProposals.status,
-    }).from(challengeProposals).innerJoin(users, eq(challengeProposals.mentorId, users.userId)).as("proposals");
+    }).from(challengeProposals).innerJoin(users, eq(challengeProposals.mentorId, users.id)).as("proposals");
 }
 export async function dbGetProposal(studentId: string, award: Award, challenge: Challenge): Promise<Proposal | null> {
     const proposal = await db.select({
@@ -38,7 +38,7 @@ export async function dbGetProposal(studentId: string, award: Award, challenge: 
             eq(challengeProposals.award, award),
             eq(challengeProposals.challenge, challenge),
         )
-    ).innerJoin(users, eq(challengeProposals.mentorId, users.userId)).limit(1);
+    ).innerJoin(users, eq(challengeProposals.mentorId, users.id)).limit(1);
 
     if (proposal.length === 0) {
         return null;

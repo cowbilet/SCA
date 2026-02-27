@@ -13,6 +13,7 @@ import { validateChallenge } from "@/types/guards/challenges"
 import { Proposal } from "@/types/schemas/proposal"
 import { dbCreateUserChallenge, dbGetUserChallenge } from "@/db/challenges.server"
 import { dbChangeProposalStatus, dbCreateChallengeProposal, dbEditProposal } from "@/db/proposals.server"
+import { restrictRoles } from "@/utils/server/auth.server"
 const createUserProposalSchema = CreateProposalSchema.extend({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
@@ -22,16 +23,12 @@ const createUserProposalSchema = CreateProposalSchema.extend({
     }),
 })
 export const createUserProposal = createServerFn({ method: 'POST' }).inputValidator(createUserProposalSchema).handler(async ({data}): Promise<Proposal> => {
+    const student = await restrictRoles({ data: ["student"] })
     const { description, goal, mentorEmail, award, challenge } = data
     // Validate mentor email
     const mentor = await dbGetUserByEmail(mentorEmail)
     if (!mentor || mentor.role !== 'mentor') {
         throw new Error("Invalid mentor email")
-    }
-
-    const student = await dbGetUserByName("Student")
-    if (!student) {
-        throw new Error("User not found")
     }
     const studentId = student.userId
     const mentorId = mentor.userId

@@ -8,6 +8,8 @@ import { validateChallenge } from '@/types/guards/challenges'
 import { Challenge } from '@/types/challenges'
 import { dbGetUserByName } from '@/db/users.server'
 import { dbGetUserChallenge } from '@/db/challenges.server'
+import { ensureSession, restrictRoles } from '@/utils/server/auth.server'
+import { dbGetMentorStudents } from '@/db/mentors.server'
 const inputSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
@@ -18,11 +20,6 @@ const inputSchema = z.object({
 })
 export const getUserChallenge = createServerFn({ method: 'GET' }).inputValidator(inputSchema).handler(async ({data}): Promise<StudentChallengeWithProposalAndSubmission | null> => {
     const { award, challenge } = data
-    const user = await dbGetUserByName("Student")
-    if (!user) {
-        throw new Error("User not found")
-    }
-    // For now we are just going to return the challenge data for the first user since we don't have authentication set up, but in the future we will need to get the user from the session and return their specific challenge data
-    const challengeData = await dbGetUserChallenge(user.userId, award, challenge)
-    return challengeData
+    const user = await restrictRoles({ data: ["student"] })
+    return await dbGetUserChallenge(user.userId, award, challenge)
 })

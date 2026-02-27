@@ -6,6 +6,7 @@ import { Award } from '@/types/awards'
 import { validateChallenge } from '@/types/guards/challenges'
 import { Challenge } from '@/types/challenges'
 import { Proposal } from '@/types/schemas/proposal'
+import { restrictStudentData } from '@/utils/server/auth.server'
 
 const getStudentProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
@@ -18,6 +19,7 @@ const getStudentProposalSchema = z.object({
 })
 export const getStudentProposal = createServerFn({ method: 'GET' }).inputValidator(getStudentProposalSchema).handler(async ({ data }: { data: { award: Award, challenge: Challenge, studentId: string } }): Promise<Proposal | null> => {
     const { award, challenge, studentId } = data
+    await restrictStudentData({data: studentId})
     const proposalData = await dbGetProposal(studentId, award, challenge)
     return proposalData || null
   })
