@@ -8,14 +8,20 @@ import { useLocation } from "@tanstack/react-router"
 export default function AdvisorStudentNavigation() {
     const location = useLocation();
     const isMentorPage = location.pathname.includes('/mentor')
-    if (!location.pathname.includes('/mentor') && !location.pathname.includes('/assessor')) {
+    if (!(location.pathname.includes('/mentor') || location.pathname.includes('/assessor'))) {
         return null
     }
+
     const params = useParams({strict: false})
     const award = params["award"] as Award | undefined
     // TODO: Make this more robust by validating the loader data format and handling loading/error states
-    const studentChallenges = useLoaderData({strict: false})
+    const student = useLoaderData({strict: false})
+    if (!student) {
+        return null
+    }
+    const studentChallenges = student.studentChallenges
     // Validate that studentChallenges is in the correct format
+    console.log("Loader Data:", studentChallenges) // Debug log to check the loader data
     if (!studentChallenges || !Array.isArray(studentChallenges)) {
         return null
     }

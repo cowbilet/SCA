@@ -11,9 +11,8 @@ export const getAdvisorPending = createServerFn({ method: 'GET' }).handler(async
         return pendingProposals
     }
     else {
-        console.log("User Role:", user.role)
+
         const pendingProposals = await dbGetAssessorPendingProposals(user.userId)
-        console.log("Pending Proposals for Assessor:", pendingProposals)
         return pendingProposals
     }
 })
