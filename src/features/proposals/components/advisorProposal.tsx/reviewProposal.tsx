@@ -4,9 +4,11 @@ import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { Route } from "@/routes/mentor/$studentId/$award/$challenge"
 import { useReviewProposal } from "../../hooks/useReviewProposal";
+import { Comments } from "../notifications";
 export default function ReviewProposal({proposal}: {proposal: Proposal}) {
     return (
         <div className="flex flex-col h-full flex-1 gap-4">
+            <Comments proposal={proposal} />
             <ProposalForm
                 values={proposal}
                 disabled={true}

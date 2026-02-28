@@ -5,7 +5,7 @@ import { validateAward } from '@/types/guards/awards'
 import { Award } from '@/types/awards'
 import { Challenge } from '@/types/challenges'
 import z from 'zod'
-import ReviewProposal from '@/features/proposals/components/mentorProposal.tsx/reviewProposal'
+import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/reviewProposal'
 import { getStudentProposal } from '@/features/proposals/api/getStudentProposal'
 
 

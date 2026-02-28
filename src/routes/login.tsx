@@ -4,7 +4,6 @@ import { getSession } from '@/utils/server/auth.server';
 export const Route = createFileRoute('/login')({
     beforeLoad: async ({ context }) => {
         const session = await getSession();
-        console.log("Session on login route:", session);
         if (session) {
             if (session.user.role === "student") {
                 throw redirect({to: "/student"});

@@ -4,14 +4,14 @@ import { SubmissionState } from "@/types/awards";
 import { useParams } from "@tanstack/react-router";
 import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { LoaderCircle } from "lucide-react";
-import Notifications from "./notifications";
+import {Comments, Instructions} from "../notifications";
 import { clsx } from "clsx";
 import { useSession } from "@/integrations/better-auth/authClient";
 import { Route } from "@/routes/student/route";
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
         <Card className="h-full flex flex-col">
-            <Notifications state={proposalStatus} />
+            <Instructions state={proposalStatus} />
             <ProposalForm 
                 Button={SubmitButton}
             />
@@ -39,7 +39,8 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
     }
     return (
         <Card className="h-full flex flex-col">
-            <Notifications proposal={proposalData} state={proposalStatus} />
+            <Instructions state={proposalStatus} />
+            <Comments proposal={proposalData} />
             <ProposalForm 
                 values={proposalData} 
                 disabled={disabledStates.includes(proposalStatus)} 

@@ -7,7 +7,6 @@ import { clsx } from 'clsx'
 import { FunctionComponent } from 'react'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
-
 interface ProposalFormProps {
     values?: {
         mentorEmail: string,
@@ -19,15 +18,13 @@ interface ProposalFormProps {
     award?: Award,
     challenge?: Challenge,
 }
-export default function ProposalForm({values, disabled, Button, award: awardProp, challenge: challengeProp}: ProposalFormProps) {
-    let award: Award, challenge: Challenge
-    if (awardProp && challengeProp) {
-        award = awardProp
-        challenge = challengeProp
-    } else {
-        ({ award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true }))
+export default function ProposalForm({values, disabled, Button}: ProposalFormProps) {
+    const { award, challenge } = useParams({strict: false})
+    if (!award || !challenge) {
+        throw new Error("Award and challenge must be provided in params")
     }
-    const { mutate: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
+    //TODO: fix this
+    const { mutate: createChallenge, isPending, isError, error } = useCreateChallenge(award as Award, challenge)
     const isDisabled = disabled || isPending
     const form = useForm({
         defaultValues: {

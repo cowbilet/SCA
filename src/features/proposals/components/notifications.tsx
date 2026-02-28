@@ -1,7 +1,8 @@
 import { SubmissionState } from '@/types/awards'
 import type { Proposal } from '@/types/schemas/proposal'
 import { Notification, NotificationHeader, NotificationBody } from '@/components/notification'
-const Instructions: Record<SubmissionState, React.ReactNode> = {
+import { HTMLAttributes, ReactNode } from 'react'
+const InstructionDictionary: Record<SubmissionState, React.ReactNode> = {
     'not started': (
         <Notification className="bg-yellow-100 border-yellow-500">
             <NotificationHeader className="text-yellow-700 font-bold text-lg">
@@ -73,51 +74,74 @@ const Instructions: Record<SubmissionState, React.ReactNode> = {
         </Notification>
     ),
 }
-export default function Notifications({proposal, state}: {proposal?: Proposal, state: SubmissionState}) {
+export function Comments({proposal}: {proposal: Proposal}) {
     return (
         <>
-            {Instructions[state]}
-            {proposal && state !== 'not started' && state !== 'pending mentor' && generateFeedbackNotifications(proposal, state)}
+            {generateFeedbackNotifications(proposal)}
         </>
     )
 }
-const rejectedClasses: Record<Exclude<SubmissionState, 'not started' | 'pending mentor'>, {card: string, text: string}> = {
-    'rejected mentor': {card: 'bg-red-100 border-red-500', text: 'text-red-700'},
-    'rejected assessor': {card: 'bg-red-100 border-red-500', text: 'text-red-700'},
-    'pending assessor': {card: 'bg-green-100 border-green-500', text: 'text-green-700'},
-    'completed': {card: 'bg-green-100 border-green-500', text: 'text-green-700'},
-    'withdrawn': {card: 'bg-gray-100 border-gray-500', text: 'text-gray-700'},
+export function Instructions({state}: {state: SubmissionState}) {
+    return InstructionDictionary[state]
 }
-function generateFeedbackNotifications(proposal: Proposal, state: Exclude<SubmissionState, 'not started' | 'pending mentor'>) {
-    const notifications = []
-    if (proposal.mentorNote) {
-        // TODO: This is hacky
-        let newState: SubmissionState = state
-        if (state === 'rejected assessor' && proposal.accepted === false) {
-            newState = 'pending assessor'
+// const rejectedClasses: Record<Exclude<SubmissionState, 'not started' | 'pending mentor'>, string> = {
+//     'rejected mentor': 'bg-red-100 border-red-500 text-red-700',
+//     'rejected assessor': 'bg-red-100 border-red-500 text-red-700',
+//     'pending assessor': 'bg-green-100 border-green-500 text-green-700',
+//     'completed': 'bg-green-100 border-green-500 text-green-700',
+//     'withdrawn': 'bg-gray-100 border-gray-500 text-gray-700',
+// }
+export const positiveClass = "bg-green-100 border-green-500 text-green-700"
+export const negativeClass = "bg-red-100 border-red-500 text-red-700"
+function generateFeedbackNotifications(proposal: Proposal) {
+    const comments: ReactNode[] = [];
+    if (proposal.status === "pending mentor" || proposal.status === "not started") {
+        return comments
+    }
+    if (proposal.accepted === null) {
+        if (proposal.mentorNote) {
+            comments.push(
+                <FeedbackNotification key="mentorFeedback" feedback={proposal.mentorNote} title={"Mentor"} className={positiveClass} />
+            )
         }
-        notifications.push(
-            <Notification key="mentorFeedback" className={rejectedClasses[newState || state].card}>
-                <NotificationHeader className={rejectedClasses[newState || state].text + " font-bold text-lg"}>
-                    📝 Mentor Feedback
-                </NotificationHeader>
-                <NotificationBody className={rejectedClasses[newState || state].text}>
-                    {proposal.mentorNote}
-                </NotificationBody>
-            </Notification>
-        )
     }
-    if (proposal.assessorNote) {
-        notifications.push(
-            <Notification key="assessorFeedback" className={rejectedClasses[state].card}>
-                <NotificationHeader className={rejectedClasses[state].text + " font-bold text-lg"}>
-                    📝 Assessor Feedback
-                </NotificationHeader>
-                <NotificationBody className={rejectedClasses[state].text}>
-                    {proposal.assessorNote}
-                </NotificationBody>
-            </Notification>
-        )
+    if (proposal.accepted === false) {
+        // If the proposal was rejected by the assessor, then the mentor feedback was positive
+        if (proposal.status === 'rejected assessor' && proposal.mentorNote) {
+            comments.push(
+                <FeedbackNotification key="mentorFeedback" feedback={proposal.mentorNote} title={"Mentor"} className={positiveClass} />
+            )
+        }
+        // However the assessor feedback was negative
+        if (proposal.status === 'rejected assessor' && proposal.assessorNote) {
+            comments.push(
+                <FeedbackNotification key="assessorFeedback" feedback={proposal.assessorNote} title={"Assessor"} className={negativeClass} />
+            )
+        }
     }
-    return notifications
+    if (proposal.accepted === true) {
+        if (proposal.mentorNote) {
+            comments.push(
+                <FeedbackNotification key="mentorFeedback" feedback={proposal.mentorNote} title={"Mentor"} className={positiveClass} />
+            )
+        }
+        if (proposal.assessorNote) {
+            comments.push(
+                <FeedbackNotification key="assessorFeedback" feedback={proposal.assessorNote} title={"Assessor"} className={positiveClass} />
+            )
+        }
+    } 
+    return comments;
+}
+function FeedbackNotification({feedback, title, ...props}: {feedback: string, title?: string} & HTMLAttributes<HTMLDivElement>) {
+    return (
+        <Notification {...props}>
+            <NotificationHeader className="font-bold text-lg">
+                📝 Feedback from {title || "Mentor"}
+            </NotificationHeader>
+            <NotificationBody>
+                {feedback}
+            </NotificationBody>
+        </Notification>
+    )
 }
