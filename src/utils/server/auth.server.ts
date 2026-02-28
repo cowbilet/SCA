@@ -53,7 +53,6 @@ export const restrictStudentData = createServerFn({ method: "GET" }).inputValida
     }
     else if (user.role === "mentor") {
         const mentorStudents = await dbGetMentorStudents(user.userId)
-        console.log("Mentor students:", mentorStudents)
         const hasStudent = mentorStudents.some(student => student.userId === studentId)
         if (!hasStudent) {
             throw new Error("Forbidden");

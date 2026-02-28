@@ -4,6 +4,7 @@ import Skeleton from "react-loading-skeleton"
 import { Proposal, ProposalWithStudent } from "@/types/schemas/proposal"
 import { Challenge } from "@/types/challenges"
 import { Link } from "@tanstack/react-router"
+import { useLocation } from "@tanstack/react-router"
 export default function StudentList() {
 
     const {data: pendingProposals, isLoading, isError} = usePendingProposals()
@@ -36,8 +37,10 @@ export default function StudentList() {
     )
 }
 function StudentListItem({proposal}: {proposal: ProposalWithStudent}) {
+    const location = useLocation();
+    const isMentorPage = location.pathname.includes('/mentor')
     return (
-        <Link to='/mentor/$studentId/$award/$challenge' params={{studentId: proposal.student.userId, award: proposal.proposal.award, challenge: proposal.proposal.challenge}} activeProps={{className: "border-purple-500 border-2"}} className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
+        <Link to={isMentorPage ? '/mentor/$studentId/$award/$challenge' : '/assessor/$studentId/$award/$challenge'} params={{studentId: proposal.student.userId, award: proposal.proposal.award, challenge: proposal.proposal.challenge}} activeProps={{className: "border-purple-500 border-2"}} className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
 
             <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold mr-0 text-black">{proposal.student.name}</h1>

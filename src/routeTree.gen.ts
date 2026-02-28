@@ -13,14 +13,18 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as StudentRouteRouteImport } from './routes/student/route'
 import { Route as MentorRouteRouteImport } from './routes/mentor/route'
+import { Route as AssessorRouteRouteImport } from './routes/assessor/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentAwardRouteRouteImport } from './routes/student/$award/route'
 import { Route as MentorStudentIdRouteRouteImport } from './routes/mentor/$studentId/route'
+import { Route as AssessorStudentIdRouteRouteImport } from './routes/assessor/$studentId/route'
 import { Route as StudentAwardIndexRouteImport } from './routes/student/$award/index'
 import { Route as StudentAwardChallengeRouteImport } from './routes/student/$award/$challenge'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MentorStudentIdAwardRouteRouteImport } from './routes/mentor/$studentId/$award/route'
+import { Route as AssessorStudentIdAwardRouteRouteImport } from './routes/assessor/$studentId/$award/route'
 import { Route as MentorStudentIdAwardChallengeRouteImport } from './routes/mentor/$studentId/$award/$challenge'
+import { Route as AssessorStudentIdAwardChallengeRouteImport } from './routes/assessor/$studentId/$award/$challenge'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -42,6 +46,11 @@ const MentorRouteRoute = MentorRouteRouteImport.update({
   path: '/mentor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssessorRouteRoute = AssessorRouteRouteImport.update({
+  id: '/assessor',
+  path: '/assessor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -56,6 +65,11 @@ const MentorStudentIdRouteRoute = MentorStudentIdRouteRouteImport.update({
   id: '/$studentId',
   path: '/$studentId',
   getParentRoute: () => MentorRouteRoute,
+} as any)
+const AssessorStudentIdRouteRoute = AssessorStudentIdRouteRouteImport.update({
+  id: '/$studentId',
+  path: '/$studentId',
+  getParentRoute: () => AssessorRouteRoute,
 } as any)
 const StudentAwardIndexRoute = StudentAwardIndexRouteImport.update({
   id: '/',
@@ -78,101 +92,138 @@ const MentorStudentIdAwardRouteRoute =
     path: '/$award',
     getParentRoute: () => MentorStudentIdRouteRoute,
   } as any)
+const AssessorStudentIdAwardRouteRoute =
+  AssessorStudentIdAwardRouteRouteImport.update({
+    id: '/$award',
+    path: '/$award',
+    getParentRoute: () => AssessorStudentIdRouteRoute,
+  } as any)
 const MentorStudentIdAwardChallengeRoute =
   MentorStudentIdAwardChallengeRouteImport.update({
     id: '/$challenge',
     path: '/$challenge',
     getParentRoute: () => MentorStudentIdAwardRouteRoute,
   } as any)
+const AssessorStudentIdAwardChallengeRoute =
+  AssessorStudentIdAwardChallengeRouteImport.update({
+    id: '/$challenge',
+    path: '/$challenge',
+    getParentRoute: () => AssessorStudentIdAwardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assessor': typeof AssessorRouteRouteWithChildren
   '/mentor': typeof MentorRouteRouteWithChildren
   '/student': typeof StudentRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/assessor/$studentId': typeof AssessorStudentIdRouteRouteWithChildren
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
+  '/assessor/$studentId/$award': typeof AssessorStudentIdAwardRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
   '/student/$award/': typeof StudentAwardIndexRoute
+  '/assessor/$studentId/$award/$challenge': typeof AssessorStudentIdAwardChallengeRoute
   '/mentor/$studentId/$award/$challenge': typeof MentorStudentIdAwardChallengeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assessor': typeof AssessorRouteRouteWithChildren
   '/mentor': typeof MentorRouteRouteWithChildren
   '/student': typeof StudentRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/assessor/$studentId': typeof AssessorStudentIdRouteRouteWithChildren
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
+  '/assessor/$studentId/$award': typeof AssessorStudentIdAwardRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
   '/student/$award': typeof StudentAwardIndexRoute
+  '/assessor/$studentId/$award/$challenge': typeof AssessorStudentIdAwardChallengeRoute
   '/mentor/$studentId/$award/$challenge': typeof MentorStudentIdAwardChallengeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assessor': typeof AssessorRouteRouteWithChildren
   '/mentor': typeof MentorRouteRouteWithChildren
   '/student': typeof StudentRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/assessor/$studentId': typeof AssessorStudentIdRouteRouteWithChildren
   '/mentor/$studentId': typeof MentorStudentIdRouteRouteWithChildren
   '/student/$award': typeof StudentAwardRouteRouteWithChildren
+  '/assessor/$studentId/$award': typeof AssessorStudentIdAwardRouteRouteWithChildren
   '/mentor/$studentId/$award': typeof MentorStudentIdAwardRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/student/$award/$challenge': typeof StudentAwardChallengeRoute
   '/student/$award/': typeof StudentAwardIndexRoute
+  '/assessor/$studentId/$award/$challenge': typeof AssessorStudentIdAwardChallengeRoute
   '/mentor/$studentId/$award/$challenge': typeof MentorStudentIdAwardChallengeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assessor'
     | '/mentor'
     | '/student'
     | '/login'
     | '/signup'
+    | '/assessor/$studentId'
     | '/mentor/$studentId'
     | '/student/$award'
+    | '/assessor/$studentId/$award'
     | '/mentor/$studentId/$award'
     | '/api/auth/$'
     | '/student/$award/$challenge'
     | '/student/$award/'
+    | '/assessor/$studentId/$award/$challenge'
     | '/mentor/$studentId/$award/$challenge'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/assessor'
     | '/mentor'
     | '/student'
     | '/login'
     | '/signup'
+    | '/assessor/$studentId'
     | '/mentor/$studentId'
+    | '/assessor/$studentId/$award'
     | '/mentor/$studentId/$award'
     | '/api/auth/$'
     | '/student/$award/$challenge'
     | '/student/$award'
+    | '/assessor/$studentId/$award/$challenge'
     | '/mentor/$studentId/$award/$challenge'
   id:
     | '__root__'
     | '/'
+    | '/assessor'
     | '/mentor'
     | '/student'
     | '/login'
     | '/signup'
+    | '/assessor/$studentId'
     | '/mentor/$studentId'
     | '/student/$award'
+    | '/assessor/$studentId/$award'
     | '/mentor/$studentId/$award'
     | '/api/auth/$'
     | '/student/$award/$challenge'
     | '/student/$award/'
+    | '/assessor/$studentId/$award/$challenge'
     | '/mentor/$studentId/$award/$challenge'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssessorRouteRoute: typeof AssessorRouteRouteWithChildren
   MentorRouteRoute: typeof MentorRouteRouteWithChildren
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -210,6 +261,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentorRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assessor': {
+      id: '/assessor'
+      path: '/assessor'
+      fullPath: '/assessor'
+      preLoaderRoute: typeof AssessorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -230,6 +288,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/mentor/$studentId'
       preLoaderRoute: typeof MentorStudentIdRouteRouteImport
       parentRoute: typeof MentorRouteRoute
+    }
+    '/assessor/$studentId': {
+      id: '/assessor/$studentId'
+      path: '/$studentId'
+      fullPath: '/assessor/$studentId'
+      preLoaderRoute: typeof AssessorStudentIdRouteRouteImport
+      parentRoute: typeof AssessorRouteRoute
     }
     '/student/$award/': {
       id: '/student/$award/'
@@ -259,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentorStudentIdAwardRouteRouteImport
       parentRoute: typeof MentorStudentIdRouteRoute
     }
+    '/assessor/$studentId/$award': {
+      id: '/assessor/$studentId/$award'
+      path: '/$award'
+      fullPath: '/assessor/$studentId/$award'
+      preLoaderRoute: typeof AssessorStudentIdAwardRouteRouteImport
+      parentRoute: typeof AssessorStudentIdRouteRoute
+    }
     '/mentor/$studentId/$award/$challenge': {
       id: '/mentor/$studentId/$award/$challenge'
       path: '/$challenge'
@@ -266,8 +338,56 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentorStudentIdAwardChallengeRouteImport
       parentRoute: typeof MentorStudentIdAwardRouteRoute
     }
+    '/assessor/$studentId/$award/$challenge': {
+      id: '/assessor/$studentId/$award/$challenge'
+      path: '/$challenge'
+      fullPath: '/assessor/$studentId/$award/$challenge'
+      preLoaderRoute: typeof AssessorStudentIdAwardChallengeRouteImport
+      parentRoute: typeof AssessorStudentIdAwardRouteRoute
+    }
   }
 }
+
+interface AssessorStudentIdAwardRouteRouteChildren {
+  AssessorStudentIdAwardChallengeRoute: typeof AssessorStudentIdAwardChallengeRoute
+}
+
+const AssessorStudentIdAwardRouteRouteChildren: AssessorStudentIdAwardRouteRouteChildren =
+  {
+    AssessorStudentIdAwardChallengeRoute: AssessorStudentIdAwardChallengeRoute,
+  }
+
+const AssessorStudentIdAwardRouteRouteWithChildren =
+  AssessorStudentIdAwardRouteRoute._addFileChildren(
+    AssessorStudentIdAwardRouteRouteChildren,
+  )
+
+interface AssessorStudentIdRouteRouteChildren {
+  AssessorStudentIdAwardRouteRoute: typeof AssessorStudentIdAwardRouteRouteWithChildren
+}
+
+const AssessorStudentIdRouteRouteChildren: AssessorStudentIdRouteRouteChildren =
+  {
+    AssessorStudentIdAwardRouteRoute:
+      AssessorStudentIdAwardRouteRouteWithChildren,
+  }
+
+const AssessorStudentIdRouteRouteWithChildren =
+  AssessorStudentIdRouteRoute._addFileChildren(
+    AssessorStudentIdRouteRouteChildren,
+  )
+
+interface AssessorRouteRouteChildren {
+  AssessorStudentIdRouteRoute: typeof AssessorStudentIdRouteRouteWithChildren
+}
+
+const AssessorRouteRouteChildren: AssessorRouteRouteChildren = {
+  AssessorStudentIdRouteRoute: AssessorStudentIdRouteRouteWithChildren,
+}
+
+const AssessorRouteRouteWithChildren = AssessorRouteRoute._addFileChildren(
+  AssessorRouteRouteChildren,
+)
 
 interface MentorStudentIdAwardRouteRouteChildren {
   MentorStudentIdAwardChallengeRoute: typeof MentorStudentIdAwardChallengeRoute
@@ -333,6 +453,7 @@ const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssessorRouteRoute: AssessorRouteRouteWithChildren,
   MentorRouteRoute: MentorRouteRouteWithChildren,
   StudentRouteRoute: StudentRouteRouteWithChildren,
   LoginRoute: LoginRoute,

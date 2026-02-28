@@ -9,7 +9,7 @@ import { getStudentAwardAndChallenges } from '@/api/students/getStudentAwardAndC
 const inputSchema = z.object({
     studentId: z.uuid(),
 })
-export const Route = createFileRoute('/mentor/$studentId')({
+export const Route = createFileRoute('/assessor/$studentId')({
     component: RouteComponent,
     params: inputSchema,
     loader: async ({ params }) => {

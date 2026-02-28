@@ -1,11 +1,18 @@
 import ProposalForm from "../proposalForm";
 import { Proposal } from "@/types/schemas/proposal";
 import { useForm } from "@tanstack/react-form";
-import { z } from "zod";
-import { Route } from "@/routes/mentor/$studentId/$award/$challenge"
+import { useParams } from "@tanstack/react-router";
 import { useReviewProposal } from "../../hooks/useReviewProposal";
 import { Comments } from "../notifications";
+import { useSession } from "@/integrations/better-auth/authClient";
+import { Award } from "@/types/awards";
 export default function ReviewProposal({proposal}: {proposal: Proposal}) {
+    const { data } = useSession()
+    if (!data || !data.user) {
+        return null
+    }
+    const { user } = data
+    const isMentor = user.role === "mentor"
     return (
         <div className="flex flex-col h-full flex-1 gap-4">
             <Comments proposal={proposal} />
@@ -15,13 +22,19 @@ export default function ReviewProposal({proposal}: {proposal: Proposal}) {
                 award={proposal.award}
                 challenge={proposal.challenge}
             />
-            <ProposalFeedbackForm />
+            {isMentor && proposal.status === "pending mentor" && <ProposalFeedbackForm />}
+            {!isMentor && proposal.status === "pending assessor" && <ProposalFeedbackForm />}
+            
         </div>
     )
 }
 function ProposalFeedbackForm() {
-    const { award, challenge, studentId } = Route.useParams()
-    const { mutate: submitProposal, isPending } = useReviewProposal(studentId, award, challenge)
+    const { award, challenge, studentId } = useParams({strict: false})
+    if (!award || !challenge || !studentId) {
+        return null
+    }
+    //TODO: Fix the type here
+    const { mutate: submitProposal, isPending } = useReviewProposal(studentId, award as Award, challenge)
     const form = useForm({
         defaultValues: {
             feedback: '',
@@ -30,7 +43,6 @@ function ProposalFeedbackForm() {
             const {feedback} = value
             //Get the button that was clicked (approve or reject) and the feedback from the form
             const action = (document.activeElement as HTMLButtonElement).id
-            console.log("Submitting proposal review with action:", action, "and feedback:", feedback, value)
             submitProposal({ notes: feedback, accepted: action === "approve" })
             // Handle approve/reject logic here, using value.feedback for the mentor's feedback
         }

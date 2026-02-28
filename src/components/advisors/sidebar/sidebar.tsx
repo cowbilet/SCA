@@ -1,21 +1,25 @@
 import {HTMLAttributes, ReactNode} from 'react'
 import SidebarShell from '../../sidebarShell'
 import StudentList from './studentList'
+import { useLocation } from "@tanstack/react-router"
+
 export default function MentorSidebar() {
     return (
         <SidebarShell>
-            <MentorSidebarHead />
+            <SidebarHead />
             <StudentList />
         </SidebarShell>
     )
 }
 
-function MentorSidebarHead() {
+function SidebarHead() {
+    const location = useLocation()
+    const isMentorHome = location.pathname === "/mentor"
     return (
         <div className="w-full h-32 border-b  border-gray-200 flex flex-col items-start justify-center p-4">
             <div>
                 <h1 className="text-2xl font-bold">
-                    Assessor Dashboard
+                    {isMentorHome ? "Mentor" : "Assessor"} Dashboard
                 </h1>
                 <p className="text-sm text-gray-500">
                     Review and provide feedback on student proposals
