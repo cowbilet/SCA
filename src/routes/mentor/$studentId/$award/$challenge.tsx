@@ -8,7 +8,7 @@ import z from 'zod'
 import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/reviewProposal'
 import { getStudentProposal } from '@/features/proposals/api/getStudentProposal'
 
-
+import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
 const inputSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
@@ -23,21 +23,16 @@ export const Route = createFileRoute(
 )({
     component: RouteComponent,
     params: inputSchema,
-    loader: async ({ params }) => {
+    loader: async ({ params, context: { queryClient } }) => {
         const { award, challenge, studentId } = params
-        const proposal = await getStudentProposal({data: { award, challenge, studentId }})
-        if (!proposal) {
-            throw new Error("Proposal not found")
-        }
-        return proposal
+        return queryClient.ensureQueryData(proposalQueryOptions(award, challenge, studentId))
     },
 })
 
 function RouteComponent() {
-    const proposalData = Route.useLoaderData()
     return (
         <div className="flex flex-col h-full flex-1 p-4 bg-white rounded-lg shadow">
-            <ReviewProposal proposal={proposalData} />
+            <ReviewProposal />
             
         </div>
     )

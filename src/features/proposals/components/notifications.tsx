@@ -112,6 +112,11 @@ function generateFeedbackNotifications(proposal: Proposal) {
                 <FeedbackNotification key="mentorFeedback" feedback={proposal.mentorNote} title={"Mentor"} className={positiveClass} />
             )
         }
+        else if (proposal.status === 'rejected mentor' && proposal.mentorNote) {
+            comments.push(
+                <FeedbackNotification key="mentorFeedback" feedback={proposal.mentorNote} title={"Mentor"} className={negativeClass} />
+            )
+        }
         // However the assessor feedback was negative
         if (proposal.status === 'rejected assessor' && proposal.assessorNote) {
             comments.push(

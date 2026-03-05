@@ -6,13 +6,22 @@ import { useReviewProposal } from "../../hooks/useReviewProposal";
 import { Comments } from "../notifications";
 import { useSession } from "@/integrations/better-auth/authClient";
 import { Award } from "@/types/awards";
-export default function ReviewProposal({proposal}: {proposal: Proposal}) {
+import { useProposal } from "../../hooks/useProposal";
+export default function ReviewProposal() {
     const { data } = useSession()
-    if (!data || !data.user) {
+    const { studentId, award, challenge } = useParams({ strict: false })
+    const { data: proposal, isError, isLoading } = useProposal(award! as Award, challenge!, studentId!)
+    if (!data || !data.user || !studentId || !award || !challenge) {
         return null
     }
     const { user } = data
     const isMentor = user.role === "mentor"
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+    if (isError || !proposal) {
+        return <div>Error loading proposal. Please try again later.</div>
+    }
     return (
         <div className="flex flex-col h-full flex-1 gap-4">
             <Comments proposal={proposal} />

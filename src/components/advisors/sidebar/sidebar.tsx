@@ -14,7 +14,7 @@ export default function MentorSidebar() {
 
 function SidebarHead() {
     const location = useLocation()
-    const isMentorHome = location.pathname === "/mentor"
+    const isMentorHome = location.pathname.includes("/mentor")
     return (
         <div className="w-full h-32 border-b  border-gray-200 flex flex-col items-start justify-center p-4">
             <div>

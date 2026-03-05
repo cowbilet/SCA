@@ -100,7 +100,7 @@ function PendingListItem({proposal}: {proposal: ProposalWithStudent}) {
 function PendingProposalTag() {
     return (
         <span className="text-yellow-700 bg-yellow-100 border border-yellow-500 px-2 py-1 rounded text-xs font-semibold">
-            Pending Proposal
+            Proposal
         </span>
     )
 }

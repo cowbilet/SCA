@@ -16,12 +16,12 @@ const AwardStyling = {
         color: 'from-yellow-400 to-yellow-500'
     }
 }
-const AwardProgressStyling: Record<Exclude<AwardProgress,'not started'>, { display: string, color?: string}> = {
-    'locked': { display: '🔒' }, 
-    'ongoing': { display: 'Ongoing', color: 'bg-blue-500/25 border-blue-500 text-blue-700!' },
-    'completed': { display: 'Completed', color: 'bg-green-500/45 border-green-500 text-green-700!' }, 
+// const AwardProgressStyling: Record<Exclude<AwardProgress,'not started'>, { display: string, color?: string}> = {
+//     'locked': { display: '🔒' }, 
+//     'ongoing': { display: 'Ongoing', color: 'bg-blue-500/25 border-blue-500 text-blue-700!' },
+//     'completed': { display: 'Completed', color: 'bg-green-500/45 border-green-500 text-green-700!' }, 
 
-}
+// }
 const AwardStatuses: Record<Award, AwardProgress> = {
     'bronze': 'completed',
     'silver': 'not started',
@@ -75,9 +75,9 @@ function AwardCard({award}: {award: Award}) {
                         className={`text-sm font-bold text-center mr-0 ${isActive ? 'text-white' : 'text-black'}`}>
                             {AwardStyling[award].title}
                     </h1>
-                    {AwardStatuses[award] !== 'not started' && (
+                    {/* {AwardStatuses[award] !== 'not started' && (
                         <AwardStatus status={AwardStatuses[award]} isActive={isActive} />
-                    )}
+                    )} */}
                 </div>
             )}
         </Link>
@@ -88,13 +88,13 @@ function AwardCard({award}: {award: Award}) {
 //         {AwardStyling[award].title}
 // </h1>
 // <TierStatus status={TierStatuses[award]} />
-function AwardStatus({status, isActive}: {status: Exclude<AwardProgress,'not started'>, isActive: boolean}) {
-    return (
-        <div 
-            className={`px-2 w-18 py-1 border rounded-sm text-[0.65rem] text-center font-semibold text-white 
-                ${isActive ? `bg-white/25 text-white` : `${AwardProgressStyling[status].color}` }
-            `}>
-                {AwardProgressStyling[status].display}
-        </div>
-    )
-}
+// function AwardStatus({status, isActive}: {status: Exclude<AwardProgress,'not started'>, isActive: boolean}) {
+//     return (
+//         <div 
+//             className={`px-2 w-18 py-1 border rounded-sm text-[0.65rem] text-center font-semibold text-white 
+//                 ${isActive ? `bg-white/25 text-white` : `${AwardProgressStyling[status].color}` }
+//             `}>
+//                 {AwardProgressStyling[status].display}
+//         </div>
+//     )
+// }

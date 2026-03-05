@@ -21,7 +21,6 @@ export default function AdvisorStudentNavigation() {
     }
     const studentChallenges = student.studentChallenges
     // Validate that studentChallenges is in the correct format
-    console.log("Loader Data:", studentChallenges) // Debug log to check the loader data
     if (!studentChallenges || !Array.isArray(studentChallenges)) {
         return null
     }
@@ -48,9 +47,9 @@ export default function AdvisorStudentNavigation() {
     return (
         <div className="flex flex-col gap-4 w-full p-4 drop-shadow-2xl">
             <div className="flex flex-row gap-2">
-                <AwardLink link={{to: awardLink, params: {award: "bronze"}, activeProps: {className: "bronze"}}} name="Bronze" disable={!availableAwards.includes("bronze")}/>
-                <AwardLink link={{to: awardLink, params: {award: "silver"}, activeProps: {className: "silver"}}} name="Silver" disable={!availableAwards.includes("silver")} />
-                <AwardLink link={{to: awardLink, params: {award: "gold"}, activeProps: {className: "gold"}}} name="Gold" disable={!availableAwards.includes("gold") } />
+                <AwardLink link={{to: awardLink, params: {award: "bronze"}, activeProps: {className: "bronze text-white border-0!"}}} name="Bronze" disable={!availableAwards.includes("bronze")}/>
+                <AwardLink link={{to: awardLink, params: {award: "silver"}, activeProps: {className: "silver text-white border-0!"}}} name="Silver" disable={!availableAwards.includes("silver")} />
+                <AwardLink link={{to: awardLink, params: {award: "gold"}, activeProps: {className: "gold text-white border-0!"}}} name="Gold" disable={!availableAwards.includes("gold") } />
             </div>
             <div className="flex flex-row gap-2">
                 <AwardLink link={{to: challengeLink, params: {award: award, challenge: "relationships"}, activeProps: {className: "relationships"}}} name="Relationships" disable={!isAwardPage || !availableNavigation?.[award]?.includes("relationships") } />
