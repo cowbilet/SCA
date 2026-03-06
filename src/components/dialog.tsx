@@ -73,7 +73,7 @@ export function DialogFooter({ children, className, ...props }: HTMLAttributes<H
 }
 export function DialogBody({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) {
     return (
-         <div className={clsx("relative gap-4 flex-1 overflow-auto" , className)} {...props}>
+         <div className={clsx("relative gap-4 flex-1 overflow-auto p-4" , className)} {...props}>
             {children}
         </div>
     )

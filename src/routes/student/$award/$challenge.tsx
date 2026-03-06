@@ -8,7 +8,7 @@ import type { JSX } from 'react'
 import { ActiveProposal, SubmitProposal } from '@/features/proposals/components/studentProposal/proposal'
 import { SubmissionState } from '@/types/awards'
 import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
-import { ViewProposal } from '@/features/proposals/components/viewProposal'
+import { ActivityLogs } from '@/features/logs/components/activityLogs'
 const challengeSchema = z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
     message: 'Invalid challenge',
 })
@@ -39,7 +39,7 @@ const proposalComponents: Record<SubmissionState, (props: {proposalStatus: Submi
     'pending assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
     'rejected mentor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
     'rejected assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
-    'completed': ({proposalStatus}) => <ViewProposal />,
+    'completed': ({proposalStatus}) => <ActivityLogs />,
 }
 function RouteComponent() {
     const { challenge, award } = Route.useParams()

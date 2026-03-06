@@ -31,7 +31,7 @@ export const Route = createFileRoute('/student/$award')({
 
 function RouteComponent() {
     return (
-        <div className='flex-1 bg-gray-50'>
+        <div className='flex-1 bg-gray-100'>
             <Outlet />
         </div>
     )
