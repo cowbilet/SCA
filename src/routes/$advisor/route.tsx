@@ -1,11 +1,15 @@
 import AdvisorSidebar from '@/components/advisors/sidebar/sidebar'
-import { ensureSession, restrictRoles } from '@/utils/server/auth.server'
+import { restrictRoles } from '@/utils/server/auth.server'
 import { createFileRoute } from '@tanstack/react-router'
 import { Outlet } from '@tanstack/react-router'
-export const Route = createFileRoute('/assessor')({
+import z from 'zod'
+export const Route = createFileRoute('/$advisor')({
+    params: z.object({
+        advisor: z.enum(["mentor", "assessor"]),
+    }),
     component: RouteComponent,
     beforeLoad: async () => {
-        await restrictRoles({ data: ["assessor"] })
+        await restrictRoles({ data: ["mentor", "assessor"] })
     }
 })
 

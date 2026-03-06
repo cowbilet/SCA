@@ -41,21 +41,18 @@ export default function AdvisorStudentNavigation() {
         }
     }, [studentChallenges])
     const availableAwards = availableNavigation ? Object.keys(availableNavigation).filter(award => availableNavigation[award as Award].length > 0) : []
-
-    const awardLink = isMentorPage ? '/mentor/$studentId/$award' : '/assessor/$studentId/$award'
-    const challengeLink = isMentorPage ? '/mentor/$studentId/$award/$challenge' : '/assessor/$studentId/$award/$challenge'
     return (
         <div className="flex flex-col gap-4 w-full p-4 drop-shadow-2xl">
             <div className="flex flex-row gap-2">
-                <AwardLink link={{to: awardLink, params: {award: "bronze"}, activeProps: {className: "bronze text-white border-0!"}}} name="Bronze" disable={!availableAwards.includes("bronze")}/>
-                <AwardLink link={{to: awardLink, params: {award: "silver"}, activeProps: {className: "silver text-white border-0!"}}} name="Silver" disable={!availableAwards.includes("silver")} />
-                <AwardLink link={{to: awardLink, params: {award: "gold"}, activeProps: {className: "gold text-white border-0!"}}} name="Gold" disable={!availableAwards.includes("gold") } />
+                <AwardLink link={{to: "/$advisor/$studentId/$award", params: {award: "bronze"}, activeProps: {className: "bronze text-white border-0!"}}} name="Bronze" disable={!availableAwards.includes("bronze")}/>
+                <AwardLink link={{to: "/$advisor/$studentId/$award", params: {award: "silver"}, activeProps: {className: "silver text-white border-0!"}}} name="Silver" disable={!availableAwards.includes("silver")} />
+                <AwardLink link={{to: "/$advisor/$studentId/$award", params: {award: "gold"}, activeProps: {className: "gold text-white border-0!"}}} name="Gold" disable={!availableAwards.includes("gold") } />
             </div>
             <div className="flex flex-row gap-2">
-                <AwardLink link={{to: challengeLink, params: {award: award, challenge: "relationships"}, activeProps: {className: "relationships"}}} name="Relationships" disable={!isAwardPage || !availableNavigation?.[award]?.includes("relationships") } />
-                <AwardLink link={{to: challengeLink, params: {award: award, challenge: "challenge"}, activeProps: {className: "challenge"}}} name="Challenge" disable={!isAwardPage || !availableNavigation?.[award]?.includes("challenge") } />
-                <AwardLink link={{to: challengeLink, params: {award: award, challenge: "community"}, activeProps: {className: "community"}}} name="Community" disable={!isAwardPage || !availableNavigation?.[award]?.includes("community") } />
-                <AwardLink link={{to: challengeLink, params: {award: award, challenge: "service"}, activeProps: {className: "service"}}} name="Service" disable={!isAwardPage || !availableNavigation?.[award]?.includes("service") } />
+                <AwardLink link={{to: "/$advisor/$studentId/$award/$challenge", params: {award: award, challenge: "relationships"}, activeProps: {className: "relationships"}}} name="Relationships" disable={!isAwardPage || !availableNavigation?.[award]?.includes("relationships") } />
+                <AwardLink link={{to: "/$advisor/$studentId/$award/$challenge", params: {award: award, challenge: "challenge"}, activeProps: {className: "challenge"}}} name="Challenge" disable={!isAwardPage || !availableNavigation?.[award]?.includes("challenge") } />
+                <AwardLink link={{to: "/$advisor/$studentId/$award/$challenge", params: {award: award, challenge: "community"}, activeProps: {className: "community"}}} name="Community" disable={!isAwardPage || !availableNavigation?.[award]?.includes("community") } />
+                <AwardLink link={{to: "/$advisor/$studentId/$award/$challenge", params: {award: award, challenge: "service"}, activeProps: {className: "service"}}} name="Service" disable={!isAwardPage || !availableNavigation?.[award]?.includes("service") } />
             </div>
         </div>
     )

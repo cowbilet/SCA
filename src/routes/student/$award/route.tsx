@@ -1,25 +1,14 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-
-import { validateAward } from '@/types/guards/awards'
-import { Award } from '@/types/awards'
-import { z } from 'zod'
+import {z} from 'zod'
+import { awardSchema } from '@/types/schemas/award'
 import { ALL_CHALLENGES } from '@/types/challenges'
 import { challengeQueryOptions } from '@/hooks/useChallenge'
 
-const awardSchema = z.string().refine((award): award is Award => validateAward(award), {
-    message: 'Invalid award',
-})
 export const Route = createFileRoute('/student/$award')({
     component: RouteComponent,
-    params: {
-        parse: (rawParams) => {
-            const result = awardSchema.safeParse(rawParams.award)
-            if (!result.success) {
-                throw new Response('Invalid award', { status: 400 })
-            }
-            return { award: result.data }
-        }
-    },
+    params: z.object({
+        award: awardSchema,
+    }),
     loader: async ({ params, context: { queryClient } }) => {
         const promises = []
         for (const challenge of Object.values(ALL_CHALLENGES)) {

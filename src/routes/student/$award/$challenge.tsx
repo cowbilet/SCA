@@ -1,28 +1,21 @@
-import { validateChallenge } from '@/types/guards/challenges'
-import { Challenge } from '@/types/challenges'
-import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { z } from 'zod'
+import { createFileRoute } from '@tanstack/react-router'
 import ChallengeShell from '@/components/student/challenge'
-import {z} from 'zod'
+import { challengeSchema } from '@/types/schemas/challenges'
 import { challengeQueryOptions, useChallenge } from '@/hooks/useChallenge'
 import type { JSX } from 'react'
 import { ActiveProposal, SubmitProposal } from '@/features/proposals/components/studentProposal/proposal'
 import { SubmissionState } from '@/types/awards'
 import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
 import { ActivityLogs } from '@/features/logs/components/activityLogs'
-const challengeSchema = z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
-    message: 'Invalid challenge',
-})
+import { awardSchema } from '@/types/schemas/award'
+
 export const Route = createFileRoute('/student/$award/$challenge')({
     component: () => <RouteComponent />,
-    params: {
-        parse: (rawParams) => {
-            const result = challengeSchema.safeParse(rawParams.challenge)
-            if (!result.success) {
-                throw new Response('Invalid challenge', { status: 400 })
-            }
-            return { challenge: result.data }
-        }
-    },
+    params: z.object({
+        award: awardSchema,
+        challenge: challengeSchema,
+    }),
     loader: async ({ params, context: { queryClient, user } }) => {
         const { award, challenge } = params
         const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge))
@@ -39,7 +32,7 @@ const proposalComponents: Record<SubmissionState, (props: {proposalStatus: Submi
     'pending assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
     'rejected mentor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
     'rejected assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
-    'completed': ({proposalStatus}) => <ActivityLogs />,
+    'completed': () => <ActivityLogs />,
 }
 function RouteComponent() {
     const { challenge, award } = Route.useParams()

@@ -1,10 +1,13 @@
+import { awardSchema } from '@/types/schemas/award'
 import { createFileRoute } from '@tanstack/react-router'
-
+import { z } from 'zod'
 
 
 export const Route = createFileRoute('/student/$award/')({
-    component: RouteComponent,
-    
+    params: z.object({
+        award: awardSchema,
+    }),
+    component: RouteComponent,    
 })
 
 

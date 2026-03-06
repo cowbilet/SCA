@@ -10,7 +10,7 @@ export function ViewProposal() {
     const {data: user} = useSession()
     const {award, challenge} = useParams({strict: false})
     //TODO: Make this better flow better (no ! and as Award)
-    const {data: proposal, isLoading, isError} = useProposal(award! as Award, challenge!, user?.user.id!)
+    const {data: proposal, isLoading, isError} = useProposal(award!, challenge!, user?.user.id!)
     return (
         <Dialog
             trigger={(setIsOpen) => (

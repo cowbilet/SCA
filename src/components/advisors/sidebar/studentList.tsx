@@ -6,6 +6,7 @@ import { Challenge } from "@/types/challenges"
 import { Link } from "@tanstack/react-router"
 import { useLocation } from "@tanstack/react-router"
 import { User } from "@/types/schemas/users"
+import { useParams } from "@tanstack/react-router"
 import { useStudents } from "@/hooks/useStudents"
 export default function StudentList() {
 
@@ -62,10 +63,9 @@ export default function StudentList() {
     )
 }
 function StudentListItem({student}: {student: User}) {
-    const location = useLocation();
-    const isMentorPage = location.pathname.includes('/mentor')
+    const { advisor } = useParams({from: "/$advisor", strict: true})
     return (
-        <Link to={isMentorPage ? `/mentor/$studentId` : `/assessor/$studentId`} params={{studentId: student.userId}} key={student.userId} className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
+        <Link to="/$advisor/$studentId" params={{advisor, studentId: student.userId}} key={student.userId} className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
             <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold mr-0 text-black">{student.name}</h1>
             </div>
@@ -76,10 +76,9 @@ function StudentListItem({student}: {student: User}) {
     )
 }
 function PendingListItem({proposal}: {proposal: ProposalWithStudent}) {
-    const location = useLocation();
-    const isMentorPage = location.pathname.includes('/mentor')
+    const { advisor } = useParams({from: "/$advisor", strict: true})
     return (
-        <Link to={isMentorPage ? '/mentor/$studentId/$award/$challenge' : '/assessor/$studentId/$award/$challenge'} params={{studentId: proposal.student.userId, award: proposal.proposal.award, challenge: proposal.proposal.challenge}} activeProps={{className: "border-purple-500 border-2"}} className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
+        <Link to="/$advisor/$studentId/$award/$challenge" params={{advisor, studentId: proposal.student.userId, award: proposal.proposal.award, challenge: proposal.proposal.challenge}} activeProps={{className: "border-purple-500 border-2"}} className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white">
 
             <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold mr-0 text-black">{proposal.student.name}</h1>

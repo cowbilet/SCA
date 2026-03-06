@@ -1,25 +1,18 @@
-import { validateChallenge } from '@/types/guards/challenges'
 import { createFileRoute } from '@tanstack/react-router'
-import { validateAward } from '@/types/guards/awards'
 
-import { Award } from '@/types/awards'
-import { Challenge } from '@/types/challenges'
 import z from 'zod'
 import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/reviewProposal'
+
 import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
-
-
+import { awardSchema } from '@/types/schemas/award'
+import { challengeSchema } from '@/types/schemas/challenges'
 const inputSchema = z.object({
-    award: z.string().refine((award): award is Award => validateAward(award), {
-        message: 'Invalid award',
-    }),
-    challenge: z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
-        message: 'Invalid challenge',
-    }),
+    award: awardSchema,
+    challenge: challengeSchema,
     studentId: z.uuid(),
 })
 export const Route = createFileRoute(
-    '/assessor/$studentId/$award/$challenge',
+    '/$advisor/$studentId/$award/$challenge',
 )({
     component: RouteComponent,
     params: inputSchema,

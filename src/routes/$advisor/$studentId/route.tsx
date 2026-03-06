@@ -6,12 +6,11 @@ import { User } from 'lucide-react'
 import { z } from 'zod'
 import AdvisorStudentNavigation from '@/components/advisors/advisorStudentNavigation'
 import { getStudentAwardAndChallenges } from '@/api/students/getStudentAwardAndChallenges'
-const inputSchema = z.object({
-    studentId: z.uuid(),
-})
-export const Route = createFileRoute('/assessor/$studentId')({
+export const Route = createFileRoute('/$advisor/$studentId')({
     component: RouteComponent,
-    params: inputSchema,
+    params: z.object({
+        studentId: z.uuid(),
+    }),
     loader: async ({ params }) => {
         const { studentId } = params
         const student = await getUserById({data: {studentId}})
