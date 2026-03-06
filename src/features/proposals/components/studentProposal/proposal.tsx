@@ -6,7 +6,7 @@ import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { LoaderCircle } from "lucide-react";
 import {Comments, Instructions} from "../notifications";
 import { clsx } from "clsx";
-import { Route } from "@/routes/student/route";
+import { useSession } from "@/integrations/better-auth/authClient";
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
         <Card className="h-full flex flex-col">
@@ -20,8 +20,8 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
 const disabledStates: SubmissionState[] = ['pending mentor', 'pending assessor']
 export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
-    const student = Route.useRouteContext()
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, student.user.userId)
+    const { data } = useSession()
+    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, data?.user?.id)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -39,9 +39,9 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
     return (
         <Card className="h-full flex flex-col">
             <Instructions state={proposalStatus} />
-            <Comments proposal={proposalData} />
+            {proposalStatus !== "pending mentor" && <Comments proposal={proposalData} />}
             <ProposalForm 
-                values={proposalData} 
+                values={proposalData}
                 disabled={disabledStates.includes(proposalStatus)} 
                 Button={SubmitButton}
             />
@@ -52,7 +52,7 @@ function SubmitButton({isDisabled, isPending}: {isDisabled: boolean, isPending: 
     return (
         <button
             type="submit"
-            className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {
+            className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 flex items-center justify-center", {
                 "opacity-50 hover:cursor-not-allowed": isPending || isDisabled,
             })}
             disabled={isPending || isDisabled}

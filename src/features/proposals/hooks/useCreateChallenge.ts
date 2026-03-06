@@ -6,17 +6,20 @@ import { Proposal } from '@/types/schemas/proposal';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
+import { useSession } from '@/integrations/better-auth/authClient';
 export function useCreateChallenge(award: Award, challenge: Challenge) {
     const queryClient = useQueryClient();
     const router = useRouter()
+    const { data } = useSession()
+    const id = data?.user?.id
     return useMutation({
         mutationFn: (data: { mentorEmail: string, description: string, goal: string }) => createUserProposal({ data: { ...data, award, challenge } }),
         onMutate: async (newProposal) => {
             await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge] })
-            await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge] })
+            await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge, id] })
 
             const previousChallenge = queryClient.getQueryData<StudentChallengeWithProposalAndSubmission | null>(['challenges', award, challenge])
-            const previousProposal = queryClient.getQueryData<Proposal | null>(['proposals', award, challenge])
+            const previousProposal = queryClient.getQueryData<Proposal | null>(['proposals', award, challenge, id])
 
             const optimisticProposal: Proposal = {
                 studentId: '',

@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 
-import { dbGetUserByEmail, dbGetUserByName } from "@/db/users.server"
+import { dbGetUserByEmail } from "@/db/users.server"
 
 import { validateAward } from "@/types/guards/awards"
 import type { Award } from "@/types/awards"

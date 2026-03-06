@@ -6,7 +6,6 @@ import { Award } from '@/types/awards'
 import { validateChallenge } from '@/types/guards/challenges'
 import { Challenge } from '@/types/challenges'
 import { dbChangeProposalStatus, dbGetProposal } from '@/db/proposals.server'
-import { dbGetUserByName } from '@/db/users.server'
 import { restrictRoles } from '@/utils/server/auth.server'
 const withdrawProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {

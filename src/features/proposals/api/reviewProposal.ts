@@ -1,5 +1,4 @@
 import { dbChangeProposalStatus } from "@/db/proposals.server";
-import { dbGetUserByName } from "@/db/users.server";
 import { Award } from "@/types/awards";
 import { Challenge } from "@/types/challenges";
 import { validateAward } from "@/types/guards/awards";
