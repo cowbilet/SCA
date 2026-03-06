@@ -8,11 +8,11 @@ import { useSession } from "@/integrations/better-auth/authClient"
 export function ViewProposal() {
     const {data: user} = useSession()
     const {award, challenge} = useParams({strict: false})
+    //This is never false however, but if it is then we break the rules of hook
     if (!user || !user.user || !award || !challenge) {
         return null
     }
-    //TODO: Make this better flow better (no ! and as Award)
-    const {data: proposal, isLoading, isError} = useProposal(award, challenge, user.user.id!)
+    const {data: proposal, isLoading, isError} = useProposal(award, challenge, user.user.id)
     return (
         <Dialog
             trigger={(setIsOpen) => (
