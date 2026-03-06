@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { useSession } from '@/integrations/better-auth/authClient';
-export function useCreateChallenge(award: Award, challenge: Challenge) {
+export function useCreateChallenge(award?: Award, challenge?: Challenge) {
     const queryClient = useQueryClient();
     const router = useRouter()
     const { data } = useSession()
@@ -15,6 +15,9 @@ export function useCreateChallenge(award: Award, challenge: Challenge) {
     return useMutation({
         mutationFn: (data: { mentorEmail: string, description: string, goal: string }) => createUserProposal({ data: { ...data, award, challenge } }),
         onMutate: async (newProposal) => {
+            if (!award || !challenge || !id) {
+                throw new Error("Award, challenge, and user ID must be provided")
+            }
             await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge] })
             await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge, id] })
 
@@ -50,6 +53,7 @@ export function useCreateChallenge(award: Award, challenge: Challenge) {
             return { previousChallenge, previousProposal }
         },
         onError: async (_error, _newProposal, context) => {
+
             await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge] })
             await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge] })
 
@@ -61,6 +65,9 @@ export function useCreateChallenge(award: Award, challenge: Challenge) {
             }
         },
         onSuccess: async (data) => {
+            if (!award || !challenge || !id) {
+                throw new Error("Award, challenge, and user ID must be provided")
+            }
             await queryClient.setQueryData(['proposals', award, challenge], data)
 
             queryClient.setQueryData(['challenges', award, challenge], (oldData: StudentChallengeWithProposalAndSubmission | null): StudentChallengeWithProposalAndSubmission | null => {

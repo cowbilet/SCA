@@ -37,10 +37,7 @@ export default function ReviewProposal() {
     )
 }
 function ProposalFeedbackForm() {
-    const { award, challenge, studentId } = useParams({strict: false})
-    if (!award || !challenge || !studentId) {
-        return null
-    }
+    const { award, challenge, studentId } = useParams({from: "/$advisor/$studentId/$award/$challenge", strict: true})
     const { mutate: submitProposal } = useReviewProposal(studentId, award, challenge)
     const form = useForm({
         defaultValues: {

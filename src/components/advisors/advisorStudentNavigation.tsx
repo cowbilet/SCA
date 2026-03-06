@@ -4,10 +4,10 @@ import { useLoaderData } from "@tanstack/react-router"
 import { Challenge } from "@/types/challenges"
 import { Link, ActiveLinkOptions, useParams } from "@tanstack/react-router"
 import { useMemo, useState } from "react"
+import { useLocation } from "@tanstack/react-router"
 export default function AdvisorStudentNavigation() {
     const { award } = useParams({strict: false})
     const student = useLoaderData({strict: false})
-    const [availableNavigation, setAvailableAwards] = useState<Record<Award, Challenge[]> | null>(null)
 
 
     // TODO: Make this more robust by validating the loader data format and handling loading/error states
@@ -18,6 +18,7 @@ export default function AdvisorStudentNavigation() {
 
     const isAwardPage = !(award === undefined)
     
+    const [availableNavigation, setAvailableAwards] = useState<Record<Award, Challenge[]> | null>(null)
     useMemo(() => {
         if (studentChallenges) {
             const awards: Record<Award, Challenge[]> = {

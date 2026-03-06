@@ -20,9 +20,6 @@ interface ProposalFormProps {
 }
 export default function ProposalForm({values, disabled, Button}: ProposalFormProps) {
     const { award, challenge } = useParams({strict: false})
-    if (!award || !challenge) {
-        throw new Error("Award and challenge must be provided in params")
-    }
     //TODO: fix this
     const { mutate: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
     const isDisabled = disabled || isPending

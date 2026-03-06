@@ -17,12 +17,15 @@ import { restrictRoles } from "@/utils/server/auth.server"
 const createUserProposalSchema = CreateProposalSchema.extend({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
-    }),
+    }).optional(),
     challenge: z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
         message: 'Invalid challenge',
-    }),
+    }).optional(),
 })
 export const createUserProposal = createServerFn({ method: 'POST' }).inputValidator(createUserProposalSchema).handler(async ({data}): Promise<Proposal> => {
+    if (!data.award || !data.challenge) {
+        throw new Error("Award and challenge must be provided")
+    }
     const student = await restrictRoles({ data: ["student"] })
     const { description, goal, mentorEmail, award, challenge } = data
     // Validate mentor email
