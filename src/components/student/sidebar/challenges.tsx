@@ -8,11 +8,10 @@ import {
 import { useMatchRoute, useParams } from '@tanstack/react-router'
 import { Challenge } from '@/types/challenges'
 import { Link } from '@tanstack/react-router'
-import { validateChallenge } from '@/types/guards/challenges'
 import { useChallenge } from '@/hooks/useChallenge'
 import Skeleton from 'react-loading-skeleton'
 import { SubmissionState } from '@/types/awards'
-
+//TODO: Clean this up
 const challenges: Record<Challenge, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 
         title: 'Relationships', 

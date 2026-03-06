@@ -1,4 +1,3 @@
-import {HTMLAttributes, ReactNode} from 'react'
 import SidebarShell from '../../sidebarShell'
 import StudentList from './studentList'
 import { useLocation } from "@tanstack/react-router"

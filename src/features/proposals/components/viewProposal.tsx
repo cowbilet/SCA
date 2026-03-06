@@ -5,12 +5,14 @@ import { Comments } from "./notifications"
 import { useProposal } from "../hooks/useProposal"
 import { useParams } from "@tanstack/react-router"
 import { useSession } from "@/integrations/better-auth/authClient"
-import { Award } from "@/types/awards"
 export function ViewProposal() {
     const {data: user} = useSession()
     const {award, challenge} = useParams({strict: false})
+    if (!user || !user.user || !award || !challenge) {
+        return null
+    }
     //TODO: Make this better flow better (no ! and as Award)
-    const {data: proposal, isLoading, isError} = useProposal(award!, challenge!, user?.user.id!)
+    const {data: proposal, isLoading, isError} = useProposal(award, challenge, user.user.id!)
     return (
         <Dialog
             trigger={(setIsOpen) => (

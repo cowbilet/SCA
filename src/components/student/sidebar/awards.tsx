@@ -1,32 +1,11 @@
 import { Link } from "@tanstack/react-router"
 import { H1Title } from "../../titles"
-import type { Award, AwardProgress } from '@/types/awards'
+import type { Award } from '@/types/awards'
 import {ALL_AWARDS} from '@/types/awards'
-const AwardStyling = {
-    'bronze': {
-        title: 'Bronze',
-        color: 'from-amber-600 to-amber-700'
-    },
-    'silver': {
-        title: 'Silver',
-        color: 'from-gray-400 to-gray-500'
-    },
-    'gold': {
-        title: 'Gold',
-        color: 'from-yellow-400 to-yellow-500'
-    }
-}
-// const AwardProgressStyling: Record<Exclude<AwardProgress,'not started'>, { display: string, color?: string}> = {
-//     'locked': { display: '🔒' }, 
-//     'ongoing': { display: 'Ongoing', color: 'bg-blue-500/25 border-blue-500 text-blue-700!' },
-//     'completed': { display: 'Completed', color: 'bg-green-500/45 border-green-500 text-green-700!' }, 
+import clsx from "clsx"
 
-// }
-const AwardStatuses: Record<Award, AwardProgress> = {
-    'bronze': 'completed',
-    'silver': 'not started',
-    'gold': 'locked',
-}
+import { capitalizeFirstLetter } from "@/utils/stringUtils"
+
 
 export default function SidebarAwards() {
     return (
@@ -55,7 +34,8 @@ function AwardCard({award}: {award: Award}) {
     return (
         <Link
             to='/student/$award'
-            disabled={AwardStatuses[award] === 'locked'}
+            //TODO: make this gold lock actually work
+            // disabled={AwardStatuses[award] === 'locked'}
             params={{
                 award: award
             }}
@@ -63,18 +43,15 @@ function AwardCard({award}: {award: Award}) {
         >
             {({ isActive }) => (
                 <div 
-                    className={`border-2 border-gray-300 flex-1 p-4 w-24 h-full gap-2 rounded-lg flex flex-col items-center space-x-2 
-                        ${AwardStatuses[award] === 'locked' 
-                            ? 'opacity-50 hover:shadow-0! hover:cursor-not-allowed hover:shadow-none'
-                            : 'hover:cursor-pointer hover:shadow-lg transition hover:border-gray-400 '
-                        }
-                        ${isActive ? 'border-0! bg-linear-to-b ' + AwardStyling[award].color : ''}
-                    `}
+                    className={clsx("border-2 border-gray-300 flex-1 p-4 w-24 h-full gap-2 rounded-lg flex flex-col items-center space-x-2",
+                        isActive ? `border-0! bg-linear-to-b ${award}` : ''
+                    )}
                 >
                     <h1 
                         className={`text-sm font-bold text-center mr-0 ${isActive ? 'text-white' : 'text-black'}`}>
-                            {AwardStyling[award].title}
+                            {capitalizeFirstLetter(award)}
                     </h1>
+                    {/* TODO: Bring this back */}
                     {/* {AwardStatuses[award] !== 'not started' && (
                         <AwardStatus status={AwardStatuses[award]} isActive={isActive} />
                     )} */}

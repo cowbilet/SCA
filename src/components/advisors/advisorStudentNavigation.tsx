@@ -4,29 +4,20 @@ import { useLoaderData } from "@tanstack/react-router"
 import { Challenge } from "@/types/challenges"
 import { Link, ActiveLinkOptions, useParams } from "@tanstack/react-router"
 import { useMemo, useState } from "react"
-import { useLocation } from "@tanstack/react-router"
 export default function AdvisorStudentNavigation() {
-    const location = useLocation();
-    const isMentorPage = location.pathname.includes('/mentor')
-    if (!(location.pathname.includes('/mentor') || location.pathname.includes('/assessor'))) {
-        return null
-    }
-
-    const params = useParams({strict: false})
-    const award = params["award"] as Award | undefined
-    // TODO: Make this more robust by validating the loader data format and handling loading/error states
+    const { award } = useParams({strict: false})
     const student = useLoaderData({strict: false})
+    const [availableNavigation, setAvailableAwards] = useState<Record<Award, Challenge[]> | null>(null)
+
+
+    // TODO: Make this more robust by validating the loader data format and handling loading/error states
     if (!student) {
         return null
     }
     const studentChallenges = student.studentChallenges
-    // Validate that studentChallenges is in the correct format
-    if (!studentChallenges || !Array.isArray(studentChallenges)) {
-        return null
-    }
+
     const isAwardPage = !(award === undefined)
     
-    const [availableNavigation, setAvailableAwards] = useState<Record<Award, Challenge[]> | null>(null)
     useMemo(() => {
         if (studentChallenges) {
             const awards: Record<Award, Challenge[]> = {
@@ -35,7 +26,7 @@ export default function AdvisorStudentNavigation() {
                 gold: [],
             }
             studentChallenges.forEach(({award, challenges}) => {
-                awards[award as Award].push(challenges)
+                awards[award].push(challenges)
             })
             setAvailableAwards(awards)
         }

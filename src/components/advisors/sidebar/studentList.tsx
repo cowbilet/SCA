@@ -1,10 +1,10 @@
 import { Award } from "@/types/awards"
 import { usePendingProposals } from "@/hooks/usePendingProposals"
 import Skeleton from "react-loading-skeleton"
-import { Proposal, ProposalWithStudent } from "@/types/schemas/proposal"
+import { ProposalWithStudent } from "@/types/schemas/proposal"
 import { Challenge } from "@/types/challenges"
 import { Link } from "@tanstack/react-router"
-import { useLocation } from "@tanstack/react-router"
+import { capitalizeFirstLetter } from "@/utils/stringUtils"
 import { User } from "@/types/schemas/users"
 import { useParams } from "@tanstack/react-router"
 import { useStudents } from "@/hooks/useStudents"
@@ -103,51 +103,18 @@ function PendingProposalTag() {
         </span>
     )
 }
-const challenges: Record<Challenge, { title: string, cardStyle: string }> = {
-    relationships: { 
-        title: 'Relationships', 
-        cardStyle: 'bg-blue-500/25 border-blue-500! hover:bg-blue-500/25!',
-    },
-    challenge: { 
-        title: 'Challenge', 
-        cardStyle: 'bg-green-500/25 border-green-500! hover:bg-green-500/25!',
-    },
-    community: { 
-        title: 'Community', 
-        cardStyle: 'bg-red-500/25 border-red-500! hover:bg-red-500/25!', 
-    },
-    service: { 
-        title: 'Service', 
-        cardStyle: 'bg-purple-500/25 border-purple-500! hover:bg-purple-500/25!',
-    },
-}
 function ChallengeTag({challenge}: {challenge: Challenge}) {
-    const challengeData = challenges[challenge]
     return (
-        <span className={`text-gray-700 bg-gray-100 border ${challengeData.cardStyle} px-2 py-1 rounded text-xs font-semibold`}>
-            {challengeData.title}
+        <span className={`text-gray-700 bg-gray-100 border ${challenge} px-2 py-1 rounded text-xs font-semibold`}>
+            {capitalizeFirstLetter(challenge)}
         </span>
     )
 }
-const AwardStyling: Record<Award, {title: string, color: string}> = {
-    'bronze': {
-        title: 'Bronze',
-        color: 'from-amber-600 to-amber-700'
-    },
-    'silver': {
-        title: 'Silver',
-        color: 'from-gray-400 to-gray-500'
-    },
-    'gold': {
-        title: 'Gold',
-        color: 'from-yellow-400 to-yellow-500'
-    }
-}
+
 function AwardTag({award}: {award: Award}) {
-    const styling = AwardStyling[award]
     return (
-        <span className={`text-white bg-gradient-to-r ${styling.color} px-2 py-1 rounded text-xs font-semibold`}>
-            {styling.title}
+        <span className={`text-white bg-linear-to-r ${award} px-2 py-1 rounded text-xs font-semibold`}>
+            {capitalizeFirstLetter(award)}
         </span>
     )
 }

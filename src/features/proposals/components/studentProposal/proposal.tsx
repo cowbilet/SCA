@@ -6,7 +6,6 @@ import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { LoaderCircle } from "lucide-react";
 import {Comments, Instructions} from "../notifications";
 import { clsx } from "clsx";
-import { useSession } from "@/integrations/better-auth/authClient";
 import { Route } from "@/routes/student/route";
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (

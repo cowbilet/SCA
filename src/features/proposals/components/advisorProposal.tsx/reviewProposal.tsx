@@ -1,5 +1,4 @@
 import ProposalForm from "../proposalForm";
-import { Proposal } from "@/types/schemas/proposal";
 import { useForm } from "@tanstack/react-form";
 import { useParams } from "@tanstack/react-router";
 import { useReviewProposal } from "../../hooks/useReviewProposal";
@@ -42,8 +41,7 @@ function ProposalFeedbackForm() {
     if (!award || !challenge || !studentId) {
         return null
     }
-    //TODO: Fix the type here
-    const { mutate: submitProposal, isPending } = useReviewProposal(studentId, award as Award, challenge)
+    const { mutate: submitProposal } = useReviewProposal(studentId, award, challenge)
     const form = useForm({
         defaultValues: {
             feedback: '',
