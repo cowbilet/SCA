@@ -76,7 +76,6 @@ export const logs = pgTable("logs", {
 	challenge: challenge().notNull(),
 	date: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
 	description: text().notNull(),
-	mentorId: uuid().notNull(),
 	approved: boolean(),
 	evidence: text(),
 }, (table) => [

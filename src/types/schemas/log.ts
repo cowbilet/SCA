@@ -1,13 +1,14 @@
 import { z } from "zod";
 import type { Award } from "@/types/awards";
 import type { Challenge } from "@/types/challenges";
+export const futureDate = z.coerce.date<string>().refine((date) => {
+    const today = new Date()
+    return date <= today
+}, {
+    message: 'Date cannot be in the future',
+})
 export const CreateLogEntrySchema = z.object({
-    date: z.coerce.date<string>().refine((date) => {
-        const today = new Date()
-        return date <= today
-    }, {
-        message: 'Date cannot be in the future',
-    }),
+    date: futureDate,
     description: z.string(),
 })
 export const LogEntrySchema = z.object({
@@ -19,7 +20,7 @@ export const LogEntrySchema = z.object({
     challenge: z.string().refine((value): value is Challenge => ['challenge1', 'challenge2', 'challenge3'].includes(value), {
         message: 'Invalid challenge',
     }),
-    date: z.coerce.date<string>(),
+    date: futureDate,
     description: z.string(),
     mentorId: z.uuid(),
     approved: z.boolean(),
