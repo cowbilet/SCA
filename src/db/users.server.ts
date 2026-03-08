@@ -1,4 +1,4 @@
-import { assessors, users } from "@/db/schema.server";
+import { assessors, users } from "@/db/schema";
 import { db } from "./index.server";
 import { eq } from "drizzle-orm";
 import { User } from "@/types/schemas/users";

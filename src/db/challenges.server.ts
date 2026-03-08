@@ -1,5 +1,5 @@
 import { Award, SubmissionState } from "@/types/awards";
-import { studentChallenge, challengeProposals, users } from "@/db/schema.server";
+import { studentChallenge, challengeProposals, users } from "@/db/schema";
 import { db } from "./index.server";
 import { and, eq } from "drizzle-orm/sql/expressions/conditions";
 import type { StudentChallengeSchema, StudentChallengeWithProposalAndSubmission } from "@/types/schemas/challenges";

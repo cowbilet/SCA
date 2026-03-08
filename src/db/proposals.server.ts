@@ -1,4 +1,4 @@
-import { challengeProposals, users } from "@/db/schema.server";
+import { challengeProposals, users } from "@/db/schema";
 import { db } from "@/db/index.server";
 import { Challenge } from "@/types/challenges";
 import { Award, SubmissionState } from "@/types/awards";

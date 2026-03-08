@@ -1,4 +1,4 @@
-import { logs } from "./schema.server";
+import { logs } from "./schema";
 import { db } from "./index.server";
 import type { Award} from "@/types/awards";
 import type { Challenge } from "@/types/challenges";
