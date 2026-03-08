@@ -1,11 +1,11 @@
-import { Award, SubmissionState } from "@/types/awards";
-import { studentChallenge, challengeProposals, users } from "@/db/schema";
+import { Award } from "@/types/awards";
+import { studentChallenge } from "@/db/schema";
 import { db } from "./index.server";
 import { and, eq } from "drizzle-orm/sql/expressions/conditions";
-import type { StudentChallengeSchema, StudentChallengeWithProposalAndSubmission } from "@/types/schemas/challenges";
+import type { StudentChallengeWithProposalAndSubmission } from "@/types/schemas/challenges";
 import { Challenge } from "@/types/challenges";
 import { dbGetAllProposals } from "./proposals.server";
-export async function dbGetUserAwardChallenges(userId: string, award: Award, userType: "student"): Promise<StudentChallengeWithProposalAndSubmission[]> {
+export async function dbGetUserAwardChallenges(userId: string, award: Award): Promise<StudentChallengeWithProposalAndSubmission[]> {
     const challengeProposalsSubquery = dbGetAllProposals()
     return await db.select().from(studentChallenge).where(and(
         eq(studentChallenge.studentId, userId),

@@ -16,7 +16,11 @@ export function CreateActivity() {
             </DialogHeader>
             <DialogBody>
                 <p className="text-gray-600">Record an activity you completed towards your goal</p>
-                <CreateActivityForm id="create-activity-form" />  
+                <CreateActivityForm onSubmit={() => {
+                    if (modalRef.current) {
+                        modalRef.current.close()
+                    }
+                }} id="create-activity-form" />  
             </DialogBody>
             <DialogFooter className="justify-end">
                 <button onClick={() => modalRef.current?.close()} className="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded hover:bg-gray-400 transition">

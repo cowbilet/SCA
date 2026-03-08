@@ -4,14 +4,17 @@ import { Challenge } from "@/types/challenges";
 import { LogEntry } from "@/types/schemas/log";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@/integrations/better-auth/authClient";
 export function useCreateLogEntry({ award, challenge}: { award: Award, challenge: Challenge }) {
     const queryClient = useQueryClient();
+    const { data } = useSession()
+    const studentId = data?.user?.id
     return useMutation({
         mutationFn: async ({ date, description }: { date: string, description: string }) => createLog({ data: { award, challenge, description, date  } }),
         onMutate: async (newLog) => {
-            await queryClient.cancelQueries({ queryKey: ['logs', award, challenge] })
+            await queryClient.cancelQueries({ queryKey: ['logs', award, challenge, studentId] })
 
-            const previousLogs = queryClient.getQueryData(['logs', award, challenge])
+            const previousLogs = queryClient.getQueryData(['logs', award, challenge, studentId])
 
             const optimisticLog: LogEntry = {
                 logId: crypto.randomUUID(),

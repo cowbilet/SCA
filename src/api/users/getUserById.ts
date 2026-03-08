@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { dbGetUserById,  } from "@/db/users.server";
 import type { User } from "@/types/schemas/users";
 import { z } from "zod";
-import { ensureSession, restrictStudentData } from '@/utils/auth';
+import { restrictStudentData } from '@/utils/auth';
 const userStudentIdSchema = z.object({
     studentId: z.uuid(),
 })

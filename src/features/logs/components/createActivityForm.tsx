@@ -3,9 +3,9 @@ import { CreateLogEntrySchema } from "@/types/schemas/log"
 import { HTMLAttributes } from "react"
 import { useCreateLogEntry } from "../hooks/useCreateLogEntry"
 import { useParams } from "@tanstack/react-router"
-export default function CreateActivityForm(props: HTMLAttributes<HTMLFormElement>) {
+export default function CreateActivityForm({onSubmit, ...props}: HTMLAttributes<HTMLFormElement>) {
     const { award, challenge } = useParams({strict: true, from: "/student/$award/$challenge"})
-    const { mutate: createLogEntry, isPending, isError, error } = useCreateLogEntry({ award, challenge })
+    const { mutate: createLogEntry, isError, error } = useCreateLogEntry({ award, challenge })
     const form = useForm({
         defaultValues: {
             date: '',
@@ -14,14 +14,17 @@ export default function CreateActivityForm(props: HTMLAttributes<HTMLFormElement
         validators: {
             onSubmit: CreateLogEntrySchema,
         },
-        onSubmit: async ({value}) => {
-            createLogEntry(value)
+        onSubmit: async (event) => {
+            createLogEntry(event.value)
         }
     })
     return (
         <form onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
+            if (onSubmit) {
+                onSubmit(e)
+            }
         }} className="flex flex-col gap-4" {...props}>
             <form.Field name="date">
                 {(field) => (
