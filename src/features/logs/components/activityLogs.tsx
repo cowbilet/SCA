@@ -43,7 +43,7 @@ function ActivityLogEntry({log}: {log: LogEntry}) {
                 <div className="flex flex-row items-center gap-2">
                     <Circle className="w-3 h-3 bg-blue-500 rounded-full text-blue-500" />
                     <span className="font-semibold">{log.date}</span>
-
+                    <ActivityStatusTag approved={log.approved} />
                 </div>
             </div>
             <h2 className="text-sm font-semibold">
@@ -54,4 +54,13 @@ function ActivityLogEntry({log}: {log: LogEntry}) {
             </p>
         </div>
     )
+}
+function ActivityStatusTag({approved} : {approved: boolean | null}) {
+    if (approved === null) {
+        return <span className=" ml-auto text-sm text-gray-500">Pending Review</span>
+    } else if (approved === true) {
+        return <span className="ml-auto text-sm text-green-500">Approved</span>
+    } else {
+        return <span className="ml-auto text-sm text-red-500">Rejected</span>
+    }
 }
