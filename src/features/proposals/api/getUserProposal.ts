@@ -12,7 +12,7 @@ import { z } from 'zod'
 
 import { validateChallenge } from '@/types/guards/challenges'
 import { Proposal } from '@/types/schemas/proposal'
-import { restrictStudentData } from '@/utils/server/auth.server'
+import { restrictStudentData } from '@/utils/auth'
 
 
 const getUserProposalSchema = z.object({

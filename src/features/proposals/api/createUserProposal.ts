@@ -13,7 +13,7 @@ import { validateChallenge } from "@/types/guards/challenges"
 import { Proposal } from "@/types/schemas/proposal"
 import { dbCreateUserChallenge, dbGetUserChallenge } from "@/db/challenges.server"
 import { dbChangeProposalStatus, dbCreateChallengeProposal, dbEditProposal } from "@/db/proposals.server"
-import { restrictRoles } from "@/utils/server/auth.server"
+import { restrictRoles } from "@/utils/auth"
 const createUserProposalSchema = CreateProposalSchema.extend({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',

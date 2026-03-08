@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { createServerFn } from "@tanstack/react-start"
-import { restrictRoles } from "@/utils/server/auth.server"
+import { restrictRoles } from "@/utils/auth"
 import { dbCreateLogEntry } from "@/db/logs.server"
 import { challengeSchema } from "@/types/schemas/challenges"
 import { awardSchema } from "@/types/schemas/award"
@@ -17,7 +17,7 @@ export const createLog = createServerFn({ method: 'POST' }).inputValidator(z.obj
     if (!challengeData || challengeData.proposals?.status !== 'completed') {
         throw new Error("You don't have a proposal for this challenge")
     }
-    const logEntry = await dbCreateLogEntry(student.userId, award, challenge, date, description)
+    const logEntry = await dbCreateLogEntry(student.userId, award, challenge, date, description, "")
     if (!logEntry) {
         throw new Error("Failed to create log entry")
     }

@@ -1,7 +1,11 @@
 import { useForm } from "@tanstack/react-form"
 import { CreateLogEntrySchema } from "@/types/schemas/log"
 import { HTMLAttributes } from "react"
+import { useCreateLogEntry } from "../hooks/useCreateLogEntry"
+import { useParams } from "@tanstack/react-router"
 export default function CreateActivityForm(props: HTMLAttributes<HTMLFormElement>) {
+    const { award, challenge } = useParams({strict: true, from: "/student/$award/$challenge"})
+    const { mutate: createLogEntry, isPending, isError, error } = useCreateLogEntry({ award, challenge })
     const form = useForm({
         defaultValues: {
             date: '',
@@ -10,6 +14,9 @@ export default function CreateActivityForm(props: HTMLAttributes<HTMLFormElement
         validators: {
             onSubmit: CreateLogEntrySchema,
         },
+        onSubmit: async ({value}) => {
+            createLogEntry(value)
+        }
     })
     return (
         <form onSubmit={(e) => {
@@ -49,6 +56,12 @@ export default function CreateActivityForm(props: HTMLAttributes<HTMLFormElement
                     </div>
                 )}
             </form.Field>
+            {/* //TODO: Add error handling for submission failure (e.g. network error, server error) */}
+            {isError && (
+                <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {error instanceof Error ? error.message : 'An error occurred while submitting your proposal. Please try again.'}
+                </div>
+            )}
         </form>
     )
 }

@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { dbGetMentorPendingProposals, dbGetMentorStudents } from "@/db/mentors.server";
 import { dbGetUserByName } from "@/db/users.server";
 import { ProposalWithStudent } from "@/types/schemas/proposal";
-import { restrictRoles } from "@/utils/server/auth.server";
+import { restrictRoles } from "@/utils/auth";
 import { User } from "@/types/schemas/users";
 import { dbGetAssessorStudents } from "@/db/assessor.server";
 export const getAdvisorStudents = createServerFn({ method: 'GET' }).handler(async (): Promise<User[]> => {

@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { auth } from "@/integrations/better-auth/auth";
 import { dbGetUserById } from "@/db/users.server";
-import { role } from "@/db/schema.server";
+import { role } from "@/db/schema";
 import { z } from "zod";
 import { dbGetMentorStudents } from "@/db/mentors.server";
 export const getSession = createServerFn({ method: "GET" }).handler(async () => {

@@ -20,10 +20,9 @@ export const LogEntrySchema = z.object({
     challenge: z.string().refine((value): value is Challenge => ['challenge1', 'challenge2', 'challenge3'].includes(value), {
         message: 'Invalid challenge',
     }),
-    date: futureDate,
+    date: z.string(),
     description: z.string(),
-    mentorId: z.uuid(),
-    approved: z.boolean(),
+    approved: z.boolean().nullable(),
     evidence: z.string(),
 })
 export type LogEntry = z.infer<typeof LogEntrySchema>

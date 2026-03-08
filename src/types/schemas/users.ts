@@ -1,4 +1,5 @@
-import { role } from '@/db/schema.server'
+//TODO: This should probably be a server
+import { role } from '@/db/schema'
 import { email, z } from 'zod'
 export const UserSchema = z.object({
     userId: z.string(),

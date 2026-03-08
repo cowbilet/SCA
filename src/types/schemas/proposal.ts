@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { validateChallenge } from "@/types/guards/challenges";
-import { status } from "@/db/schema.server";
+import { status } from "@/db/schema";
 import type { Challenge } from "@/types/challenges";
 import { validateAward } from "@/types/guards/awards";
 import type { Award } from "@/types/awards";

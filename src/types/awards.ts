@@ -1,4 +1,4 @@
-import { awardTiers, status } from "@/db/schema.server";
+import { awardTiers, status } from "@/db/schema";
 
 
 export type Award = typeof awardTiers.enumValues[number]

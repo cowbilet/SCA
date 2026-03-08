@@ -5,7 +5,7 @@ import { validateAward } from "@/types/guards/awards";
 import { validateChallenge } from "@/types/guards/challenges";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { restrictRoles } from "@/utils/server/auth.server";
+import { restrictRoles } from "@/utils/auth";
 const submitProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',

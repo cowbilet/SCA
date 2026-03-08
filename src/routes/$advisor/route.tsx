@@ -1,5 +1,5 @@
 import AdvisorSidebar from '@/components/advisors/sidebar/sidebar'
-import { restrictRoles } from '@/utils/server/auth.server'
+import { restrictRoles } from '@/utils/auth'
 import { createFileRoute } from '@tanstack/react-router'
 import { Outlet } from '@tanstack/react-router'
 import z from 'zod'

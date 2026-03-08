@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { dbGetUserByEmail,  } from "@/db/users.server";
 import type { User } from "@/types/schemas/users";
 import { z } from "zod";
-import { ensureSession, restrictStudentData } from '@/utils/server/auth.server';
+import { ensureSession, restrictStudentData } from '@/utils/auth';
 const userEmailSchema = z.object({
     email: z.email(),
 })

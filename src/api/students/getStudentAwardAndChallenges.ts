@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { dbGetStudentAwardsAndChallenges } from "@/db/challenges.server";
-import { ensureSession, restrictStudentData } from "@/utils/server/auth.server";
+import { ensureSession, restrictStudentData } from "@/utils/auth";
 import { dbGetMentorStudents } from "@/db/mentors.server";
 const getStudentAwardAndChallengesSchema = z.object({
     studentId: z.uuid(),

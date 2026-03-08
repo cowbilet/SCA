@@ -1,4 +1,4 @@
-import { location, role } from "@/db/schema.server";
+import { location, role } from "@/db/schema";
 import { z } from "zod";
 export const SignupSchema = z.object({
     name: z.string().min(1, "Name is required"),

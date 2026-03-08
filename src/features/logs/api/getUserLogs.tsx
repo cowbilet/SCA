@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start"
 import { z } from "zod"
-import { restrictRoles } from "@/utils/server/auth.server"
+import { restrictRoles } from "@/utils/auth"
 import { awardSchema } from "@/types/schemas/award"
 import { challengeSchema } from "@/types/schemas/challenges"
 import { dbGetStudentAwardLogs } from "@/db/logs.server"

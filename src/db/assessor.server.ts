@@ -1,7 +1,7 @@
 import { db } from "./index.server";
 
 import { and, eq } from "drizzle-orm/sql/expressions/conditions";
-import {  challengeProposals, users } from "./schema.server";
+import {  challengeProposals, users } from "./schema";
 import { ProposalWithStudent } from "@/types/schemas/proposal";
 //TODO: Make this specific to the assessor state and award
 export async function dbGetAssessorPendingProposals(assessorId: string): Promise<ProposalWithStudent[]> {

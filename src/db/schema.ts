@@ -77,7 +77,7 @@ export const logs = pgTable("logs", {
 	date: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
 	description: text().notNull(),
 	approved: boolean(),
-	evidence: text(),
+	evidence: text().notNull(),
 }, (table) => [
 	foreignKey({
 		columns: [table.studentId, table.award, table.challenge],

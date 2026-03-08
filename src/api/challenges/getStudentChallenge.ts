@@ -8,7 +8,7 @@ import { validateChallenge } from '@/types/guards/challenges'
 import { Challenge } from '@/types/challenges'
 import { dbGetUserByName } from '@/db/users.server'
 import { dbGetUserChallenge } from '@/db/challenges.server'
-import { ensureSession, restrictRoles } from '@/utils/server/auth.server'
+import { ensureSession, restrictRoles } from '@/utils/auth'
 import { dbGetMentorStudents } from '@/db/mentors.server'
 const inputSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
