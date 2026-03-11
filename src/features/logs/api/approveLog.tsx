@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start"
 import { restrictRoles } from "@/utils/auth"
 import { dbApproveLogEntry, dbGetLogEntry } from "@/db/logs.server"
 import { dbGetUserChallenge } from "@/db/challenges.server"
-export const createLog = createServerFn({ method: 'POST' }).inputValidator(z.object({
+export const approveLog = createServerFn({ method: 'POST' }).inputValidator(z.object({
     logId: z.uuid(),
     approved: z.boolean(),
     feedback: z.string().optional(),

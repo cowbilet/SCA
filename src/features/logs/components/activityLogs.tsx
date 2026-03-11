@@ -68,10 +68,10 @@ export function FeedbackForm({disabled, feedback, ...props}: {disabled: boolean,
             <textarea id="feedback" name="feedback" rows={4} disabled={disabled} defaultValue={feedback} className=" p-2 mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
             {!feedback && (
                 <div className="buttons ml-auto flex flex-row items-center gap-1">
-                    <button type="submit" disabled={disabled} className="bg-red-500 text-white px-4 py-2 rounded mr-2">
+                    <button type="submit" disabled={disabled} id="reject" className="bg-red-500 text-white px-4 py-2 rounded mr-2">
                         Reject
                     </button>
-                    <button type="submit" disabled={disabled} className="bg-green-500 text-white px-4 py-2 rounded">
+                    <button type="submit" disabled={disabled} id="approve" className="bg-green-500 text-white px-4 py-2 rounded">
                         Approve
                     </button>
                 </div>

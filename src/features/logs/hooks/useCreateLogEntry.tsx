@@ -12,9 +12,9 @@ export function useCreateLogEntry({ award, challenge}: { award: Award, challenge
     return useMutation({
         mutationFn: async ({ date, description }: { date: string, description: string }) => createLog({ data: { award, challenge, description, date  } }),
         onMutate: async (newLog) => {
-            await queryClient.cancelQueries({ queryKey: ['logs', award, challenge, studentId] })
+            await queryClient.cancelQueries({ queryKey: ['logs', award, challenge, studentId, "pending"] })
 
-            const previousLogs = queryClient.getQueryData(['logs', award, challenge, studentId])
+            const previousLogs = queryClient.getQueryData(['logs', award, challenge, studentId, "pending"])
 
             const optimisticLog: LogEntry = {
                 logId: crypto.randomUUID(),
@@ -24,9 +24,10 @@ export function useCreateLogEntry({ award, challenge}: { award: Award, challenge
                 description: newLog.description,
                 date: newLog.date,
                 approved: null,
+                feedback: null,
                 evidence: '',
             }
-            queryClient.setQueryData(['logs', award, challenge], (oldData: LogEntry[] | null) => {
+            queryClient.setQueryData(['logs', award, challenge, studentId, "pending"], (oldData: LogEntry[] | null) => {
                 if (!oldData) return [optimisticLog]
                 return [...oldData, optimisticLog]
             })
@@ -34,13 +35,13 @@ export function useCreateLogEntry({ award, challenge}: { award: Award, challenge
             return { previousLogs }
         },
         onError: async (_error, _newLog, context) => {
-            await queryClient.cancelQueries({ queryKey: ['logs', award, challenge] })
+            await queryClient.cancelQueries({ queryKey: ['logs', award, challenge, studentId, "pending"] })
             if (context?.previousLogs) {
-                queryClient.setQueryData(['logs', award, challenge], context.previousLogs)
+                queryClient.setQueryData(['logs', award, challenge, studentId, "pending"], context.previousLogs)
             }
         },
         onSettled: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['logs', award, challenge] })
+            await queryClient.invalidateQueries({ queryKey: ['logs', award, challenge, studentId, "pending"] })
         },
     })
 }

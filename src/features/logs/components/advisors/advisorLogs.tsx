@@ -3,6 +3,7 @@ import { useLocation, useParams } from "@tanstack/react-router"
 import { useLogs } from "../../hooks/useLogs"
 import type { LogEntry } from "@/types/schemas/log"
 import { ActivityLogGroupCard, FeedbackForm, LogEntryScaffold } from "@/features/logs/components/activityLogs"
+import { useApproveLog } from "../../hooks/useApproveLog"
 
 export function AdvisorActivityLogs() {
     
@@ -48,7 +49,23 @@ function AdvisorLogEntry({log}: {log: LogEntry}) {
     return <LogEntryScaffold log={log} key={log.logId}/>
 }
 function MentorLogEntry({log}: {log: LogEntry}) {
+    const { award, challenge, studentId } = useParams({strict: true, from: "/$advisor/$studentId/$award/$challenge"})
+    const { mutate: approveLog } = useApproveLog(log.logId, award, challenge, studentId)
+    const onSubmitFeedback = (event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        const submitter = event.nativeEvent.submitter as HTMLButtonElement
+        //This is a pretty recent addition to browsers
+        //TODO: Add polyfill
+        if (!submitter) {
+            console.error("No submitter found for feedback form submission. Please update your browser to a more recent version that supports the submitter property on the submit event.")
+            return
+        }
+        const formData = new FormData(event.target)
+        const feedback = formData.get("feedback") as string
+        approveLog({ approved: submitter.id === "approve", feedback })
+    }
+    //TODO: Make this have error handling and loading states
     return (
-        <LogEntryScaffold log={log} key={log.logId} feedback={<FeedbackForm disabled={false} />} isFeedbackOpen={log.approved === null} />
+        <LogEntryScaffold log={log} key={log.logId} feedback={<FeedbackForm disabled={false} onSubmit={onSubmitFeedback}/>} isFeedbackOpen={log.approved === null} />
     )
 }
