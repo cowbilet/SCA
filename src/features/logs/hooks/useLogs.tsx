@@ -1,7 +1,7 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { getUserLogs } from '../api/getUserLogs';
-import { Award } from "@/types/awards";
-import { Challenge } from "@/types/challenges";
+import type { Award } from "@/types/awards";
+import type { Challenge } from "@/types/challenges";
 
 export const logsQueryOptions = (award: Award, challenge: Challenge, studentId?: string, selectedStatus?: string) => queryOptions({
     queryKey: ['logs', award, challenge, studentId, selectedStatus],

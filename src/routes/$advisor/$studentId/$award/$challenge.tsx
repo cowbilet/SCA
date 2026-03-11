@@ -6,6 +6,8 @@ import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/
 import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
 import { awardSchema } from '@/types/schemas/award'
 import { challengeSchema } from '@/types/schemas/challenges'
+import { AdvisorActivityLogs } from '@/features/logs/components/advisors/advisorLogs'
+
 const inputSchema = z.object({
     award: awardSchema,
     challenge: challengeSchema,
@@ -18,15 +20,22 @@ export const Route = createFileRoute(
     params: inputSchema,
     loader: async ({ params, context: { queryClient } }) => {
         const { award, challenge, studentId } = params
-        return queryClient.ensureQueryData(proposalQueryOptions(award, challenge, studentId))
+        const data = await queryClient.ensureQueryData(proposalQueryOptions(award, challenge, studentId))
+        return data 
     },
 })
 
 function RouteComponent() {
-    return (
-        <div className="flex flex-col h-full flex-1 p-4 bg-white rounded-lg shadow">
-            <ReviewProposal />
-            
-        </div>
-    )
+    const proposalData = Route.useLoaderData()
+    if (proposalData?.accepted === true) {
+        return <AdvisorActivityLogs />
+    }
+    else {
+        return (
+            <div className="flex flex-col h-full flex-1 p-4 bg-white rounded-lg shadow">
+                <ReviewProposal />
+    
+            </div>
+        )
+    }
 }

@@ -77,6 +77,7 @@ export const logs = pgTable("logs", {
 	date: timestamp({ withTimezone: true, mode: 'string' }).notNull(),
 	description: text().notNull(),
 	approved: boolean(),
+	feedback: text(),
 	evidence: text().notNull(),
 }, (table) => [
 	foreignKey({

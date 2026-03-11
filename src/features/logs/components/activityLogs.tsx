@@ -1,8 +1,9 @@
-import { Card } from "@/components/card";
+import clsx from "clsx";
 import { Circle, Clock } from "lucide-react";
 
-import { LogEntry } from "@/types/schemas/log";
-import clsx from "clsx";
+import type { LogEntry } from "@/types/schemas/log";
+import { Card } from "@/components/card";
+import { HTMLAttributes } from "react";
 
 const logStyling = {
     pending: {
@@ -31,6 +32,44 @@ export function ActivityLogGroupCard({type, children}: {type: keyof typeof logSt
                 {children}
             </div>
         </Card>
+    )
+}
+export function LogEntryScaffold({log, children, feedback, isFeedbackOpen}: {log: LogEntry, children?: React.ReactNode, feedback?: React.ReactNode, isFeedbackOpen?: boolean}) {
+    return (
+        <div className="border-2 bg-gray-50 border-gray-300 rounded-lg p-4 flex flex-col gap-2">
+            <div className="flex justify-between items-center text-lg">
+                <div className="flex flex-row items-center gap-2">
+                    <Circle className="w-3 h-3 min-w-3 min-h-3 bg-blue-500 rounded-full text-blue-500" />
+                    <span className="font-semibold">{new Date(log.date).toLocaleDateString()}</span>
+                    {children}
+                </div>
+            </div>
+            <h2 className="text-sm font-semibold">
+                ACTIVITY
+            </h2>
+            <p className="text-gray-600">
+                {log.description}
+            </p>
+            {isFeedbackOpen && (
+                feedback
+            )}
+        </div>
+    )
+}
+export function FeedbackForm({disabled, feedback, ...props}: {disabled: boolean, feedback?: string} & HTMLAttributes<HTMLFormElement>) {
+    return (
+        <form aria-disabled={disabled} className={clsx("flex flex-col gap-4", disabled && "opacity-50 pointer-events-none")} {...props}>
+            <label htmlFor="feedback" className="text-sm font-medium text-gray-700">Feedback</label>
+            <textarea id="feedback" name="feedback" rows={4} disabled={disabled} defaultValue={feedback} className=" p-2 mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
+            <div className="buttons ml-auto flex flex-row items-center gap-1">
+                <button type="submit" disabled={disabled} className="bg-red-500 text-white px-4 py-2 rounded mr-2">
+                    Reject
+                </button>
+                <button type="submit" disabled={disabled} className="bg-green-500 text-white px-4 py-2 rounded">
+                    Approve
+                </button>
+            </div>
+        </form>
     )
 }
 // export function ActivityLogGroup({type}: {type: keyof typeof logStyling}) {
@@ -70,24 +109,6 @@ function ActivityLogHeader({className, children, ...props}: React.HTMLAttributes
     return (
         <div className={clsx("w-full h-fit p-4 rounded-t-lg flex flex-row items-center gap-2", className)} {...props}>
             {children}
-        </div>
-    )
-}
-function ActivityLogEntry({log}: {log: LogEntry}) {
-    return (
-        <div className="border-2 border-gray-300 rounded-lg p-4 flex flex-col gap-2">
-            <div className="flex justify-between items-center text-lg">
-                <div className="flex flex-row items-center gap-2">
-                    <Circle className="w-3 h-3 bg-blue-500 rounded-full text-blue-500" />
-                    <span className="font-semibold">{log.date}</span>
-                </div>
-            </div>
-            <h2 className="text-sm font-semibold">
-                ACTIVITY
-            </h2>
-            <p className="text-gray-600">
-                {log.description}
-            </p>
         </div>
     )
 }

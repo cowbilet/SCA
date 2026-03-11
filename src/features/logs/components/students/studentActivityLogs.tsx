@@ -1,10 +1,11 @@
-import { ActivityLogGroupCard } from "@/features/logs/components/activityLogs"
-import { Circle, DoorOpen, Pencil, Repeat2, Trash } from "lucide-react"
-import type { LogEntry } from "@/types/schemas/log"
-import { useLogs } from "../../hooks/useLogs"
-import { useSession } from "@/integrations/better-auth/authClient"
-import { useParams } from "@tanstack/react-router"
 import Skeleton from "react-loading-skeleton"
+import { DoorOpen, Pencil, Repeat2, Trash } from "lucide-react"
+import { useParams } from "@tanstack/react-router"
+import { useLogs } from "../../hooks/useLogs"
+import type { LogEntry } from "@/types/schemas/log"
+import { useSession } from "@/integrations/better-auth/authClient"
+import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
+
 export function StudentActivityLogs() {
     
     return (
@@ -45,35 +46,23 @@ function StudentLogEntries({type}: {type: "pending" | "approved" | "rejected"}) 
 }
 function StudentLogEntry({log}: {log: LogEntry}) {
     return (
-        <div className="border-2 border-gray-300 rounded-lg p-4 flex flex-col gap-2">
-            <div className="flex justify-between items-center text-lg">
-                <div className="flex flex-row items-center gap-2">
-                    <Circle className="w-3 h-3 min-w-3 min-h-3 bg-blue-500 rounded-full text-blue-500" />
-                    <span className="font-semibold">{new Date(log.date).toLocaleDateString()}</span>
-                    <div className="buttons ml-auto flex flex-row items-center gap-1">
+        <LogEntryScaffold log={log} key={log.logId}>
+            <div className="buttons ml-auto flex flex-row items-center gap-1">
 
-                        {log.approved === false && (
-                            <>  
-                                <button className=" text-blue-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Repeat2 /></button>
-                                
-                                <button className=" text-red-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Trash /></button>
-                            </>
-                        )}
-                        {log.approved === null && (
-                            <>
-                                <button className=" text-blue-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Pencil /></button>
-                                <button className=" text-red-500 font-bold rounded w-5 h-5 flex items-center justify-center"><DoorOpen /></button>
-                            </>
-                        )}
-                    </div>
-                </div>
+                {log.approved === false && (
+                    <>  
+                        <button className=" text-blue-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Repeat2 /></button>
+                        
+                        <button className=" text-red-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Trash /></button>
+                    </>
+                )}
+                {log.approved === null && (
+                    <>
+                        <button className=" text-blue-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Pencil /></button>
+                        <button className=" text-red-500 font-bold rounded w-5 h-5 flex items-center justify-center"><DoorOpen /></button>
+                    </>
+                )}
             </div>
-            <h2 className="text-sm font-semibold">
-                ACTIVITY
-            </h2>
-            <p className="text-gray-600">
-                {log.description}
-            </p>
-        </div>
+        </LogEntryScaffold>
     )
 }
