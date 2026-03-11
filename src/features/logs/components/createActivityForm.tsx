@@ -48,6 +48,7 @@ export default function CreateActivityForm({onSubmit, ...props}: HTMLAttributes<
                     <div className="flex flex-col">
                         <label className="mb-1 font-semibold">Description</label>
                         <textarea 
+                            required
                             value={field.state.value}
                             onChange={(e) => field.handleChange(e.target.value)}
                             onBlur={field.handleBlur}

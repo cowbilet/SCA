@@ -6,20 +6,26 @@ import type { LogEntry } from "@/types/schemas/log"
 import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, FeedbackForm, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 import { useState } from "react"
+import { CreateActivity } from "../createActivity"
 
 export function StudentActivityLogs() {
     
     return (
-        <div className="flex flex-row max-xl:flex-col h-full gap-4">
-            <ActivityLogGroupCard type="pending">
-                <StudentLogEntries  type="pending"/>
-            </ActivityLogGroupCard>
-            <ActivityLogGroupCard type="approved">
-                <StudentLogEntries  type="approved"/>
-            </ActivityLogGroupCard>
-            <ActivityLogGroupCard type="rejected">
-                <StudentLogEntries  type="rejected"/>
-            </ActivityLogGroupCard>
+        <div className="flex flex-col h-full gap-4">
+            <div className="flex flex-row items-center justify-between">
+                <CreateActivity />
+            </div>
+            <div className="flex flex-row max-xl:flex-col h-full gap-4">
+                <ActivityLogGroupCard type="pending">
+                    <StudentLogEntries  type="pending"/>
+                </ActivityLogGroupCard>
+                <ActivityLogGroupCard type="approved">
+                    <StudentLogEntries  type="approved"/>
+                </ActivityLogGroupCard>
+                <ActivityLogGroupCard type="rejected">
+                    <StudentLogEntries  type="rejected"/>
+                </ActivityLogGroupCard>
+            </div>
         </div>
     )
 }
