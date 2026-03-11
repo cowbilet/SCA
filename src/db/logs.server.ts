@@ -20,10 +20,17 @@ export async function dbCreateLogEntry(studentId: string, award: Award, challeng
     }
     return logEntry[0]
 }
-// export async function dbApproveLogEntry(logId: string, approved: boolean, feedback: string | null) {
-//     const updatedLog = await db.update(logs).set({ approved, feedback }).where(eq(logs.logId, logId)).returning()
-//     if (updatedLog.length === 0) {
-//         return null
-//     }
-//     return updatedLog[0]
-// }
+export async function dbGetLogEntry(logId: string) {
+    const logEntry = await db.select().from(logs).where(eq(logs.logId, logId))
+    if (logEntry.length === 0) {
+        return null
+    }
+    return logEntry[0]
+}
+export async function dbApproveLogEntry(logId: string, approved: boolean, feedback: string | null) {
+    const updatedLog = await db.update(logs).set({ approved, feedback }).where(eq(logs.logId, logId)).returning()
+    if (updatedLog.length === 0) {
+        return null
+    }
+    return updatedLog[0]
+}
