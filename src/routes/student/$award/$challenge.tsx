@@ -7,7 +7,7 @@ import type { JSX } from 'react'
 import { ActiveProposal, SubmitProposal } from '@/features/proposals/components/studentProposal/proposal'
 import { SubmissionState } from '@/types/awards'
 import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
-import { ActivityLogs } from '@/features/logs/components/activityLogs'
+import { StudentActivityLogs } from '@/features/logs/components/students/studentActivityLogs'
 import { awardSchema } from '@/types/schemas/award'
 
 export const Route = createFileRoute('/student/$award/$challenge')({
@@ -34,7 +34,7 @@ const proposalComponents: Record<SubmissionState, (props: {proposalStatus: Submi
     'pending assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
     'rejected mentor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
     'rejected assessor': ({proposalStatus}) => <ActiveProposal proposalStatus={proposalStatus} />,
-    'completed': () => <ActivityLogs />,
+    'completed': () => <StudentActivityLogs />,
 }
 function RouteComponent() {
     const { challenge, award } = Route.useParams()

@@ -3,11 +3,26 @@ import { getUserLogs } from '../api/getUserLogs';
 import { Award } from "@/types/awards";
 import { Challenge } from "@/types/challenges";
 
-export const logsQueryOptions = (award: Award, challenge: Challenge, studentId?: string) => queryOptions({
-    queryKey: ['logs', award, challenge, studentId],
+export const logsQueryOptions = (award: Award, challenge: Challenge, studentId?: string, selectedStatus?: string) => queryOptions({
+    queryKey: ['logs', award, challenge, studentId, selectedStatus],
     queryFn: () => getUserLogs({ data: { award, challenge, studentId: studentId! } }),
+    select: (data) => {
+        if (selectedStatus) {
+            switch (selectedStatus) {
+                case 'pending':
+                    return data.filter(log => log.approved === null)
+                case 'approved':
+                    return data.filter(log => log.approved === true)
+                case 'rejected':
+                    return data.filter(log => log.approved === false)
+                default:
+                    return data
+            }
+        }
+        return data
+    },
     enabled: !!studentId,
 })
-export function useLogs(award: Award, challenge: Challenge, studentId?: string ) {
-    return useQuery(logsQueryOptions(award, challenge, studentId))
+export function useLogs(award: Award, challenge: Challenge, studentId?: string, selectedStatus?: string) {
+    return useQuery(logsQueryOptions(award, challenge, studentId, selectedStatus))
 }

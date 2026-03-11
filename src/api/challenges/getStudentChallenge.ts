@@ -20,9 +20,5 @@ export const getUserChallenge = createServerFn({ method: 'GET' }).inputValidator
     const { award, challenge } = data
     const user = await restrictRoles({ data: ["student"] })
     const result = await dbGetUserChallenge(user.userId, award, challenge)
-    console.log(user.userId, award, challenge)
-    if (!result) {
-        console.log(result)
-    }
     return result
 })
