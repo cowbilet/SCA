@@ -16,6 +16,7 @@ export const Route = createFileRoute('/student/$award/$challenge')({
         award: awardSchema,
         challenge: challengeSchema,
     }),
+    shouldReload: false,
     //TODO: If you go to the student page and hover over any page it preloads the data, this is not very good for data saving
     loader: async ({ params, context: { queryClient, user } }) => {
         const { award, challenge } = params
@@ -37,7 +38,7 @@ const proposalComponents: Record<SubmissionState, (props: {proposalStatus: Submi
 }
 function RouteComponent() {
     const { challenge, award } = Route.useParams()
-    const {data: challengeData} = useChallenge(award, challenge)
+    const { data: challengeData } = useChallenge(award, challenge)
     
     
     return (

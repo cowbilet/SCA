@@ -6,10 +6,8 @@ import { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/chall
 
 import { validateChallenge } from '@/types/guards/challenges'
 import { Challenge } from '@/types/challenges'
-import { dbGetUserByName } from '@/db/users.server'
 import { dbGetUserChallenge } from '@/db/challenges.server'
-import { ensureSession, restrictRoles } from '@/utils/auth'
-import { dbGetMentorStudents } from '@/db/mentors.server'
+import { restrictRoles } from '@/utils/auth'
 const inputSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
@@ -21,5 +19,10 @@ const inputSchema = z.object({
 export const getUserChallenge = createServerFn({ method: 'GET' }).inputValidator(inputSchema).handler(async ({data}): Promise<StudentChallengeWithProposalAndSubmission | null> => {
     const { award, challenge } = data
     const user = await restrictRoles({ data: ["student"] })
-    return await dbGetUserChallenge(user.userId, award, challenge)
+    const result = await dbGetUserChallenge(user.userId, award, challenge)
+    console.log(user.userId, award, challenge)
+    if (!result) {
+        console.log(result)
+    }
+    return result
 })

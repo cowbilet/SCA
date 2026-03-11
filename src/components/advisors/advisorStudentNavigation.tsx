@@ -4,11 +4,9 @@ import { useLoaderData } from "@tanstack/react-router"
 import { Challenge } from "@/types/challenges"
 import { Link, ActiveLinkOptions, useParams } from "@tanstack/react-router"
 import { useMemo, useState } from "react"
-import { useLocation } from "@tanstack/react-router"
 export default function AdvisorStudentNavigation() {
     const { award } = useParams({strict: false})
     const student = useLoaderData({strict: false})
-
 
     // TODO: Make this more robust by validating the loader data format and handling loading/error states
     if (!student) {

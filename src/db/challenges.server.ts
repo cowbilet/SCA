@@ -27,6 +27,7 @@ export async function dbGetUserChallenge(userId: string, award: Award, challenge
     if (results.length === 0) {
         return null
     }
+    
     return results[0]
     
 }

@@ -1,7 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
 
-import { dbGetUserByName } from '@/db/users.server'
-
 import { dbGetProposal } from '@/db/proposals.server'
 import { validateAward } from '@/types/guards/awards'
 import type { Award } from '@/types/awards'
@@ -28,6 +26,6 @@ export const getUserProposal = createServerFn({ method: 'GET' }).inputValidator(
     const { award, challenge, studentId } = data
     await restrictStudentData({data: studentId})
 
-    const proposalData = await dbGetProposal(studentId, award, challenge,)
+    const proposalData = await dbGetProposal(studentId, award, challenge)
     return proposalData
 })
