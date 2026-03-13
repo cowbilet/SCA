@@ -56,7 +56,9 @@ function StudentLogEntries({type}: {type: "pending" | "approved" | "rejected"}) 
 function StudentLogEntry({log}: {log: LogEntry}) {
     const [isFeedbackOpen, setFeedbackOpen] = useState(false)
     return (
-        <LogEntryScaffold log={log} key={log.logId}
+        <LogEntryScaffold 
+        
+            log={log} key={log.logId}
             footer={log.feedback ? <button className="text-sm text-blue-500" onClick={() => setFeedbackOpen(!isFeedbackOpen)}>{isFeedbackOpen ? "Hide Feedback" : "Show Feedback"}</button> : undefined}
             feedback={<FeedbackForm disabled={true} feedback={log.feedback || undefined} />} 
             isFeedbackOpen={isFeedbackOpen}
