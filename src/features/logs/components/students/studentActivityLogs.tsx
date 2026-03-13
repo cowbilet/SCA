@@ -7,13 +7,15 @@ import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, FeedbackForm, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 import { useState } from "react"
 import { CreateActivity } from "../createActivity"
+import { StudentSubmission } from "@/features/submission/components/studentSubmission"
 
 export function StudentActivityLogs() {
     
     return (
         <div className="flex flex-col h-full gap-4">
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-start gap-4">
                 <CreateActivity />
+                <StudentSubmission />
             </div>
             <div className="flex flex-row max-xl:flex-col h-full gap-4">
                 <ActivityLogGroupCard type="pending">
