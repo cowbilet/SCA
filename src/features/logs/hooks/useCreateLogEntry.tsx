@@ -1,14 +1,14 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLog } from "../api/createLog";
-import { Award } from "@/types/awards";
-import { Challenge } from "@/types/challenges";
-import { LogEntry } from "@/types/schemas/log";
-import { useMutation } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import type { Award } from "@/types/awards";
+import type { Challenge } from "@/types/challenges";
+import type { LogEntry } from "@/types/schemas/log";
 import { useSession } from "@/integrations/better-auth/authClient";
+
 export function useCreateLogEntry({ award, challenge}: { award: Award, challenge: Challenge }) {
     const queryClient = useQueryClient();
     const { data } = useSession()
-    const studentId = data?.user?.id
+    const studentId = data?.user.id
     return useMutation({
         mutationFn: async ({ date, description }: { date: string, description: string }) => createLog({ data: { award, challenge, description, date  } }),
         onMutate: async (newLog) => {
@@ -27,7 +27,7 @@ export function useCreateLogEntry({ award, challenge}: { award: Award, challenge
                 feedback: null,
                 evidence: '',
             }
-            queryClient.setQueryData(['logs', award, challenge, studentId, "pending"], (oldData: LogEntry[] | null) => {
+            queryClient.setQueryData(['logs', award, challenge, studentId, "pending"], (oldData: Array<LogEntry> | null) => {
                 if (!oldData) return [optimisticLog]
                 return [...oldData, optimisticLog]
             })

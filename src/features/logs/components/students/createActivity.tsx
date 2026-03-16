@@ -1,7 +1,8 @@
-import { ButtonHTMLAttributes, useRef } from "react";
-import Dialog from "@/components/dialog";
-import { DialogHeader, DialogBody, DialogFooter } from "@/components/dialog";
+import { useRef } from "react";
 import CreateActivityForm from "./createActivityForm";
+import type { ButtonHTMLAttributes } from "react";
+import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog";
+
 export function CreateActivity() {
     const modalRef = useRef<HTMLDialogElement>(null)
     return (

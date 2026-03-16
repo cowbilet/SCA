@@ -20,7 +20,7 @@ interface ProposalFormProps {
 }
 export default function ProposalForm({values, disabled, Button}: ProposalFormProps) {
     const { award, challenge } = useParams({strict: false})
-    //TODO: fix this
+    // TODO: fix this
     const { mutate: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
     const isDisabled = disabled || isPending
     const form = useForm({

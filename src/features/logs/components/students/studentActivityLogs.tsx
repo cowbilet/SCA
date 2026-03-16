@@ -3,7 +3,7 @@ import { Pencil, Trash } from "lucide-react"
 import { useParams } from "@tanstack/react-router"
 
 import { useLogs } from "../../hooks/useLogs"
-import { CreateActivity } from "../createActivity"
+import { CreateActivity } from "./createActivity"
 import type { LogEntry } from "@/types/schemas/log"
 import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"

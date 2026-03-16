@@ -1,11 +1,10 @@
 import { useForm } from "@tanstack/react-form"
+import { useState } from "react"
+import type {HTMLAttributes} from "react"
 import { CreateLogEntrySchema } from "@/types/schemas/log"
-import { HTMLAttributes } from "react"
-import { useCreateLogEntry } from "../hooks/useCreateLogEntry"
-import { useParams } from "@tanstack/react-router"
-export default function CreateActivityForm({onSubmit, ...props}: HTMLAttributes<HTMLFormElement>) {
-    const { award, challenge } = useParams({strict: true, from: "/student/$award/$challenge"})
-    const { mutate: createLogEntry, isError, error } = useCreateLogEntry({ award, challenge })
+
+export default function ActivityForm({onSubmit, ...props}: HTMLAttributes<HTMLFormElement>) {
+    const [error, setError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
             date: '',
@@ -14,17 +13,23 @@ export default function CreateActivityForm({onSubmit, ...props}: HTMLAttributes<
         validators: {
             onSubmit: CreateLogEntrySchema,
         },
-        onSubmit: async (event) => {
-            createLogEntry(event.value)
-        }
     })
     return (
-        <form onSubmit={(e) => {
+        <form onSubmit={async (e) => {
             e.preventDefault();
-            form.handleSubmit();
-            if (onSubmit) {
-                onSubmit(e)
+            await form.handleSubmit()
+            if (form.state.isValid) {
+                setError(null)
+                if (onSubmit) {
+                    try {
+                        onSubmit(e)
+                    }
+                    catch (err) {
+                        setError(err instanceof Error ? err.message : "An unknown error occurred.")
+                    }
+                }
             }
+
         }} className="flex flex-col gap-4" {...props}>
             <form.Field name="date">
                 {(field) => (
@@ -32,13 +37,14 @@ export default function CreateActivityForm({onSubmit, ...props}: HTMLAttributes<
                         <label className="mb-1 font-semibold">Date</label>
                         <input 
                             type="date"
+                            name="date"
                             value={field.state.value}
                             onChange={(e) => field.handleChange(e.target.value)}
                             onBlur={field.handleBlur}
                             className="border border-gray-300 rounded px-3 py-2"
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((fieldError) => fieldError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
@@ -49,21 +55,22 @@ export default function CreateActivityForm({onSubmit, ...props}: HTMLAttributes<
                         <label className="mb-1 font-semibold">Description</label>
                         <textarea 
                             required
+                            name="description"
                             value={field.state.value}
                             onChange={(e) => field.handleChange(e.target.value)}
                             onBlur={field.handleBlur}
                             className="border border-gray-300 rounded px-3 py-2 resize-y"
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((fieldError) => fieldError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
             </form.Field>
             {/* //TODO: Add error handling for submission failure (e.g. network error, server error) */}
-            {isError && (
+            {error !== null && (
                 <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                    {error instanceof Error ? error.message : 'An error occurred while submitting your proposal. Please try again.'}
+                    {error}
                 </div>
             )}
         </form>
