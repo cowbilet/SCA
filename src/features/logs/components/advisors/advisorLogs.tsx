@@ -1,9 +1,10 @@
 import Skeleton from "react-loading-skeleton"
 import { useLocation, useParams } from "@tanstack/react-router"
+import { Check, X } from "lucide-react"
 import { useLogs } from "../../hooks/useLogs"
 import { useApproveLog } from "../../hooks/useApproveLog"
 import type { LogEntry } from "@/types/schemas/log"
-import { ActivityLogGroupCard, FeedbackForm, LogEntryScaffold } from "@/features/logs/components/activityLogs"
+import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 
 export function AdvisorActivityLogs() {
     
@@ -51,22 +52,22 @@ function AdvisorLogEntry({log}: {log: LogEntry}) {
 function MentorLogEntry({log}: {log: LogEntry}) {
     const { award, challenge, studentId } = useParams({strict: true, from: "/$advisor/$studentId/$award/$challenge"})
     const { mutate: approveLog } = useApproveLog(log.logId, award, challenge, studentId)
-    const onSubmitFeedback = (event: React.SubmitEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const submitter = event.nativeEvent.submitter as HTMLButtonElement
-        // This is a pretty recent addition to browsers
-        // TODO: Add polyfill
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition --- This is because some browsers don't support the submitter property ---
-        if (!submitter) {
-            console.error("No submitter found for feedback form submission. Please update your browser to a more recent version that supports the submitter property on the submit event.")
-            return
-        }
-        const formData = new FormData(event.target)
-        const feedback = formData.get("feedback") as string
-        approveLog({ approved: submitter.id === "approve", feedback })
-    }
     // TODO: Make this have error handling and loading states
     return (
-        <LogEntryScaffold log={log} key={log.logId} feedback={<FeedbackForm disabled={false} onSubmit={onSubmitFeedback}/>} isFeedbackOpen={log.approved === null} />
+        <LogEntryScaffold 
+            log={log} 
+            key={log.logId} 
+        >
+            <div className="buttons ml-auto flex flex-row items-center gap-1">
+
+                {log.approved === null && (
+                    <>  
+                        <button onClick={() => approveLog({ approved: true })} className=" text-green-500 font-bold rounded w-5 h-5 flex items-center justify-center hover:cursor-pointer"><Check /></button>
+                        {/* TODO: Make this show feedback? */}
+                        <button onClick={() => approveLog({ approved: false })} className=" text-red-500 font-bold rounded w-5 h-5 flex items-center justify-center hover:cursor-pointer"><X /></button>
+                    </>
+                )}
+            </div>
+        </LogEntryScaffold>
     )
 }

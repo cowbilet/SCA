@@ -34,7 +34,7 @@ export function ActivityLogGroupCard({type, children}: {type: keyof typeof logSt
         </Card>
     )
 }
-export function LogEntryScaffold({log, children, footer, feedback, isFeedbackOpen}: {log: LogEntry, children?: React.ReactNode, footer?: React.ReactNode, feedback?: React.ReactNode, isFeedbackOpen?: boolean}) {
+export function LogEntryScaffold({log, children}: {log: LogEntry, children?: React.ReactNode}) {
     return (
         <div className="border-2 bg-gray border-gray-300 rounded-lg p-4 flex flex-col gap-2">
             <div className="flex justify-between items-center text-lg">
@@ -50,35 +50,35 @@ export function LogEntryScaffold({log, children, footer, feedback, isFeedbackOpe
             <p className="text-gray-600">
                 {log.description}
             </p>
-            {footer && (
+            {/* {footer && (
                 <div className="mt-2">
                     {footer}
                 </div>
-            )}
-            {isFeedbackOpen && (
+            )} */}
+            {/* {isFeedbackOpen && (
                 feedback
-            )}
+            )} */}
         </div>
     )
 }
-export function FeedbackForm({disabled, feedback, ...props}: {disabled: boolean, feedback?: string} & HTMLAttributes<HTMLFormElement>) {
-    return (
-        <form aria-disabled={disabled} className={clsx("flex flex-col gap-4", disabled && "opacity-50 pointer-events-none")} {...props}>
-            <label htmlFor="feedback" className="text-sm font-medium text-gray-700">Feedback</label>
-            <textarea id="feedback" name="feedback" rows={4} disabled={disabled} defaultValue={feedback} className=" p-2 mt-1 block w-full rounded-md border border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
-            {!feedback && (
-                <div className="buttons ml-auto flex flex-row items-center gap-1">
-                    <button type="submit" disabled={disabled} id="reject" className="bg-red-500 text-white px-4 py-2 rounded mr-2">
-                        Reject
-                    </button>
-                    <button type="submit" disabled={disabled} id="approve" className="bg-green-500 text-white px-4 py-2 rounded">
-                        Approve
-                    </button>
-                </div>
-            )}
-        </form>
-    )
-}
+// export function FeedbackForm({disabled, feedback, ...props}: {disabled: boolean, feedback?: string} & HTMLAttributes<HTMLFormElement>) {
+//     return (
+//         <form aria-disabled={disabled} className={clsx("flex flex-col gap-4", disabled && "opacity-50 pointer-events-none")} {...props}>
+//             <label htmlFor="feedback" className="text-sm font-medium text-gray-700">Feedback</label>
+//             <textarea id="feedback" name="feedback" rows={4} disabled={disabled} defaultValue={feedback} className=" p-2 mt-1 block w-full rounded-md border border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
+//             {!feedback && (
+//                 <div className="buttons ml-auto flex flex-row items-center gap-1">
+//                     <button type="submit" disabled={disabled} id="reject" className="bg-red-500 text-white px-4 py-2 rounded mr-2">
+//                         Reject
+//                     </button>
+//                     <button type="submit" disabled={disabled} id="approve" className="bg-green-500 text-white px-4 py-2 rounded">
+//                         Approve
+//                     </button>
+//                 </div>
+//             )}
+//         </form>
+//     )
+// }
 // export function ActivityLogGroup({type}: {type: keyof typeof logStyling}) {
 //     const { data } = useSession()
 //     const { award, challenge } = useParams({strict: false})

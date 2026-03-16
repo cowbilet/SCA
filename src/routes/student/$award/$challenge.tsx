@@ -17,7 +17,7 @@ export const Route = createFileRoute('/student/$award/$challenge')({
         challenge: challengeSchema,
     }),
     shouldReload: false,
-    //TODO: If you go to the student page and hover over any page it preloads the data, this is not very good for data saving
+    // TODO: If you go to the student page and hover over any page it preloads the data, this is not very good for data saving
     loader: async ({ params, context: { queryClient, user } }) => {
         const { award, challenge } = params
         const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge))

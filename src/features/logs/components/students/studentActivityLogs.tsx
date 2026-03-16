@@ -1,12 +1,12 @@
 import Skeleton from "react-loading-skeleton"
 import { Pencil, Trash } from "lucide-react"
 import { useParams } from "@tanstack/react-router"
-import { useState } from "react"
+
 import { useLogs } from "../../hooks/useLogs"
 import { CreateActivity } from "../createActivity"
 import type { LogEntry } from "@/types/schemas/log"
 import { useSession } from "@/integrations/better-auth/authClient"
-import { ActivityLogGroupCard, FeedbackForm, LogEntryScaffold } from "@/features/logs/components/activityLogs"
+import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 import { StudentSubmission } from "@/features/submissions/components/studentSubmission"
 
 export function StudentActivityLogs() {
@@ -54,14 +54,9 @@ function StudentLogEntries({type}: {type: "pending" | "approved" | "rejected"}) 
     )
 }
 function StudentLogEntry({log}: {log: LogEntry}) {
-    const [isFeedbackOpen, setFeedbackOpen] = useState(false)
     return (
         <LogEntryScaffold 
-        
             log={log} key={log.logId}
-            footer={log.feedback ? <button className="text-sm text-blue-500" onClick={() => setFeedbackOpen(!isFeedbackOpen)}>{isFeedbackOpen ? "Hide Feedback" : "Show Feedback"}</button> : undefined}
-            feedback={<FeedbackForm disabled={true} feedback={log.feedback || undefined} />} 
-            isFeedbackOpen={isFeedbackOpen}
         >
             <div className="buttons ml-auto flex flex-row items-center gap-1">
 
