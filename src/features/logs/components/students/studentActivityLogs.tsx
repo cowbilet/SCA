@@ -7,7 +7,7 @@ import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, FeedbackForm, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 import { useState } from "react"
 import { CreateActivity } from "../createActivity"
-import { StudentSubmission } from "@/features/submission/components/studentSubmission"
+import { StudentSubmission } from "@/features/submissions/components/studentSubmission"
 
 export function StudentActivityLogs() {
     
