@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { Circle, Clock } from "lucide-react";
 
+import type { HTMLAttributes } from "react";
 import type { LogEntry } from "@/types/schemas/log";
 import { Card } from "@/components/card";
-import { HTMLAttributes } from "react";
 
 const logStyling = {
     pending: {
@@ -38,7 +38,7 @@ export function LogEntryScaffold({log, children, footer, feedback, isFeedbackOpe
     return (
         <div className="border-2 bg-gray border-gray-300 rounded-lg p-4 flex flex-col gap-2">
             <div className="flex justify-between items-center text-lg">
-                <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-row items-center gap-2 w-full">
                     <Circle className={clsx(`w-3 h-3 min-w-3 min-h-3 rounded-full`, log.approved === true && "bg-green-500 text-green-500", log.approved === false && "bg-red-500 text-red-500", log.approved === null && "bg-yellow-500 text-yellow-500")} />
                     <span className="font-semibold">{new Date(log.date).toLocaleDateString()}</span>
                     {children}

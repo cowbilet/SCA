@@ -38,6 +38,7 @@ export default function Dialog({ref, trigger, children, className, ...props}: {r
                         "w-full max-w-full sm:max-w-lg",
                         "rounded-lg shadow-lg bg-white",
                         "open:zoom-in-95 open:duration-200",
+                        "open:backdrop:bg-black/50",
                         className
                     )}
                     {...props}
@@ -58,7 +59,7 @@ export default function Dialog({ref, trigger, children, className, ...props}: {r
 }
 export function DialogHeader({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) {
     return (
-        <div className={clsx("border-b border-gray-300 flex items-center text-xl flex-col font-semibold px-6 py-3 pr-12 text-black", className)} {...props}>
+        <div className={clsx("border-b border-gray-300 flex items-start text-xl flex-col font-semibold px-6 py-3 pr-12 text-black", className)} {...props}>
             {children}
         </div>
     )
