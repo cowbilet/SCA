@@ -1,14 +1,16 @@
 import { useForm } from "@tanstack/react-form"
 import { useState } from "react"
 import type {HTMLAttributes} from "react"
+import type { LogEntry } from "@/types/schemas/log"
 import { CreateLogEntrySchema } from "@/types/schemas/log"
 
-export default function ActivityForm({onSubmit, ...props}: HTMLAttributes<HTMLFormElement>) {
+export default function ActivityForm({log, onSubmit, ...props}: {log?: LogEntry} & HTMLAttributes<HTMLFormElement>) {
     const [error, setError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
-            date: '',
-            description: '',
+
+            date: new Date(log?.date || Date.now()).toISOString().split("T")[0], // Format date as YYYY-MM-DD for input value
+            description: log?.description || '',
         },
         validators: {
             onSubmit: CreateLogEntrySchema,

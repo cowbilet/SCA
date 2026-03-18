@@ -1,5 +1,5 @@
 import { useParams } from "@tanstack/react-router"
-import { useCreateLogEntry } from "../../hooks/useCreateLogEntry"
+import { useCreateLogEntry } from "../../../../hooks/useCreateLogEntry"
 import ActivityForm from "./activityForm";
 import type { ComponentProps } from "react";
 

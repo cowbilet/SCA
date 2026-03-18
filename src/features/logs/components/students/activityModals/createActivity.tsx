@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import CreateActivityForm from "./createActivityForm";
+import CreateActivityForm from "./forms/createActivityForm";
 import type { ButtonHTMLAttributes } from "react";
 import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog";
 

@@ -1,16 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { approveLog } from "../api/approveLog";
-import { Award } from "@/types/awards";
-import { Challenge } from "@/types/challenges";
-import { useQueryClient } from "@tanstack/react-query";
 import type { LogEntry } from "@/types/schemas/log";
+import type { Award } from "@/types/awards";
+import type { Challenge } from "@/types/challenges";
 
 export function useApproveLog(logId: string, award: Award, challenge: Challenge, studentId: string) {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: async ({ approved, feedback }: { approved: boolean, feedback?: string }) => approveLog({data: {logId, approved, feedback}}),
-        onMutate: async ({ approved, feedback }) => {
-            const logs = queryClient.getQueryData<LogEntry[] | undefined>(['logs', award, challenge, studentId, "pending"])
+        onMutate: ({ approved, feedback }) => {
+            const logs = queryClient.getQueryData<Array<LogEntry> | undefined>(['logs', award, challenge, studentId, "pending"])
             if (!logs) return
             const logIndex = logs.findIndex(log => log.logId === logId)
             if (logIndex === -1) return
@@ -22,7 +21,7 @@ export function useApproveLog(logId: string, award: Award, challenge: Challenge,
             ])
             // Add the log to the appropriate approved/rejected query
             const targetQueryKey = approved ? ['logs', award, challenge, studentId, "approved"] : ['logs', award, challenge, studentId, "rejected"]
-            const targetLogs = queryClient.getQueryData<LogEntry[] | undefined>(targetQueryKey)
+            const targetLogs = queryClient.getQueryData<Array<LogEntry> | undefined>(targetQueryKey)
             if (targetLogs) {
                 queryClient.setQueryData(targetQueryKey, [...targetLogs, {...log, approved, feedback}])
             }

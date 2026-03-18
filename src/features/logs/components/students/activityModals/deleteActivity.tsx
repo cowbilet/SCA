@@ -1,9 +1,8 @@
 import { useRef } from "react";
-import { FileWarningIcon, Trash, TriangleAlert } from "lucide-react";
-import type { LogEntry } from "@/types/schemas/log";
+import { Trash, TriangleAlert } from "lucide-react";
 import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog";
 
-export function DeleteActivity({log}: {log: LogEntry}) {
+export function DeleteActivity() {
     const modalRef = useRef<HTMLDialogElement>(null)
     return (
         <Dialog
@@ -21,7 +20,6 @@ export function DeleteActivity({log}: {log: LogEntry}) {
                 <div className="flex flex-col gap-2 bg-red-50 border border-red-700 p-4 rounded">
                     <p className="text-black"><span className="font-bold">WARNING: </span>Are you sure you want to delete this activity?</p>
                     <p className="text-black">This action cannot be undone and may affect your progress towards your goal.</p>
-
                 </div>
             </DialogBody>
             <DialogFooter className="justify-end">

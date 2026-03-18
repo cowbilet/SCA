@@ -5,6 +5,7 @@ import { dbCreateLogEntry } from "@/db/logs.server"
 import { challengeSchema } from "@/types/schemas/challenges"
 import { awardSchema } from "@/types/schemas/award"
 import { dbGetUserChallenge } from "@/db/challenges.server"
+
 export const createLog = createServerFn({ method: 'POST' }).inputValidator(z.object({
     award: awardSchema,
     challenge: challengeSchema,
