@@ -6,7 +6,6 @@ import { useDeleteLog } from "@/features/logs/hooks/useDeleteLog";
 
 export function DeleteActivity({log}: {log: LogEntry}) {
     const modalRef = useRef<HTMLDialogElement>(null)
-    console.log("Log in delete modal:", log) // Debugging statement to check the log data
     const {mutate: deleteLog} = useDeleteLog({ oldLog: log })
     return (
         <Dialog
