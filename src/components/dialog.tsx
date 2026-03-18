@@ -59,7 +59,7 @@ export default function Dialog({ref, trigger, children, className, ...props}: {r
 }
 export function DialogHeader({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) {
     return (
-        <div className={clsx("border-b border-gray-300 flex items-start text-xl flex-col font-semibold px-6 py-3 pr-12 text-black", className)} {...props}>
+        <div className={clsx("border-b border-gray-300 flex items-start text-xl flex-col font-semibold px-6 py-3 pr-12 text-black gap-2", className)} {...props}>
             {children}
         </div>
     )

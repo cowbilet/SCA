@@ -4,6 +4,7 @@ import { useParams } from "@tanstack/react-router"
 
 import { useLogs } from "../../hooks/useLogs"
 import { CreateActivity } from "./createActivity"
+import { DeleteActivity } from "./deleteActivity"
 import type { LogEntry } from "@/types/schemas/log"
 import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
@@ -63,8 +64,7 @@ function StudentLogEntry({log}: {log: LogEntry}) {
                 {(log.approved === false || log.approved === null) && (
                     <>  
                         <button className=" text-blue-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Pencil /></button>
-                        
-                        <button className=" text-red-500 font-bold rounded w-5 h-5 flex items-center justify-center"><Trash /></button>
+                        <DeleteActivity log={log} />
                     </>
                 )}
             </div>
