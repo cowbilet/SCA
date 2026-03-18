@@ -1,9 +1,13 @@
 import { useRef } from "react";
 import { Trash, TriangleAlert } from "lucide-react";
+import type { LogEntry } from "@/types/schemas/log";
 import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog";
+import { useDeleteLog } from "@/features/logs/hooks/useDeleteLog";
 
-export function DeleteActivity() {
+export function DeleteActivity({log}: {log: LogEntry}) {
     const modalRef = useRef<HTMLDialogElement>(null)
+    console.log("Log in delete modal:", log) // Debugging statement to check the log data
+    const {mutate: deleteLog} = useDeleteLog({ oldLog: log })
     return (
         <Dialog
             ref={modalRef}
@@ -26,7 +30,10 @@ export function DeleteActivity() {
                 <button onClick={() => modalRef.current?.close()} className="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded hover:bg-gray-400 transition hover:cursor-pointer">
                     Cancel
                 </button>
-                <button form="create-activity-form" className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition hover:cursor-pointer">
+                <button onClick={() => {
+                    deleteLog()
+                    modalRef.current?.close()
+                }} className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition hover:cursor-pointer">
                     Delete
                 </button>
             </DialogFooter>

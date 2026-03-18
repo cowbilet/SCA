@@ -65,7 +65,7 @@ function StudentLogEntry({log}: {log: LogEntry}) {
                 {(log.approved === false || log.approved === null) && (
                     <>  
                         <EditActivity log={log} />
-                        <DeleteActivity />
+                        <DeleteActivity log={log} />
                     </>
                 )}
             </div>

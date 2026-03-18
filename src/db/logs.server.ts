@@ -21,6 +21,13 @@ export async function dbCreateLogEntry(studentId: string, award: Award, challeng
     }
     return logEntry[0]
 }
+export async function dbDeleteLogEntry(logId: string) {
+    const deletedLog = await db.delete(logs).where(eq(logs.logId, logId)).returning()
+    if (deletedLog.length === 0) {
+        return null
+    }
+    return deletedLog[0]
+}
 export async function dbGetLogEntry(logId: string) {
     const logEntry = await db.select().from(logs).where(eq(logs.logId, logId))
     if (logEntry.length === 0) {
