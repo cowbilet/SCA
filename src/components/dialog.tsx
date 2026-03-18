@@ -1,14 +1,24 @@
-import { useState, useRef, useEffect, type ComponentType, type Dispatch, type SetStateAction, type HTMLAttributes } from "react";
+import { useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
-import clsx from "clsx";
+import type { Dispatch, HTMLAttributes, SetStateAction } from "react";
+
 export default function Dialog({ref, trigger, children, className, ...props}: {ref?: React.RefObject<HTMLDialogElement | null>, trigger: (setIsOpen: Dispatch<SetStateAction<boolean>>) => React.ReactNode, children: React.ReactNode,} & HTMLAttributes<HTMLDialogElement>) {
     const [isOpen, setIsOpen] = useState(false);
     if (!ref) {
         ref = useRef<HTMLDialogElement>(null);
     }
     const handleClick = (event: React.MouseEvent<HTMLDialogElement>) => {
-        if (event.target === ref.current) {
+        const dialog = event.currentTarget;
+        const rect = dialog.getBoundingClientRect();
+        const clickedOutsideDialog =
+            event.clientX < rect.left ||
+            event.clientX > rect.right ||
+            event.clientY < rect.top ||
+            event.clientY > rect.bottom;
+
+        if (clickedOutsideDialog) {
             setIsOpen(false);
         }
     };
