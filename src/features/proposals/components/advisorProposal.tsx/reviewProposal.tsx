@@ -1,16 +1,16 @@
-import ProposalForm from "../proposalForm";
 import { useForm } from "@tanstack/react-form";
 import { useParams } from "@tanstack/react-router";
+import ProposalForm from "../proposalForm";
 import { useReviewProposal } from "../../hooks/useReviewProposal";
 import { Comments } from "../notifications";
-import { useSession } from "@/integrations/better-auth/authClient";
-import { Award } from "@/types/awards";
 import { useProposal } from "../../hooks/useProposal";
+import { useSession } from "@/integrations/better-auth/authClient";
+
 export default function ReviewProposal() {
     const { data } = useSession()
     const { studentId, award, challenge } = useParams({ strict: false })
-    const { data: proposal, isError, isLoading } = useProposal(award! as Award, challenge!, studentId!)
-    if (!data || !data.user || !studentId || !award || !challenge) {
+    const { data: proposal, isError, isLoading } = useProposal(award!, challenge!, studentId)
+    if (!data || !studentId || !award || !challenge) {
         return null
     }
     const { user } = data
@@ -45,10 +45,11 @@ function ProposalFeedbackForm() {
         },
         onSubmit: async ({value}) => {
             const {feedback} = value
-            //Get the button that was clicked (approve or reject) and the feedback from the form
+            // Get the button that was clicked (approve or reject) and the feedback from the form
             const action = (document.activeElement as HTMLButtonElement).id
             submitProposal({ notes: feedback, accepted: action === "approve" })
-            // Handle approve/reject logic here, using value.feedback for the mentor's feedback
+            
+            // TODO: Handle approve/reject logic here, using value.feedback for the mentor's feedback
         }
     })
     return (    

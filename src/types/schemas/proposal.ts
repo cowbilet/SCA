@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { UserSchema } from "./users";
+import type { Challenge } from "@/types/challenges";
+import type { Award } from "@/types/awards";
 import { validateChallenge } from "@/types/guards/challenges";
 import { status } from "@/db/schema";
-import type { Challenge } from "@/types/challenges";
 import { validateAward } from "@/types/guards/awards";
-import type { Award } from "@/types/awards";
-import { UserSchema } from "./users";
+
 export const ProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',

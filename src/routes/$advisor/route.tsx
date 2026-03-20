@@ -1,8 +1,8 @@
-import AdvisorSidebar from '@/components/advisors/sidebar/sidebar'
-import { restrictRoles } from '@/utils/auth'
-import { createFileRoute } from '@tanstack/react-router'
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, createFileRoute  } from '@tanstack/react-router'
 import z from 'zod'
+import { restrictRoles } from '@/utils/auth'
+import AdvisorSidebar from '@/components/advisors/sidebar/sidebar'
+
 export const Route = createFileRoute('/$advisor')({
     params: z.object({
         advisor: z.enum(["mentor", "assessor"]),

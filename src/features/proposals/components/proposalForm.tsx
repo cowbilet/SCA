@@ -1,12 +1,13 @@
 import { useForm } from '@tanstack/react-form'
-import { CreateProposalSchema } from '../types/schema/forms'
 import { useParams } from '@tanstack/react-router'
-import { getUserByEmail } from '@/api/users/getUserByEmail'
-import { useCreateChallenge } from '../hooks/useCreateChallenge'
 import { clsx } from 'clsx'
-import { FunctionComponent } from 'react'
+import { useCreateChallenge } from '../hooks/useCreateChallenge'
+import { CreateProposalSchema } from '../types/schema/forms'
+import type { FunctionComponent } from 'react'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
+import { getUserByEmail } from '@/api/users/getUserByEmail'
+
 interface ProposalFormProps {
     values?: {
         mentorEmail: string,
@@ -62,7 +63,7 @@ export default function ProposalForm({values, disabled, Button}: ProposalFormPro
                 }
             }
         },
-        onSubmit: async ({value}) => {
+        onSubmit: ({value}) => {
             createChallenge(value)
         }
     })

@@ -1,19 +1,20 @@
 import { createServerFn } from "@tanstack/react-start"
 
+import { z } from "zod"
+import { CreateProposalSchema } from "../types/schema/forms"
+import type { Award } from "@/types/awards"
+import type { Challenge } from "@/types/challenges"
+import type { Proposal } from "@/types/schemas/proposal"
 import { dbGetUserByEmail } from "@/db/users.server"
 
 import { validateAward } from "@/types/guards/awards"
-import type { Award } from "@/types/awards"
-import type { Challenge } from "@/types/challenges"
-import { z } from "zod"
 
-import { CreateProposalSchema } from "../types/schema/forms"
 import { validateChallenge } from "@/types/guards/challenges"
 
-import { Proposal } from "@/types/schemas/proposal"
 import { dbCreateUserChallenge, dbGetUserChallenge } from "@/db/challenges.server"
 import { dbChangeProposalStatus, dbCreateChallengeProposal, dbEditProposal } from "@/db/proposals.server"
 import { restrictRoles } from "@/utils/auth"
+
 const createUserProposalSchema = CreateProposalSchema.extend({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
@@ -45,8 +46,10 @@ export const createUserProposal = createServerFn({ method: 'POST' }).inputValida
         if (status === 'pending mentor' || status === 'pending assessor' || status === 'completed') {
             throw new Error("You already have a proposal in progress for this challenge")
         }
-        //TODO: Make this a transaction
+        // TODO: Make this a transaction
+        console.log("Updating proposal status to pending mentor")
         await dbChangeProposalStatus(studentId, award, challenge, 'pending mentor')
+        console.log("Editing proposal with new description and goal")
         proposal = await dbEditProposal(studentId, award, challenge, description, goal)
         
     }

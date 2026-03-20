@@ -1,12 +1,13 @@
-import { Card } from "@/components/card";
-import ProposalForm from "../proposalForm";
-import { SubmissionState } from "@/types/awards";
 import { useParams } from "@tanstack/react-router";
-import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { LoaderCircle } from "lucide-react";
-import {Comments, Instructions} from "../notifications";
 import { clsx } from "clsx";
+import ProposalForm from "../proposalForm";
+import {Comments, Instructions} from "../notifications";
+import type { SubmissionState } from "@/types/awards";
+import { Card } from "@/components/card";
+import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { useSession } from "@/integrations/better-auth/authClient";
+
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
         <Card className="h-full flex flex-col">
@@ -17,11 +18,11 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
         </Card>
     )
 }
-const disabledStates: SubmissionState[] = ['pending mentor', 'pending assessor']
+const disabledStates: Array<SubmissionState> = ['pending mentor', 'pending assessor']
 export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
     const { data } = useSession()
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, data?.user?.id)
+    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, data?.user.id)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">

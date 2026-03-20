@@ -10,6 +10,7 @@ import type { LogEntry } from "@/types/schemas/log"
 import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 import { StudentSubmission } from "@/features/submissions/components/studentSubmission"
+import Feedback from "@/components/feedback"
 
 export function StudentActivityLogs() {
     

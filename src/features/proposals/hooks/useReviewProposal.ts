@@ -1,9 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient  } from "@tanstack/react-query";
 import { reviewProposal } from "../api/reviewProposal";
-import { Award } from "@/types/awards";
-import { Challenge } from "@/types/challenges";
-import { useQueryClient } from "@tanstack/react-query";
 import type { Proposal, ProposalWithStudent } from "@/types/schemas/proposal";
+import type { Award } from "@/types/awards";
+import type { Challenge } from "@/types/challenges";
 
 export function useReviewProposal(studentId: string, award: Award, challenge: Challenge) {
     const queryClient = useQueryClient()
@@ -15,11 +14,11 @@ export function useReviewProposal(studentId: string, award: Award, challenge: Ch
             queryClient.cancelQueries({queryKey: ['proposals', award, challenge, studentId]})
             queryClient.cancelQueries({ queryKey: ['pendingProposals'] })
             const previousProposal = queryClient.getQueryData<Proposal>(['proposals', award, challenge, studentId])
-            const previousPendingProposals = queryClient.getQueryData<ProposalWithStudent[]>(['pendingProposals'])
+            const previousPendingProposals = queryClient.getQueryData<Array<ProposalWithStudent>>(['pendingProposals'])
             if (!previousProposal) return
             const newProposal = generateNewProposal(previousProposal, data.accepted, data.notes)
             queryClient.setQueryData(['proposals', award, challenge, studentId], newProposal)
-            queryClient.setQueryData<ProposalWithStudent[]>(['pendingProposals'], (oldData) => {
+            queryClient.setQueryData<Array<ProposalWithStudent>>(['pendingProposals'], (oldData) => {
                 if (!oldData) return oldData
                 return oldData.filter(proposal => !(proposal.proposal.award === award && proposal.proposal.challenge === challenge && proposal.student.userId === studentId))
             })

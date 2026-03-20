@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, foreignKey, boolean, timestamp, primaryKey, pgEnum, index } from "drizzle-orm/pg-core"
+import { boolean, foreignKey, index, pgEnum, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm";
 
 
@@ -46,29 +46,6 @@ export const challengeProposals = pgTable("challenge_proposals", {
 		}),
 ]);
 
-export const challengeSubmission = pgTable("challenge_submission", {
-	studentId: uuid().notNull(),
-	award: awardTiers().notNull(),
-	challenge: challenge().notNull(),
-	assessorId: uuid(),
-	studentReflection: text().notNull(),
-	mentorReflection: text(),
-	assessorReflection: text(),
-	accepted: boolean(),
-}, (table) => [
-	primaryKey({ columns: [table.studentId, table.award, table.challenge], name: "challenge_submission_pkey"}),
-	foreignKey({
-			columns: [table.assessorId],
-			foreignColumns: [assessors.assessorId],
-			name: "challenge_submission_assessorId_fkey"
-		}),
-	foreignKey({
-			columns: [table.studentId, table.award, table.challenge],
-			foreignColumns: [studentChallenge.studentId, studentChallenge.award, studentChallenge.challenge],
-			name: "challenge_submission_student_challenge_fkey"
-		}),
-]);
-
 export const logs = pgTable("logs", {
 	logId: uuid().defaultRandom().primaryKey().notNull(),
 	studentId: uuid().notNull(),
@@ -94,9 +71,14 @@ export const logs = pgTable("logs", {
 
 export const studentChallenge = pgTable("student_challenge", {
 	mentorId: uuid().notNull(),
+	assessorId: uuid(),
 	studentId: uuid().notNull(),
 	award: awardTiers().notNull(),
 	challenge: challenge().notNull(),
+	status: status().default("not started").notNull(),
+	accepted: boolean(),
+	mentorNote: text(),
+	assessorNote: text(),
 }, (table) => [
 	foreignKey({
 			columns: [table.mentorId],
@@ -108,12 +90,17 @@ export const studentChallenge = pgTable("student_challenge", {
 			foreignColumns: [users.id],
 			name: "student_challenge_studentId_fkey"
 		}),
+	foreignKey({
+			columns: [table.assessorId],
+			foreignColumns: [assessors.assessorId],
+			name: "student_challenge_assessorId_fkey"
+		}),
 	primaryKey({ columns: [table.studentId, table.award, table.challenge], name: "student_challenge_pkey"}),
 ]);
 
 
 
-//Auth stuff
+// Auth stuff
 export const users = pgTable("users", {
 	id: uuid("userId").defaultRandom().primaryKey(),
 	name: text("name").notNull(),

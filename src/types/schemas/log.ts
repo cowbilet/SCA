@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Award } from "@/types/awards";
 import type { Challenge } from "@/types/challenges";
+
 export const futureDate = z.coerce.date<string>().refine((date) => {
     const today = new Date()
     return date <= today

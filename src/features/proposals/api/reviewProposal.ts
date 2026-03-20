@@ -1,11 +1,12 @@
-import { dbChangeProposalStatus } from "@/db/proposals.server";
-import { Award } from "@/types/awards";
-import { Challenge } from "@/types/challenges";
-import { validateAward } from "@/types/guards/awards";
-import { validateChallenge } from "@/types/guards/challenges";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import type { Award } from "@/types/awards";
+import type { Challenge } from "@/types/challenges";
+import { dbChangeProposalStatus } from "@/db/proposals.server";
+import { validateAward } from "@/types/guards/awards";
+import { validateChallenge } from "@/types/guards/challenges";
 import { restrictRoles } from "@/utils/auth";
+
 const submitProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',
@@ -14,7 +15,7 @@ const submitProposalSchema = z.object({
         message: 'Invalid challenge',
     }),
     studentId: z.uuid(),
-    //TODO: Get rid of this
+    // TODO: Get rid of this
     notes: z.string(),
     accepted: z.boolean(),
 })

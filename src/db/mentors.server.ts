@@ -1,11 +1,11 @@
+import { and, eq } from "drizzle-orm/sql/expressions/conditions";
 import { db } from "./index.server";
 
-import { and, eq } from "drizzle-orm/sql/expressions/conditions";
 import {  challengeProposals, users } from "./schema";
-import { ProposalWithStudent } from "@/types/schemas/proposal";
+import type { ProposalWithStudent } from "@/types/schemas/proposal";
 
 
-export async function dbGetMentorPendingProposals(mentorId: string): Promise<ProposalWithStudent[]> {
+export async function dbGetMentorPendingProposals(mentorId: string): Promise<Array<ProposalWithStudent>> {
     const challengeProposalsSubquery = db.select({
         studentId: challengeProposals.studentId,
         award: challengeProposals.award,
