@@ -1,17 +1,17 @@
-import { H1Title } from '../../titles'
 import {
-    Users,
-    Zap,
     BookOpen,
-    HandPlatter
+    HandPlatter,
+    Users,
+    Zap
 } from 'lucide-react'
-import { useMatchRoute, useParams } from '@tanstack/react-router'
-import { Challenge } from '@/types/challenges'
-import { Link } from '@tanstack/react-router'
-import { useChallenge } from '@/hooks/useChallenge'
+import { Link, useMatchRoute, useParams  } from '@tanstack/react-router'
 import Skeleton from 'react-loading-skeleton'
-import { SubmissionState } from '@/types/awards'
-//TODO: Clean this up
+import { H1Title } from '../../titles'
+import type { SubmissionState } from '@/types/awards'
+import type { Challenge } from '@/types/challenges'
+import { useChallenge } from '@/hooks/useChallenge'
+import { useSession } from '@/integrations/better-auth/authClient'
+// TODO: Clean this up
 const challenges: Record<Challenge, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 
         title: 'Relationships', 
@@ -47,7 +47,7 @@ export default function SidebarChallenges() {
                 <H1Title title="Challenges" />
                 <div className='flex flex-col items-center justify-center gap-4'>
                     {
-                        (Object.keys(challenges) as Challenge[]).map((challenge) => (
+                        (Object.keys(challenges) as Array<Challenge>).map((challenge) => (
                             <ActivityCard 
                                 key={challenge}
                                 title={challenges[challenge].title}
@@ -113,7 +113,8 @@ const ChallengeStatuses: Record<SubmissionState, React.ReactNode> = {
 // Has to be a seperate component otherwhise there will be more hooks called in the component than in the parent which causes rules of hooks errors
 function ActiveActivityCard({ title, iconStyle, challenge, icon, className }: ActiveActivityCardProps) {
     const params = useParams({ from: '/student/$award', strict: true }) 
-    const { data, isLoading, isError } = useChallenge(params.award, challenge)
+    const { data: user } = useSession()
+    const { data, isLoading, isError } = useChallenge(params.award, challenge, user?.user.id)
     const status = isLoading ? 
         <Skeleton /> 
         : isError ? 

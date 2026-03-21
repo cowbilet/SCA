@@ -1,10 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
+import { z } from "zod";
 import { auth } from "@/integrations/better-auth/auth";
 import { dbGetUserById } from "@/db/users.server";
 import { role } from "@/db/schema";
-import { z } from "zod";
 import { dbGetMentorStudents } from "@/db/mentors.server";
+
 export const getSession = createServerFn({ method: "GET" }).handler(async () => {
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
@@ -37,7 +38,6 @@ export const restrictRoles = createServerFn({ method: "GET" }).inputValidator(re
 
     return user;
 })
-
 export const restrictStudentData = createServerFn({ method: "GET" }).inputValidator(z.uuid()).handler(async ({ data: studentId }) => {
     const session = await ensureSession();
     const user = await dbGetUserById(session.user.id);

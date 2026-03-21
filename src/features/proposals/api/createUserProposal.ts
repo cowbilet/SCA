@@ -47,9 +47,7 @@ export const createUserProposal = createServerFn({ method: 'POST' }).inputValida
             throw new Error("You already have a proposal in progress for this challenge")
         }
         // TODO: Make this a transaction
-        console.log("Updating proposal status to pending mentor")
         await dbChangeProposalStatus(studentId, award, challenge, 'pending mentor')
-        console.log("Editing proposal with new description and goal")
         proposal = await dbEditProposal(studentId, award, challenge, description, goal)
         
     }

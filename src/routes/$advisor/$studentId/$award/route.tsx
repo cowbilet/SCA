@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Outlet, createFileRoute  } from '@tanstack/react-router'
 import { z } from 'zod'
-import { Outlet } from '@tanstack/react-router'
 import { awardSchema } from '@/types/schemas/award'
+
 export const Route = createFileRoute('/$advisor/$studentId/$award')({
     params: z.object({
         award: awardSchema,

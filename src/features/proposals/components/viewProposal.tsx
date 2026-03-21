@@ -1,15 +1,15 @@
-import Dialog from "@/components/dialog"
-import { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog"
-import { Target, Clipboard } from "lucide-react"
-import { Comments } from "./notifications"
-import { useProposal } from "../hooks/useProposal"
+import { Clipboard, Target } from "lucide-react"
 import { useParams } from "@tanstack/react-router"
+import { useProposal } from "../hooks/useProposal"
+import { Comments } from "./notifications"
+import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog"
 import { useSession } from "@/integrations/better-auth/authClient"
+
 export function ViewProposal() {
     const {data: user} = useSession()
     const {award, challenge} = useParams({strict: false})
-    //This is never false however, but if it is then we break the rules of hook
-    if (!user || !user.user || !award || !challenge) {
+    // This is never false however, but if it is then we break the rules of hook
+    if (!user || !award || !challenge) {
         return null
     }
     const {data: proposal, isLoading, isError} = useProposal(award, challenge, user.user.id)
