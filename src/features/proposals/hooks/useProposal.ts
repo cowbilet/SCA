@@ -4,11 +4,11 @@ import type { Award } from "@/types/awards";
 import type { Challenge } from "@/types/challenges";
 
 // proposalQueryOptions.ts
-export const proposalQueryOptions = (award: Award, challenge: Challenge, studentId: string) => queryOptions({
+export const proposalQueryOptions = (award: Award, challenge: Challenge, studentId: string, enabled: boolean = !!studentId) => queryOptions({
     queryKey: ['proposals', award, challenge, studentId],
     queryFn: () => getUserProposal({ data: { award, challenge, studentId } }),
-    enabled: !!studentId,
+    enabled,
 })
-export function useProposal(award: Award, challenge: Challenge, studentId: string ) {
-    return useQuery(proposalQueryOptions(award, challenge, studentId))
+export function useProposal(award: Award, challenge: Challenge, studentId: string, enabled: boolean = !!studentId ) {
+    return useQuery(proposalQueryOptions(award, challenge, studentId, enabled))
 }

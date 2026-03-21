@@ -1,9 +1,10 @@
-import { LinkOptions, useLocation } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
-import { useForm } from "@tanstack/react-form";
-import { SignupSchema } from "@/types/schemas/auth";
-import { authClient } from "@/integrations/better-auth/authClient";
 import { useState } from "react";
+import { Link, useLocation } from "@tanstack/react-router";
+import type { LinkOptions } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { LoginSchema, SignupSchema } from "@/types/schemas/auth";
+import { authClient } from "@/integrations/better-auth/authClient";
+
 export default function Auth() {
     const location = useLocation()
     if (location.pathname === "/login") {
@@ -22,21 +23,24 @@ export default function Auth() {
     }
 }
 function LoginForm() {
-    const [error, setError] = useState<string | null>(null)
+    const [submitError, setSubmitError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
             email: '',
             password: '',
         },
+        validators: {
+            onSubmit: LoginSchema,
+        },
         onSubmit: async ({value}) => {       
-            setError(null)     
+            setSubmitError(null)     
             const {email, password} = value
-            const { error } = await authClient.signIn.email({
+            const signInResult = await authClient.signIn.email({
                 email,
                 password,
             })
-            if (error && error.message) {
-                setError(error.message)
+            if (signInResult.error?.message) {
+                setSubmitError(signInResult.error.message)
             }
 
         }
@@ -63,6 +67,9 @@ function LoginForm() {
                             onChange={(e) => field.handleChange(e.target.value)}
                             className="w-full border-2 border-gray-400 p-2 rounded-lg"
                         />
+                        {!field.state.meta.isValid && (
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
+                        )}
                     </div>
                 )}
             </form.Field>
@@ -80,21 +87,25 @@ function LoginForm() {
                             onChange={(e) => field.handleChange(e.target.value)}
                             className="w-full border-2 border-gray-400 p-2 rounded-lg"
                         />
+                        {!field.state.meta.isValid && (
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
+                        )}
                     </div>
                 )}
             </form.Field>
-            {error && <span className="error text-red-500 text-sm mt-1 col-span-2">{error}</span>}
+            {submitError && <span className="error text-red-500 text-sm mt-1 col-span-2">{submitError}</span>}
             <button
                 type="submit"
+                disabled={form.state.isSubmitting}
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-150"
             >
-                Log In
+                {form.state.isSubmitting ? 'Logging In...' : 'Log In'}
             </button>
         </form> 
     )
 }
 function SignupForm() {
-    const [error, setError] = useState<string | null>(null)
+    const [submitError, setSubmitError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
             name: '',
@@ -107,17 +118,17 @@ function SignupForm() {
             onSubmit: SignupSchema,
         },
         onSubmit: async ({value}) => {
-            setError(null)
+            setSubmitError(null)
             const {name, email, password, role, state} = value
-            const { data, error } = await authClient.signUp.email({
+            const signUpResult = await authClient.signUp.email({
                 name,
                 email,
                 password,
                 role,
                 state,
             })
-            if (error && error.message) {
-                setError(error.message)
+            if (signUpResult.error?.message) {
+                setSubmitError(signUpResult.error.message)
             }
         }
     })
@@ -144,7 +155,7 @@ function SignupForm() {
                             className="w-full border-2 border-gray-400 p-2 rounded-lg"
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
@@ -164,7 +175,7 @@ function SignupForm() {
                             className="w-full border-2 border-gray-400 p-2 rounded-lg"
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
@@ -184,7 +195,7 @@ function SignupForm() {
                             className="w-full border-2 border-gray-400 p-2 rounded-lg"
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
@@ -208,7 +219,7 @@ function SignupForm() {
                                 <option value="mentor">Mentor</option>
                             </select>
                             {!field.state.meta.isValid && (
-                                <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                                <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                             )}
                         </div>
                     )}
@@ -236,18 +247,19 @@ function SignupForm() {
                                 <option value="NAT">National/Other</option>
                             </select>
                             {!field.state.meta.isValid && (
-                                <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                                <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                             )}
                         </div>
                     )}
                 </form.Field>
-                {error && <span className="error text-red-500 text-sm mt-1 col-span-2">{error}</span>}
+                {submitError && <span className="error text-red-500 text-sm mt-1 col-span-2">{submitError}</span>}
             </div>
             <button
                 type="submit"
+                disabled={form.state.isSubmitting}
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150"
             >
-                Sign Up
+                {form.state.isSubmitting ? 'Creating Account...' : 'Sign Up'}
             </button>
         </form> 
     )

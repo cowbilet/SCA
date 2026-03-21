@@ -1,8 +1,10 @@
 import { useForm } from "@tanstack/react-form";
 import { useParams } from "@tanstack/react-router";
+import { useState } from "react";
 import ProposalForm from "../proposalForm";
 import { useReviewProposal } from "../../hooks/useReviewProposal";
 import { useProposal } from "../../hooks/useProposal";
+import { ReviewProposalFeedbackSchema } from "../../types/schema/forms";
 
 import Feedback from "@/components/feedback";
 
@@ -35,18 +37,24 @@ export default function ReviewProposal() {
 }
 function ProposalFeedbackForm() {
     const { award, challenge, studentId } = useParams({from: "/$advisor/$studentId/$award/$challenge", strict: true})
-    const { mutate: submitProposal } = useReviewProposal(studentId, award, challenge)
+    const { mutateAsync: submitProposal } = useReviewProposal(studentId, award, challenge)
+    const [decision, setDecision] = useState<boolean | null>(null)
+    const [submitError, setSubmitError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
             feedback: '',
         },
-        onSubmit: ({value}) => {
+        validators: {
+            onSubmit: ReviewProposalFeedbackSchema,
+        },
+        onSubmit: async ({value}) => {
             const {feedback} = value
-            // Get the button that was clicked (approve or reject) and the feedback from the form
-            const action = (document.activeElement as HTMLButtonElement).id
-            submitProposal({ notes: feedback, accepted: action === "approve" })
-            
-            // TODO: Handle approve/reject logic here, using value.feedback for the mentor's feedback
+            if (decision === null) {
+                setSubmitError("Choose approve or reject before submitting feedback.")
+                return
+            }
+            setSubmitError(null)
+            await submitProposal({ notes: feedback, accepted: decision })
         }
     })
     return (    
@@ -66,15 +74,20 @@ function ProposalFeedbackForm() {
                             className="w-full border-2 border-gray-400 p-2 rounded-lg mb-4"
                             placeholder="Enter feedback for the student..."
                             rows={5}
-                            required
                         />
+                        {!field.state.meta.isValid && (
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
+                        )}
                     </div>
                 )}
             </form.Field>
-            <button id="reject" type="submit" className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150">
+            {submitError && (
+                <p className="text-red-500 text-sm mb-3">{submitError}</p>
+            )}
+            <button id="reject" type="submit" onClick={() => setDecision(false)} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150">
                 Reject Proposal
             </button>
-            <button id="approve" type="submit" className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2">
+            <button id="approve" type="submit" onClick={() => setDecision(true)} className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2">
                 Approve Proposal
             </button>
         </form>

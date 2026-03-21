@@ -7,8 +7,8 @@ import Feedback from '@/components/feedback'
 export function Comments({proposal}: {proposal: Proposal}) {
     return (
         <>
-            <Feedback status={proposal.status} mentorNote={proposal.mentorNote} assessorNote={proposal.assessorNote} />
             <Instructions state={proposal.status} />
+            <Feedback status={proposal.status} mentorNote={proposal.mentorNote} assessorNote={proposal.assessorNote} />
         </>
     )
 }

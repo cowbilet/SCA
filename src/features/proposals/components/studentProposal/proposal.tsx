@@ -6,7 +6,7 @@ import {Comments, Instructions} from "../notifications";
 import type { SubmissionState } from "@/types/awards";
 import { Card } from "@/components/card";
 import { useProposal } from "@/features/proposals/hooks/useProposal";
-import { useSession } from "@/integrations/better-auth/authClient";
+import { Route } from "@/routes/student/route";
 
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
@@ -24,16 +24,8 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
 const disabledStates: Array<SubmissionState> = ['pending mentor', 'pending assessor']
 export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
-    const { data: session } = useSession()
-    const studentId = session?.user.id
-    if (!studentId) {
-        return (
-            <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                Unable to load your session. Please log in again.
-            </div>
-        )
-    }
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, studentId)
+    const { user } = Route.useRouteContext()
+    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, user.userId)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">

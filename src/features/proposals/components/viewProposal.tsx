@@ -3,16 +3,13 @@ import { useParams } from "@tanstack/react-router"
 import { useProposal } from "../hooks/useProposal"
 import { Comments } from "./notifications"
 import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog"
-import { useSession } from "@/integrations/better-auth/authClient"
+import { Route } from "@/routes/student/route"
 
 export function ViewProposal() {
-    const {data: user} = useSession()
-    const {award, challenge} = useParams({strict: false})
-    // This is never false however, but if it is then we break the rules of hook
-    if (!user || !award || !challenge) {
-        return null
-    }
-    const {data: proposal, isLoading, isError} = useProposal(award, challenge, user.user.id)
+    const { user } = Route.useRouteContext()
+    const {award, challenge} = useParams({ from: '/student/$award/$challenge', strict: true })
+    const {data: proposal, isLoading, isError} = useProposal(award, challenge, user.userId)
+
     return (
         <Dialog
             trigger={(setIsOpen) => (

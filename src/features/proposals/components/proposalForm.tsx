@@ -1,6 +1,6 @@
 import { useForm } from '@tanstack/react-form'
-import { useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
+import { useState } from 'react'
 import { useCreateChallenge } from '../hooks/useCreateChallenge'
 import { CreateProposalSchema } from '../types/schema/forms'
 import type { FunctionComponent } from 'react'
@@ -19,10 +19,9 @@ interface ProposalFormProps {
     award?: Award,
     challenge?: Challenge,
 }
-export default function ProposalForm({values, disabled, Button}: ProposalFormProps) {
-    const { award, challenge } = useParams({strict: false})
-    // TODO: fix this
-    const { mutate: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
+export default function ProposalForm({values, disabled, Button, award, challenge}: ProposalFormProps) {
+    const [submitError, setSubmitError] = useState<string | null>(null)
+    const { mutateAsync: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
     const isDisabled = disabled || isPending
     const form = useForm({
         defaultValues: {
@@ -63,8 +62,13 @@ export default function ProposalForm({values, disabled, Button}: ProposalFormPro
                 }
             }
         },
-        onSubmit: ({value}) => {
-            createChallenge(value)
+        onSubmit: async ({value}) => {
+            if (!award || !challenge) {
+                setSubmitError('Unable to submit proposal from this page.')
+                return
+            }
+            setSubmitError(null)
+            await createChallenge(value)
         }
     })
     return (
@@ -91,7 +95,7 @@ export default function ProposalForm({values, disabled, Button}: ProposalFormPro
                             disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
@@ -110,7 +114,7 @@ export default function ProposalForm({values, disabled, Button}: ProposalFormPro
                             disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
@@ -129,15 +133,15 @@ export default function ProposalForm({values, disabled, Button}: ProposalFormPro
                             disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((error) => error?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
                         )}
                     </div>
                 )}
             </form.Field>
             {/* //TODO: Add error handling for submission failure (e.g. network error, server error) */}
-            {isError && (
+            {(isError || submitError) && (
                 <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                    {error instanceof Error ? error.message : 'An error occurred while submitting your proposal. Please try again.'}
+                    {submitError ?? (error instanceof Error ? error.message : 'An error occurred while submitting your proposal. Please try again.')}
                 </div>
             )}
             {Button && <Button isDisabled={isDisabled} isPending={isPending} />}

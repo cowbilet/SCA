@@ -5,21 +5,12 @@ import ActivityForm from "./activityForm";
 import type { LogEntry } from "@/types/schemas/log";
 import type { ComponentProps } from "react";
 
-export default function EditActivityForm({log, onSubmit, ...props}: ComponentProps<"form"> & {log: LogEntry}) {
-    const { mutate: editLog } = useEditLog({ oldLog: log })
+export default function EditActivityForm({log, onSubmit, ...props}: Omit<ComponentProps<"form">, "onSubmit"> & {log: LogEntry; onSubmit?: () => void}) {
+    const { mutateAsync: editLog } = useEditLog({ oldLog: log })
     return (
-        <ActivityForm id="edit-activity-form" log={log} onSubmit={(event) => {
-            const formData = new FormData(event.target)
-            const date = formData.get("date")
-            const description = formData.get("description")
-
-            if (typeof date === "string" && typeof description === "string") {
-                editLog({description, date})
-            }
-
-            if (onSubmit) {
-                onSubmit(event)
-            }
+        <ActivityForm id="edit-activity-form" log={log} onValidSubmit={async ({ date, description }) => {
+            await editLog({description, date})
+            onSubmit?.()
         }} {...props} />
     )
 }

@@ -4,7 +4,12 @@ import type {HTMLAttributes} from "react"
 import type { LogEntry } from "@/types/schemas/log"
 import { CreateLogEntrySchema } from "@/types/schemas/log"
 
-export default function ActivityForm({log, onSubmit, ...props}: {log?: LogEntry} & HTMLAttributes<HTMLFormElement>) {
+type ActivityFormValues = {
+    date: string
+    description: string
+}
+
+export default function ActivityForm({log, onValidSubmit, ...props}: {log?: LogEntry; onValidSubmit?: (values: ActivityFormValues) => Promise<void> | void} & Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'>) {
     const [error, setError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
@@ -15,23 +20,20 @@ export default function ActivityForm({log, onSubmit, ...props}: {log?: LogEntry}
         validators: {
             onSubmit: CreateLogEntrySchema,
         },
+        onSubmit: async ({ value }) => {
+            setError(null)
+            try {
+                await onValidSubmit?.(value)
+            }
+            catch (err) {
+                setError(err instanceof Error ? err.message : "An unknown error occurred.")
+            }
+        }
     })
     return (
-        <form onSubmit={async (e) => {
+        <form onSubmit={(e) => {
             e.preventDefault();
-            await form.handleSubmit()
-            if (form.state.isValid) {
-                setError(null)
-                if (onSubmit) {
-                    try {
-                        onSubmit(e)
-                    }
-                    catch (err) {
-                        setError(err instanceof Error ? err.message : "An unknown error occurred.")
-                    }
-                }
-            }
-
+            form.handleSubmit()
         }} className="flex flex-col gap-4" {...props}>
             <form.Field name="date">
                 {(field) => (
