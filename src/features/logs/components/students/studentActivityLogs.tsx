@@ -7,29 +7,39 @@ import { CreateActivity } from "./activityModals/createActivity"
 import { DeleteActivity } from "./activityModals/deleteActivity"
 import {EditActivity} from "./activityModals/editActivity"
 import type { LogEntry } from "@/types/schemas/log"
+import type { SubmissionState } from "@/types/awards"
 import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 import { StudentSubmission } from "@/features/submissions/components/studentSubmission"
-import Feedback from "@/components/feedback"
+import { useChallenge } from "@/hooks/useChallenge"
 
+const disabledStatuses: Array<SubmissionState> = ["pending assessor", "pending mentor", "completed"] as const
 export function StudentActivityLogs() {
-    
+    const { award, challenge } = useParams({strict: true, from: "/student/$award/$challenge"})
+    const { data: user } = useSession()
+    const { data } = useChallenge(award, challenge, user?.user.id)
     return (
         <div className="flex flex-col h-full gap-4">
-            <div className="flex flex-row items-center justify-start gap-4">
-                <CreateActivity />
-                <StudentSubmission />
-            </div>
+            {!disabledStatuses.includes(data?.student_challenge.status ?? "not started") && (
+                <div className="flex flex-row items-center justify-start gap-4">
+                    <CreateActivity />
+                    <StudentSubmission />
+                </div>
+            )}
             <div className="flex flex-row max-xl:flex-col h-full gap-4">
-                <ActivityLogGroupCard type="pending">
-                    <StudentLogEntries  type="pending"/>
-                </ActivityLogGroupCard>
+                {!disabledStatuses.includes(data?.student_challenge.status ?? "not started") && (
+                    <ActivityLogGroupCard type="pending">
+                        <StudentLogEntries  type="pending"/>
+                    </ActivityLogGroupCard>
+                )}
                 <ActivityLogGroupCard type="approved">
                     <StudentLogEntries  type="approved"/>
                 </ActivityLogGroupCard>
-                <ActivityLogGroupCard type="rejected">
-                    <StudentLogEntries  type="rejected"/>
-                </ActivityLogGroupCard>
+                {!disabledStatuses.includes(data?.student_challenge.status ?? "not started") && (
+                    <ActivityLogGroupCard type="rejected">
+                        <StudentLogEntries  type="rejected"/>
+                    </ActivityLogGroupCard>
+                )}
             </div>
         </div>
     )

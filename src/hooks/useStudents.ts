@@ -1,5 +1,5 @@
-import { getAdvisorStudents} from "@/api/advisors/getAdvisorStudents"
 import { useQuery } from "@tanstack/react-query"
+import { getAdvisorStudents} from "@/api/advisors/getAdvisorStudents"
 
 export const useStudentsOptions = () => {
 

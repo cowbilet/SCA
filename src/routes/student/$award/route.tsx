@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 import {z} from 'zod'
 import { awardSchema } from '@/types/schemas/award'
 import { ALL_CHALLENGES } from '@/types/challenges'
@@ -9,10 +9,10 @@ export const Route = createFileRoute('/student/$award')({
     params: z.object({
         award: awardSchema,
     }),
-    loader: async ({ params, context: { queryClient } }) => {
+    loader: async ({ params, context: { queryClient, user } }) => {
         const promises = []
         for (const challenge of Object.values(ALL_CHALLENGES)) {
-            promises.push(queryClient.ensureQueryData(challengeQueryOptions(params.award, challenge)))
+            promises.push(queryClient.ensureQueryData(challengeQueryOptions(params.award, challenge, user.userId)))
         }
         await Promise.all(promises)
     }

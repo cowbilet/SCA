@@ -1,5 +1,5 @@
-import { getAdvisorPending } from "@/api/advisors/getAdvisorPending"
 import { useQuery } from "@tanstack/react-query"
+import { getAdvisorPending } from "@/api/advisors/getAdvisorPending"
 
 export const usePendingProposalsOptions = () => {
 

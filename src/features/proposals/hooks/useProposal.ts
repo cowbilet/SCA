@@ -1,7 +1,7 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { getUserProposal } from '../api/getUserProposal';
-import { Award } from "@/types/awards";
-import { Challenge } from "@/types/challenges";
+import type { Award } from "@/types/awards";
+import type { Challenge } from "@/types/challenges";
 
 // proposalQueryOptions.ts
 export const proposalQueryOptions = (award: Award, challenge: Challenge, studentId?: string) => queryOptions({

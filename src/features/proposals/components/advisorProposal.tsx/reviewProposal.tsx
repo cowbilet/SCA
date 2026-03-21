@@ -5,6 +5,7 @@ import { useReviewProposal } from "../../hooks/useReviewProposal";
 import { Comments } from "../notifications";
 import { useProposal } from "../../hooks/useProposal";
 import { useSession } from "@/integrations/better-auth/authClient";
+import Feedback from "@/components/feedback";
 
 export default function ReviewProposal() {
     const { data } = useSession()
@@ -23,7 +24,8 @@ export default function ReviewProposal() {
     }
     return (
         <div className="flex flex-col h-full flex-1 gap-4">
-            <Comments proposal={proposal} />
+            {/* TODO: Should show instructions for the advisors */}
+            <Feedback status={proposal.status} mentorNote={proposal.mentorNote} assessorNote={proposal.assessorNote} />
             <ProposalForm
                 values={proposal}
                 disabled={true}

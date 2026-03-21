@@ -1,15 +1,18 @@
+import { queryOptions, useQuery  } from '@tanstack/react-query';
+import type { Award } from "@/types/awards";
+import type { Challenge } from "@/types/challenges";
 import { getUserChallenge } from "@/api/challenges/getStudentChallenge";
-import { Award } from "@/types/awards";
-import { Challenge } from "@/types/challenges";
-import { useQuery } from '@tanstack/react-query';
-import { queryOptions } from '@tanstack/react-query'
-export const challengeQueryOptions = (award: Award, challenge: Challenge) => (queryOptions({
-    queryKey: ['challenges', award, challenge],
-    queryFn: () => getUserChallenge({data: {award, challenge}}),
+
+export const challengeQueryOptions = (award: Award, challenge: Challenge, studentId: string | undefined) => (queryOptions({
+    queryKey: ['challenges', award, challenge, studentId],
+    queryFn: () => getUserChallenge({data: {award, challenge, studentId: studentId!}}),
+    enabled: !!studentId,
 }))
 export function useChallenge(
     award: Award, 
-    challenge: Challenge
+    challenge: Challenge,
+    studentId: string | undefined
 ) {
-    return useQuery(challengeQueryOptions(award, challenge))
+
+    return useQuery(challengeQueryOptions(award, challenge, studentId))
 }

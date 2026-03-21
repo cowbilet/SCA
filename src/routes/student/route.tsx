@@ -1,9 +1,9 @@
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 import Sidebar from '@/components/student/sidebar/sidebar'
 import { restrictRoles } from '@/utils/auth'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/student')({
-    //TODO: Optimise this, because it runs for every child navigation 
+    // TODO: Optimise this, because it runs for every child navigation 
     // https://tanstack.com/router/latest/docs/guide/authenticated-routes
     beforeLoad: async () => {
         const user = await restrictRoles({ data: ["student"] })

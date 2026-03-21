@@ -7,7 +7,6 @@ import type { LogEntry } from "@/types/schemas/log"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 
 export function AdvisorActivityLogs() {
-    
     return (
         <div className="flex flex-row max-xl:flex-col h-full gap-4">
             <ActivityLogGroupCard type="pending">

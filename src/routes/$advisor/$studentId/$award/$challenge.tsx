@@ -7,6 +7,7 @@ import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
 import { awardSchema } from '@/types/schemas/award'
 import { challengeSchema } from '@/types/schemas/challenges'
 import { AdvisorActivityLogs } from '@/features/logs/components/advisors/advisorLogs'
+import ReviewActivity from '@/features/logs/components/advisors/reviewActivity'
 
 const inputSchema = z.object({
     award: awardSchema,
@@ -28,7 +29,7 @@ export const Route = createFileRoute(
 function RouteComponent() {
     const proposalData = Route.useLoaderData()
     if (proposalData?.accepted === true) {
-        return <AdvisorActivityLogs />
+        return <ReviewActivity />
     }
     else {
         return (

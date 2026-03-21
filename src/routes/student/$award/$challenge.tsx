@@ -9,6 +9,7 @@ import { ActiveProposal, SubmitProposal } from '@/features/proposals/components/
 import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
 import { StudentActivityLogs } from '@/features/logs/components/students/studentActivityLogs'
 import { awardSchema } from '@/types/schemas/award'
+import { useSession } from '@/integrations/better-auth/authClient'
 
 export const Route = createFileRoute('/student/$award/$challenge')({
     component: () => <RouteComponent />,
@@ -20,7 +21,8 @@ export const Route = createFileRoute('/student/$award/$challenge')({
     // TODO: If you go to the student page and hover over any page it preloads the data, this is not very good for data saving
     loader: async ({ params, context: { queryClient, user } }) => {
         const { award, challenge } = params
-        const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge))
+        console.log("Challenge data:", challenge, award, user.userId)
+        const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge, user.userId))
         if (data && data.proposals?.status !== 'not started') {
             await queryClient.ensureQueryData(proposalQueryOptions(award, challenge, user.userId))
         }
@@ -38,9 +40,11 @@ const proposalComponents: Record<SubmissionState, (props: {proposalStatus: Submi
 }
 function RouteComponent() {
     const { challenge, award } = Route.useParams()
-    const { data: challengeData } = useChallenge(award, challenge)
-    
-    
+    const { data } = useSession()
+    console.log("Challenge data:", challenge, award, data?.user.id)
+    const { data: challengeData } = useChallenge(award, challenge, data?.user.id)
+
+
     return (
         <div className='h-full'>
             <ChallengeShell challenge={challenge}>
