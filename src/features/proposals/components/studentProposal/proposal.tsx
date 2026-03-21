@@ -6,13 +6,16 @@ import {Comments, Instructions} from "../notifications";
 import type { SubmissionState } from "@/types/awards";
 import { Card } from "@/components/card";
 import { useProposal } from "@/features/proposals/hooks/useProposal";
-import { Route} from "@/routes/student/route"
+import { useSession } from "@/integrations/better-auth/authClient";
 
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
+    const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
     return (
         <Card className="h-full flex flex-col">
             <Instructions state={proposalStatus} />
             <ProposalForm 
+                award={award}
+                challenge={challenge}
                 Button={SubmitButton}
             />
         </Card>
@@ -21,8 +24,16 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
 const disabledStates: Array<SubmissionState> = ['pending mentor', 'pending assessor']
 export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
-    const {user} = Route.useRouteContext()
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, user.userId)
+    const { data: session } = useSession()
+    const studentId = session?.user.id
+    if (!studentId) {
+        return (
+            <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                Unable to load your session. Please log in again.
+            </div>
+        )
+    }
+    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, studentId)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -44,6 +55,8 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
             <ProposalForm 
                 values={proposalData}
                 disabled={disabledStates.includes(proposalStatus)} 
+                award={award}
+                challenge={challenge}
                 Button={SubmitButton}
             />
         </Card>

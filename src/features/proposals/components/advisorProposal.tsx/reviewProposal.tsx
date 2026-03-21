@@ -7,10 +7,7 @@ import { useProposal } from "../../hooks/useProposal";
 import Feedback from "@/components/feedback";
 
 export default function ReviewProposal() {
-    const { advisor, studentId, award, challenge } = useParams({ strict: false })
-    if ( !studentId || !award || !challenge) {
-        throw new Error("Missing required data to review proposal.")
-    }
+    const { advisor, studentId, award, challenge } = useParams({ from: "/$advisor/$studentId/$award/$challenge", strict: true })
     const { data: proposal, isError, isLoading } = useProposal(award, challenge, studentId)
 
     const isMentor = advisor === "mentor"
