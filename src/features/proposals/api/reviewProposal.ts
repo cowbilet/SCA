@@ -23,18 +23,18 @@ export const reviewProposal = createServerFn().inputValidator(submitProposalSche
     const user = await restrictRoles({ data: ["mentor", "assessor"] })
     if (user.role === "assessor") {
         if (accepted) {
-            dbChangeProposalStatus(studentId, award, challenge, "completed", notes, user.userId)
+            return await dbChangeProposalStatus(studentId, award, challenge, "completed", notes, user.userId)
         }
         else {
-            dbChangeProposalStatus(studentId, award, challenge, "rejected assessor", notes, user.userId)
+            return await dbChangeProposalStatus(studentId, award, challenge, "rejected assessor", notes, user.userId)
         }
     }
     else if (user.role === "mentor") {
         if (accepted) {
-            dbChangeProposalStatus(studentId, award, challenge, "pending assessor", notes)
+            return await dbChangeProposalStatus(studentId, award, challenge, "pending assessor", notes)
         }
         else {
-            dbChangeProposalStatus(studentId, award, challenge, "rejected mentor", notes)
+            return await dbChangeProposalStatus(studentId, award, challenge, "rejected mentor", notes)
         }
     }
 })
