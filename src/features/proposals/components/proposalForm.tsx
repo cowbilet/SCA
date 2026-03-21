@@ -52,7 +52,7 @@ export default function ProposalForm({values, disabled, Button}: ProposalFormPro
                     await getUserByEmail({ data: { email: mentorEmail } })
                     return undefined
                 }
-                catch (error) {                    
+                catch {                    
                     return {
                         fields: {
                             mentorEmail: {

@@ -20,7 +20,7 @@ export const LogEntrySchema = z.object({
     date: z.string(),
     description: z.string(),
     approved: z.boolean().nullable(),
-    feedback: z.string().nullable(),
+    feedback: z.string(),
     evidence: z.string(),
 })
 export type LogEntry = z.infer<typeof LogEntrySchema>

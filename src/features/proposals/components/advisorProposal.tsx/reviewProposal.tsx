@@ -46,7 +46,7 @@ function ProposalFeedbackForm() {
         defaultValues: {
             feedback: '',
         },
-        onSubmit: async ({value}) => {
+        onSubmit: ({value}) => {
             const {feedback} = value
             // Get the button that was clicked (approve or reject) and the feedback from the form
             const action = (document.activeElement as HTMLButtonElement).id

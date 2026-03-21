@@ -5,7 +5,7 @@ import type { Challenge } from "@/types/challenges";
 import { dbChangeProposalStatus } from "@/db/proposals.server";
 import { validateAward } from "@/types/guards/awards";
 import { validateChallenge } from "@/types/guards/challenges";
-import { restrictRoles } from "@/utils/auth";
+import { restrictRoles, restrictStudentData } from "@/utils/auth";
 
 const submitProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
@@ -20,7 +20,7 @@ const submitProposalSchema = z.object({
     accepted: z.boolean(),
 })
 export const reviewProposal = createServerFn().inputValidator(submitProposalSchema).handler(async ({data: {award, challenge, studentId, notes, accepted}}) => {
-    const user = await restrictRoles({ data: ["mentor", "assessor"] })
+    const user = await restrictStudentData({ data: studentId })
     if (user.role === "assessor") {
         if (accepted) {
             return await dbChangeProposalStatus(studentId, award, challenge, "completed", notes, user.userId)
