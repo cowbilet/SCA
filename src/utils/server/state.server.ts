@@ -78,7 +78,7 @@ export function validateStatusTransition(
                 accepted: false,
                 mentorNote: null,
                 assessorNote: data.note ?? null,
-                assessorId: data.assessorId,
+                assessorId: data.assessorId ?? null,
             }
         case 'completed':
             return {
@@ -86,7 +86,7 @@ export function validateStatusTransition(
                 accepted: true,
                 mentorNote: null,
                 assessorNote: null,
-                assessorId: data.assessorId,
+                assessorId: data.assessorId ?? null,
             };
         case 'not started':
             return {

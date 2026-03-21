@@ -8,16 +8,16 @@ import { DeleteActivity } from "./activityModals/deleteActivity"
 import {EditActivity} from "./activityModals/editActivity"
 import type { LogEntry } from "@/types/schemas/log"
 import type { SubmissionState } from "@/types/awards"
-import { useSession } from "@/integrations/better-auth/authClient"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 import { StudentSubmission } from "@/features/submissions/components/studentSubmission"
 import { useChallenge } from "@/hooks/useChallenge"
+import { Route } from "@/routes/student/route"
 
 const disabledStatuses: Array<SubmissionState> = ["pending assessor", "pending mentor", "completed"] as const
 export function StudentActivityLogs() {
     const { award, challenge } = useParams({strict: true, from: "/student/$award/$challenge"})
-    const { data: user } = useSession()
-    const { data } = useChallenge(award, challenge, user?.user.id)
+    const {user} = Route.useRouteContext()
+    const { data } = useChallenge(award, challenge, user.userId)
     return (
         <div className="flex flex-col h-full gap-4">
             {!disabledStatuses.includes(data?.student_challenge.status ?? "not started") && (
@@ -45,10 +45,9 @@ export function StudentActivityLogs() {
     )
 }
 function StudentLogEntries({type}: {type: "pending" | "approved" | "rejected"}) {
-    const { data } = useSession()
+    const { user } = Route.useRouteContext()
     const { award, challenge } = useParams({strict: true, from: "/student/$award/$challenge"})
-    // TODO: Handle the params missing case properly
-    const {data: logs, isPending, isError} = useLogs(award, challenge, data?.user.id, type)
+    const {data: logs, isPending, isError} = useLogs(award, challenge, user.userId, type)
     if (isPending) {
         return <Skeleton count={3} height={80} className="mb-2" />
     }

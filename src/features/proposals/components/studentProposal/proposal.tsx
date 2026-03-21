@@ -6,7 +6,7 @@ import {Comments, Instructions} from "../notifications";
 import type { SubmissionState } from "@/types/awards";
 import { Card } from "@/components/card";
 import { useProposal } from "@/features/proposals/hooks/useProposal";
-import { useSession } from "@/integrations/better-auth/authClient";
+import { Route} from "@/routes/student/route"
 
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     return (
@@ -21,11 +21,8 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
 const disabledStates: Array<SubmissionState> = ['pending mentor', 'pending assessor']
 export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
-    const { data } = useSession()
-    if (!data) {
-        throw new Error("User data is required to view proposal.")
-    }
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, data.user.id)
+    const {user} = Route.useRouteContext()
+    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, user.userId)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">

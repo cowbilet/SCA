@@ -9,8 +9,8 @@ import Skeleton from 'react-loading-skeleton'
 import { H1Title } from '../../titles'
 import type { SubmissionState } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
+import { Route } from '@/routes/student/route'
 import { useChallenge } from '@/hooks/useChallenge'
-import { useSession } from '@/integrations/better-auth/authClient'
 // TODO: Clean this up
 const challenges: Record<Challenge, { title: string, iconStyle: string, cardStyle: string, icon: React.ReactNode }> = {
     relationships: { 
@@ -113,8 +113,8 @@ const ChallengeStatuses: Record<SubmissionState, React.ReactNode> = {
 // Has to be a seperate component otherwhise there will be more hooks called in the component than in the parent which causes rules of hooks errors
 function ActiveActivityCard({ title, iconStyle, challenge, icon, className }: ActiveActivityCardProps) {
     const params = useParams({ from: '/student/$award', strict: true }) 
-    const { data: user } = useSession()
-    const { data, isLoading, isError } = useChallenge(params.award, challenge, user?.user.id)
+    const { user } = Route.useRouteContext()
+    const { data, isLoading, isError } = useChallenge(params.award, challenge, user.userId)
     const status = isLoading ? 
         <Skeleton /> 
         : isError ? 

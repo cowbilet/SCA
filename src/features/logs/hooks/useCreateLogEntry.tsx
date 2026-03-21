@@ -24,7 +24,7 @@ export function useCreateLogEntry({ award, challenge}: { award: Award, challenge
                 description: newLog.description,
                 date: newLog.date,
                 approved: null,
-                feedback: null,
+                feedback: '',
                 evidence: '',
             }
             queryClient.setQueryData(['logs', award, challenge, studentId, "pending"], (oldData: Array<LogEntry> | null) => {

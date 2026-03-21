@@ -2,21 +2,18 @@ import { useForm } from "@tanstack/react-form";
 import { useParams } from "@tanstack/react-router";
 import ProposalForm from "../proposalForm";
 import { useReviewProposal } from "../../hooks/useReviewProposal";
-import { Comments } from "../notifications";
 import { useProposal } from "../../hooks/useProposal";
-import { useSession } from "@/integrations/better-auth/authClient";
+
 import Feedback from "@/components/feedback";
 
 export default function ReviewProposal() {
-    const { data } = useSession()
-    const { studentId, award, challenge } = useParams({ strict: false })
-
-    if (!data || !studentId || !award || !challenge) {
+    const { advisor, studentId, award, challenge } = useParams({ strict: false })
+    if ( !studentId || !award || !challenge) {
         throw new Error("Missing required data to review proposal.")
     }
     const { data: proposal, isError, isLoading } = useProposal(award, challenge, studentId)
-    const { user } = data
-    const isMentor = user.role === "mentor"
+
+    const isMentor = advisor === "mentor"
     if (isLoading) {
         return <div>Loading...</div>
     }

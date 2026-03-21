@@ -39,8 +39,8 @@ const proposalComponents: Record<SubmissionState, (props: {proposalStatus: Submi
 }
 function RouteComponent() {
     const { challenge, award } = Route.useParams()
-    const { data } = useSession()
-    const { data: challengeData } = useChallenge(award, challenge, data?.user.id)
+    const { user } = Route.useRouteContext()
+    const { data: challengeData } = useChallenge(award, challenge, user.userId)
 
 
     return (
