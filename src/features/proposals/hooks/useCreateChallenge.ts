@@ -6,6 +6,7 @@ import type { Challenge } from "@/types/challenges";
 import type { Proposal } from '@/types/schemas/proposal';
 import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges';
 import { useSession } from '@/integrations/better-auth/authClient';
+import { queryKeys } from '@/hooks/queryKeys';
 
 export function useCreateChallenge(award?: Award, challenge?: Challenge) {
     const queryClient = useQueryClient();
@@ -18,11 +19,13 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
             if (!award || !challenge || !id) {
                 throw new Error("Award, challenge, and user ID must be provided")
             }
-            await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge, id] })
-            await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge, id] })
+            const challengeKey = queryKeys.challenges.detail(award, challenge, id)
+            const proposalKey = queryKeys.proposals.detail(award, challenge, id)
+            await queryClient.cancelQueries({ queryKey: challengeKey })
+            await queryClient.cancelQueries({ queryKey: proposalKey })
 
-            const previousChallenge = queryClient.getQueryData<StudentChallengeWithProposalAndSubmission | null>(['challenges', award, challenge, id])
-            const previousProposal = queryClient.getQueryData<Proposal | null>(['proposals', award, challenge, id])
+            const previousChallenge = queryClient.getQueryData<StudentChallengeWithProposalAndSubmission | null>(challengeKey)
+            const previousProposal = queryClient.getQueryData<Proposal | null>(proposalKey)
 
             const optimisticProposal: Proposal = {
                 studentId: '',
@@ -37,7 +40,7 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
                 status: 'pending mentor',
             }
 
-            queryClient.setQueryData(['challenges', award, challenge, id    ], (oldData: StudentChallengeWithProposalAndSubmission | null): StudentChallengeWithProposalAndSubmission | null => {
+            queryClient.setQueryData(challengeKey, (oldData: StudentChallengeWithProposalAndSubmission | null): StudentChallengeWithProposalAndSubmission | null => {
                 if (!oldData) return oldData
                 return {
                     ...oldData,
@@ -48,29 +51,37 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
                 }
             })
 
-            queryClient.setQueryData<Proposal | null>(['proposals', award, challenge, id], optimisticProposal)
+            queryClient.setQueryData<Proposal | null>(proposalKey, optimisticProposal)
 
             return { previousChallenge, previousProposal }
         },
         onError: async (_error, _newProposal, context) => {
+            if (!award || !challenge || !id) {
+                return
+            }
+            const challengeKey = queryKeys.challenges.detail(award, challenge, id)
+            const proposalKey = queryKeys.proposals.detail(award, challenge, id)
 
-            await queryClient.cancelQueries({ queryKey: ['challenges', award, challenge, id] })
-            await queryClient.cancelQueries({ queryKey: ['proposals', award, challenge, id] })
+            await queryClient.cancelQueries({ queryKey: challengeKey })
+            await queryClient.cancelQueries({ queryKey: proposalKey })
 
             if (context) {
-                queryClient.setQueryData(['challenges', award, challenge, id], context.previousChallenge ?? null)
-                queryClient.setQueryData(['proposals', award, challenge, id], context.previousProposal ?? null)
+                queryClient.setQueryData(challengeKey, context.previousChallenge ?? null)
+                queryClient.setQueryData(proposalKey, context.previousProposal ?? null)
             } else {
-                queryClient.removeQueries({ queryKey: ['proposals', award, challenge, id], exact: true })
+                queryClient.removeQueries({ queryKey: proposalKey, exact: true })
             }
         },
         onSuccess: async (data) => {
             if (!award || !challenge || !id) {
                 throw new Error("Award, challenge, and user ID must be provided")
             }
-            await queryClient.setQueryData(['proposals', award, challenge, id], data)
+            const challengeKey = queryKeys.challenges.detail(award, challenge, id)
+            const proposalKey = queryKeys.proposals.detail(award, challenge, id)
 
-            queryClient.setQueryData(['challenges', award, challenge, id], (oldData: StudentChallengeWithProposalAndSubmission | null): StudentChallengeWithProposalAndSubmission | null => {
+            await queryClient.setQueryData(proposalKey, data)
+
+            queryClient.setQueryData(challengeKey, (oldData: StudentChallengeWithProposalAndSubmission | null): StudentChallengeWithProposalAndSubmission | null => {
                 if (!oldData) return oldData
                 return {
                     ...oldData,
@@ -79,8 +90,8 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
             })
 
             await router.invalidate({sync: true})
-            await queryClient.invalidateQueries({ queryKey: ['proposals', award, challenge, id] })
-            await queryClient.invalidateQueries({ queryKey: ['challenges', award, challenge, id] })
+            await queryClient.invalidateQueries({ queryKey: proposalKey })
+            await queryClient.invalidateQueries({ queryKey: challengeKey })
         }
     })
 }

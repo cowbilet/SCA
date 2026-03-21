@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
-import type { LinkOptions } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
+import type { LinkOptions } from "@tanstack/react-router";
 import { LoginSchema, SignupSchema } from "@/types/schemas/auth";
 import { authClient } from "@/integrations/better-auth/authClient";
 

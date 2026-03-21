@@ -3,22 +3,25 @@ import { reviewProposal } from "../api/reviewProposal";
 import type { Proposal, ProposalWithStudent } from "@/types/schemas/proposal";
 import type { Award } from "@/types/awards";
 import type { Challenge } from "@/types/challenges";
+import { queryKeys } from "@/hooks/queryKeys";
 
 export function useReviewProposal(studentId: string, award: Award, challenge: Challenge) {
     const queryClient = useQueryClient()
+    const proposalKey = queryKeys.proposals.detail(award, challenge, studentId)
+    const pendingProposalsKey = queryKeys.proposals.pending()
     return useMutation({
         mutationKey: ['reviewProposal', studentId, award, challenge],
         mutationFn: (data: {notes: string, accepted: boolean }) => reviewProposal({data: { studentId, award, challenge, ...data }}),
         onMutate: (data) => {
             // Invalidate the proposal query to refetch the updated proposal data
-            queryClient.cancelQueries({queryKey: ['proposals', award, challenge, studentId]})
-            queryClient.cancelQueries({ queryKey: ['pendingProposals'] })
-            const previousProposal = queryClient.getQueryData<Proposal>(['proposals', award, challenge, studentId])
-            const previousPendingProposals = queryClient.getQueryData<Array<ProposalWithStudent>>(['pendingProposals'])
+            queryClient.cancelQueries({queryKey: proposalKey})
+            queryClient.cancelQueries({ queryKey: pendingProposalsKey })
+            const previousProposal = queryClient.getQueryData<Proposal>(proposalKey)
+            const previousPendingProposals = queryClient.getQueryData<Array<ProposalWithStudent>>(pendingProposalsKey)
             if (!previousProposal) return
             const newProposal = generateNewProposal(previousProposal, data.accepted, data.notes)
-            queryClient.setQueryData(['proposals', award, challenge, studentId], newProposal)
-            queryClient.setQueryData<Array<ProposalWithStudent>>(['pendingProposals'], (oldData) => {
+            queryClient.setQueryData(proposalKey, newProposal)
+            queryClient.setQueryData<Array<ProposalWithStudent>>(pendingProposalsKey, (oldData) => {
                 if (!oldData) return oldData
                 return oldData.filter(proposal => !(proposal.proposal.award === award && proposal.proposal.challenge === challenge && proposal.student.userId === studentId))
             })
@@ -26,15 +29,15 @@ export function useReviewProposal(studentId: string, award: Award, challenge: Ch
         },
         onError: (_error, _data, context) => {
             if (context?.previousProposal) {
-                queryClient.setQueryData(['proposals', award, challenge, studentId], context.previousProposal)
+                queryClient.setQueryData(proposalKey, context.previousProposal)
             }
             if (context?.previousPendingProposals) {
-                queryClient.setQueryData(['pendingProposals'], context.previousPendingProposals)
+                queryClient.setQueryData(pendingProposalsKey, context.previousPendingProposals)
             }
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ['proposals', award, challenge, studentId]})
-            queryClient.invalidateQueries({ queryKey: ['pendingProposals'] })
+            queryClient.invalidateQueries({queryKey: proposalKey})
+            queryClient.invalidateQueries({ queryKey: pendingProposalsKey })
         }
     })
 }
