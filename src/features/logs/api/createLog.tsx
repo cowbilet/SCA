@@ -5,12 +5,13 @@ import { dbCreateLogEntry } from "@/db/logs.server"
 import { challengeSchema } from "@/types/schemas/challenges"
 import { awardSchema } from "@/types/schemas/award"
 import { dbGetUserChallenge } from "@/db/challenges.server"
+import { futureDate } from "@/types/schemas/log"
 
 export const createLog = createServerFn({ method: 'POST' }).inputValidator(z.object({
     award: awardSchema,
     challenge: challengeSchema,
     description: z.string().min(1),
-    date: z.coerce.date(),
+    date: futureDate,
 })).handler(async ({data}) => {
     const { award, challenge, description, date } = data
     const student = await restrictRoles({ data: ["student"] })

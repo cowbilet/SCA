@@ -10,10 +10,11 @@ import Feedback from "@/components/feedback";
 export default function ReviewProposal() {
     const { data } = useSession()
     const { studentId, award, challenge } = useParams({ strict: false })
-    const { data: proposal, isError, isLoading } = useProposal(award!, challenge!, studentId)
+
     if (!data || !studentId || !award || !challenge) {
-        return null
+        throw new Error("Missing required data to review proposal.")
     }
+    const { data: proposal, isError, isLoading } = useProposal(award, challenge, studentId)
     const { user } = data
     const isMentor = user.role === "mentor"
     if (isLoading) {

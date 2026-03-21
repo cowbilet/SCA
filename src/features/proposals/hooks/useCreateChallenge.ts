@@ -10,8 +10,8 @@ import { useSession } from '@/integrations/better-auth/authClient';
 export function useCreateChallenge(award?: Award, challenge?: Challenge) {
     const queryClient = useQueryClient();
     const router = useRouter()
-    const { data } = useSession()
-    const id = data?.user.id
+    const { data: user } = useSession()
+    const id = user?.user.id
     return useMutation({
         mutationFn: (data: { mentorEmail: string, description: string, goal: string }) => createUserProposal({ data: { ...data, award, challenge } }),
         onMutate: async (newProposal) => {

@@ -72,7 +72,7 @@ export const restrictStudentData = createServerFn({ method: "GET" }).inputValida
         }
         return user
     }
-    else if (user.role === "assessor") {
+    else {
         return user
     }
 })

@@ -1,25 +1,17 @@
 import { createServerFn } from '@tanstack/react-start'
 
-import { dbGetProposal } from '@/db/proposals.server'
-import { validateAward } from '@/types/guards/awards'
-import type { Award } from '@/types/awards'
-import type { Challenge } from '@/types/challenges'
 import { z } from 'zod'
+import type { Proposal } from '@/types/schemas/proposal'
+import { dbGetProposal } from '@/db/proposals.server'
 
-
-
-import { validateChallenge } from '@/types/guards/challenges'
-import { Proposal } from '@/types/schemas/proposal'
 import { restrictStudentData } from '@/utils/auth'
+import { challengeSchema } from '@/types/schemas/challenges'
+import { awardSchema } from '@/types/schemas/award'
 
 
 const getUserProposalSchema = z.object({
-    award: z.string().refine((award): award is Award => validateAward(award), {
-        message: 'Invalid award',
-    }),
-    challenge: z.string().refine((challenge): challenge is Challenge => validateChallenge(challenge), {
-        message: 'Invalid challenge',
-    }),
+    award: awardSchema,
+    challenge: challengeSchema,
     studentId: z.uuid(),
 })
 export const getUserProposal = createServerFn({ method: 'GET' }).inputValidator(getUserProposalSchema).handler(async ({data}): Promise<Proposal | null> => {

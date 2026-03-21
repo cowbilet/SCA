@@ -22,7 +22,10 @@ const disabledStates: Array<SubmissionState> = ['pending mentor', 'pending asses
 export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
     const { data } = useSession()
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, data?.user.id)
+    if (!data) {
+        throw new Error("User data is required to view proposal.")
+    }
+    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, data.user.id)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
