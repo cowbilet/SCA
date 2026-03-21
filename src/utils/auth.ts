@@ -38,6 +38,19 @@ export const restrictRoles = createServerFn({ method: "GET" }).inputValidator(re
 
     return user;
 })
+export const restrictToSelf = createServerFn({ method: "GET" }).inputValidator(z.string()).handler(async ({ data: userId }) => {
+    const session = await ensureSession();
+    const user = await dbGetUserById(session.user.id);
+
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+    if (user.userId !== userId) {
+        throw new Error("Forbidden");
+    }
+
+    return user;
+})
 export const restrictStudentData = createServerFn({ method: "GET" }).inputValidator(z.uuid()).handler(async ({ data: studentId }) => {
     const session = await ensureSession();
     const user = await dbGetUserById(session.user.id);
