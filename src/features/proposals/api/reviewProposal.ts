@@ -15,12 +15,13 @@ const submitProposalSchema = z.object({
         message: 'Invalid challenge',
     }),
     studentId: z.uuid(),
-    // TODO: Get rid of this
     notes: z.string(),
     accepted: z.boolean(),
 })
 export const reviewProposal = createServerFn().inputValidator(submitProposalSchema).handler(async ({data: {award, challenge, studentId, notes, accepted}}) => {
+    await restrictRoles({ data: ["assessor", "mentor"] })
     const user = await restrictStudentData({ data: studentId })
+
     if (user.role === "assessor") {
         if (accepted) {
             return await dbChangeProposalStatus(studentId, award, challenge, "completed", notes, user.userId)
