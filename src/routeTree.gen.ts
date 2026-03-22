@@ -23,335 +23,333 @@ import { Route as AdvisorStudentIdAwardRouteRouteImport } from './routes/$adviso
 import { Route as AdvisorStudentIdAwardChallengeRouteImport } from './routes/$advisor/$studentId/$award/$challenge'
 
 const SignupRoute = SignupRouteImport.update({
-    id: '/signup',
-    path: '/signup',
-    getParentRoute: () => rootRouteImport,
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
-    id: '/login',
-    path: '/login',
-    getParentRoute: () => rootRouteImport,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StudentRouteRoute = StudentRouteRouteImport.update({
-    id: '/student',
-    path: '/student',
-    getParentRoute: () => rootRouteImport,
+  id: '/student',
+  path: '/student',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdvisorRouteRoute = AdvisorRouteRouteImport.update({
-    id: '/$advisor',
-    path: '/$advisor',
-    getParentRoute: () => rootRouteImport,
+  id: '/$advisor',
+  path: '/$advisor',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StudentAwardRouteRoute = StudentAwardRouteRouteImport.update({
-    id: '/$award',
-    path: '/$award',
-    getParentRoute: () => StudentRouteRoute,
+  id: '/$award',
+  path: '/$award',
+  getParentRoute: () => StudentRouteRoute,
 } as any)
 const AdvisorStudentIdRouteRoute = AdvisorStudentIdRouteRouteImport.update({
-    id: '/$studentId',
-    path: '/$studentId',
-    getParentRoute: () => AdvisorRouteRoute,
+  id: '/$studentId',
+  path: '/$studentId',
+  getParentRoute: () => AdvisorRouteRoute,
 } as any)
 const StudentAwardIndexRoute = StudentAwardIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => StudentAwardRouteRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudentAwardRouteRoute,
 } as any)
 const StudentAwardChallengeRoute = StudentAwardChallengeRouteImport.update({
-    id: '/$challenge',
-    path: '/$challenge',
-    getParentRoute: () => StudentAwardRouteRoute,
+  id: '/$challenge',
+  path: '/$challenge',
+  getParentRoute: () => StudentAwardRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-    id: '/api/auth/$',
-    path: '/api/auth/$',
-    getParentRoute: () => rootRouteImport,
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdvisorStudentIdAwardRouteRoute =
-    AdvisorStudentIdAwardRouteRouteImport.update({
-        id: '/$award',
-        path: '/$award',
-        getParentRoute: () => AdvisorStudentIdRouteRoute,
-    } as any)
+  AdvisorStudentIdAwardRouteRouteImport.update({
+    id: '/$award',
+    path: '/$award',
+    getParentRoute: () => AdvisorStudentIdRouteRoute,
+  } as any)
 const AdvisorStudentIdAwardChallengeRoute =
-    AdvisorStudentIdAwardChallengeRouteImport.update({
-        id: '/$challenge',
-        path: '/$challenge',
-        getParentRoute: () => AdvisorStudentIdAwardRouteRoute,
-    } as any)
+  AdvisorStudentIdAwardChallengeRouteImport.update({
+    id: '/$challenge',
+    path: '/$challenge',
+    getParentRoute: () => AdvisorStudentIdAwardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-    '/': typeof IndexRoute
-    '/$advisor': typeof AdvisorRouteRouteWithChildren
-    '/student': typeof StudentRouteRouteWithChildren
-    '/login': typeof LoginRoute
-    '/signup': typeof SignupRoute
-    '/$advisor/$studentId': typeof AdvisorStudentIdRouteRouteWithChildren
-    '/student/$award': typeof StudentAwardRouteRouteWithChildren
-    '/$advisor/$studentId/$award': typeof AdvisorStudentIdAwardRouteRouteWithChildren
-    '/api/auth/$': typeof ApiAuthSplatRoute
-    '/student/$award/$challenge': typeof StudentAwardChallengeRoute
-    '/student/$award/': typeof StudentAwardIndexRoute
-    '/$advisor/$studentId/$award/$challenge': typeof AdvisorStudentIdAwardChallengeRoute
+  '/': typeof IndexRoute
+  '/$advisor': typeof AdvisorRouteRouteWithChildren
+  '/student': typeof StudentRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/$advisor/$studentId': typeof AdvisorStudentIdRouteRouteWithChildren
+  '/student/$award': typeof StudentAwardRouteRouteWithChildren
+  '/$advisor/$studentId/$award': typeof AdvisorStudentIdAwardRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/student/$award/$challenge': typeof StudentAwardChallengeRoute
+  '/student/$award/': typeof StudentAwardIndexRoute
+  '/$advisor/$studentId/$award/$challenge': typeof AdvisorStudentIdAwardChallengeRoute
 }
 export interface FileRoutesByTo {
-    '/': typeof IndexRoute
-    '/$advisor': typeof AdvisorRouteRouteWithChildren
-    '/student': typeof StudentRouteRouteWithChildren
-    '/login': typeof LoginRoute
-    '/signup': typeof SignupRoute
-    '/$advisor/$studentId': typeof AdvisorStudentIdRouteRouteWithChildren
-    '/$advisor/$studentId/$award': typeof AdvisorStudentIdAwardRouteRouteWithChildren
-    '/api/auth/$': typeof ApiAuthSplatRoute
-    '/student/$award/$challenge': typeof StudentAwardChallengeRoute
-    '/student/$award': typeof StudentAwardIndexRoute
-    '/$advisor/$studentId/$award/$challenge': typeof AdvisorStudentIdAwardChallengeRoute
+  '/': typeof IndexRoute
+  '/$advisor': typeof AdvisorRouteRouteWithChildren
+  '/student': typeof StudentRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/$advisor/$studentId': typeof AdvisorStudentIdRouteRouteWithChildren
+  '/$advisor/$studentId/$award': typeof AdvisorStudentIdAwardRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/student/$award/$challenge': typeof StudentAwardChallengeRoute
+  '/student/$award': typeof StudentAwardIndexRoute
+  '/$advisor/$studentId/$award/$challenge': typeof AdvisorStudentIdAwardChallengeRoute
 }
 export interface FileRoutesById {
-    __root__: typeof rootRouteImport
-    '/': typeof IndexRoute
-    '/$advisor': typeof AdvisorRouteRouteWithChildren
-    '/student': typeof StudentRouteRouteWithChildren
-    '/login': typeof LoginRoute
-    '/signup': typeof SignupRoute
-    '/$advisor/$studentId': typeof AdvisorStudentIdRouteRouteWithChildren
-    '/student/$award': typeof StudentAwardRouteRouteWithChildren
-    '/$advisor/$studentId/$award': typeof AdvisorStudentIdAwardRouteRouteWithChildren
-    '/api/auth/$': typeof ApiAuthSplatRoute
-    '/student/$award/$challenge': typeof StudentAwardChallengeRoute
-    '/student/$award/': typeof StudentAwardIndexRoute
-    '/$advisor/$studentId/$award/$challenge': typeof AdvisorStudentIdAwardChallengeRoute
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/$advisor': typeof AdvisorRouteRouteWithChildren
+  '/student': typeof StudentRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/$advisor/$studentId': typeof AdvisorStudentIdRouteRouteWithChildren
+  '/student/$award': typeof StudentAwardRouteRouteWithChildren
+  '/$advisor/$studentId/$award': typeof AdvisorStudentIdAwardRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/student/$award/$challenge': typeof StudentAwardChallengeRoute
+  '/student/$award/': typeof StudentAwardIndexRoute
+  '/$advisor/$studentId/$award/$challenge': typeof AdvisorStudentIdAwardChallengeRoute
 }
 export interface FileRouteTypes {
-    fileRoutesByFullPath: FileRoutesByFullPath
-    fullPaths:
-        | '/'
-        | '/$advisor'
-        | '/student'
-        | '/login'
-        | '/signup'
-        | '/$advisor/$studentId'
-        | '/student/$award'
-        | '/$advisor/$studentId/$award'
-        | '/api/auth/$'
-        | '/student/$award/$challenge'
-        | '/student/$award/'
-        | '/$advisor/$studentId/$award/$challenge'
-    fileRoutesByTo: FileRoutesByTo
-    to:
-        | '/'
-        | '/$advisor'
-        | '/student'
-        | '/login'
-        | '/signup'
-        | '/$advisor/$studentId'
-        | '/$advisor/$studentId/$award'
-        | '/api/auth/$'
-        | '/student/$award/$challenge'
-        | '/student/$award'
-        | '/$advisor/$studentId/$award/$challenge'
-    id:
-        | '__root__'
-        | '/'
-        | '/$advisor'
-        | '/student'
-        | '/login'
-        | '/signup'
-        | '/$advisor/$studentId'
-        | '/student/$award'
-        | '/$advisor/$studentId/$award'
-        | '/api/auth/$'
-        | '/student/$award/$challenge'
-        | '/student/$award/'
-        | '/$advisor/$studentId/$award/$challenge'
-    fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/$advisor'
+    | '/student'
+    | '/login'
+    | '/signup'
+    | '/$advisor/$studentId'
+    | '/student/$award'
+    | '/$advisor/$studentId/$award'
+    | '/api/auth/$'
+    | '/student/$award/$challenge'
+    | '/student/$award/'
+    | '/$advisor/$studentId/$award/$challenge'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/$advisor'
+    | '/student'
+    | '/login'
+    | '/signup'
+    | '/$advisor/$studentId'
+    | '/$advisor/$studentId/$award'
+    | '/api/auth/$'
+    | '/student/$award/$challenge'
+    | '/student/$award'
+    | '/$advisor/$studentId/$award/$challenge'
+  id:
+    | '__root__'
+    | '/'
+    | '/$advisor'
+    | '/student'
+    | '/login'
+    | '/signup'
+    | '/$advisor/$studentId'
+    | '/student/$award'
+    | '/$advisor/$studentId/$award'
+    | '/api/auth/$'
+    | '/student/$award/$challenge'
+    | '/student/$award/'
+    | '/$advisor/$studentId/$award/$challenge'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-    IndexRoute: typeof IndexRoute
-    AdvisorRouteRoute: typeof AdvisorRouteRouteWithChildren
-    StudentRouteRoute: typeof StudentRouteRouteWithChildren
-    LoginRoute: typeof LoginRoute
-    SignupRoute: typeof SignupRoute
-    ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  IndexRoute: typeof IndexRoute
+  AdvisorRouteRoute: typeof AdvisorRouteRouteWithChildren
+  StudentRouteRoute: typeof StudentRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
-    interface FileRoutesByPath {
-        '/signup': {
-            id: '/signup'
-            path: '/signup'
-            fullPath: '/signup'
-            preLoaderRoute: typeof SignupRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        '/login': {
-            id: '/login'
-            path: '/login'
-            fullPath: '/login'
-            preLoaderRoute: typeof LoginRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        '/student': {
-            id: '/student'
-            path: '/student'
-            fullPath: '/student'
-            preLoaderRoute: typeof StudentRouteRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        '/$advisor': {
-            id: '/$advisor'
-            path: '/$advisor'
-            fullPath: '/$advisor'
-            preLoaderRoute: typeof AdvisorRouteRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        '/': {
-            id: '/'
-            path: '/'
-            fullPath: '/'
-            preLoaderRoute: typeof IndexRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        '/student/$award': {
-            id: '/student/$award'
-            path: '/$award'
-            fullPath: '/student/$award'
-            preLoaderRoute: typeof StudentAwardRouteRouteImport
-            parentRoute: typeof StudentRouteRoute
-        }
-        '/$advisor/$studentId': {
-            id: '/$advisor/$studentId'
-            path: '/$studentId'
-            fullPath: '/$advisor/$studentId'
-            preLoaderRoute: typeof AdvisorStudentIdRouteRouteImport
-            parentRoute: typeof AdvisorRouteRoute
-        }
-        '/student/$award/': {
-            id: '/student/$award/'
-            path: '/'
-            fullPath: '/student/$award/'
-            preLoaderRoute: typeof StudentAwardIndexRouteImport
-            parentRoute: typeof StudentAwardRouteRoute
-        }
-        '/student/$award/$challenge': {
-            id: '/student/$award/$challenge'
-            path: '/$challenge'
-            fullPath: '/student/$award/$challenge'
-            preLoaderRoute: typeof StudentAwardChallengeRouteImport
-            parentRoute: typeof StudentAwardRouteRoute
-        }
-        '/api/auth/$': {
-            id: '/api/auth/$'
-            path: '/api/auth/$'
-            fullPath: '/api/auth/$'
-            preLoaderRoute: typeof ApiAuthSplatRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        '/$advisor/$studentId/$award': {
-            id: '/$advisor/$studentId/$award'
-            path: '/$award'
-            fullPath: '/$advisor/$studentId/$award'
-            preLoaderRoute: typeof AdvisorStudentIdAwardRouteRouteImport
-            parentRoute: typeof AdvisorStudentIdRouteRoute
-        }
-        '/$advisor/$studentId/$award/$challenge': {
-            id: '/$advisor/$studentId/$award/$challenge'
-            path: '/$challenge'
-            fullPath: '/$advisor/$studentId/$award/$challenge'
-            preLoaderRoute: typeof AdvisorStudentIdAwardChallengeRouteImport
-            parentRoute: typeof AdvisorStudentIdAwardRouteRoute
-        }
+  interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student': {
+      id: '/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$advisor': {
+      id: '/$advisor'
+      path: '/$advisor'
+      fullPath: '/$advisor'
+      preLoaderRoute: typeof AdvisorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student/$award': {
+      id: '/student/$award'
+      path: '/$award'
+      fullPath: '/student/$award'
+      preLoaderRoute: typeof StudentAwardRouteRouteImport
+      parentRoute: typeof StudentRouteRoute
+    }
+    '/$advisor/$studentId': {
+      id: '/$advisor/$studentId'
+      path: '/$studentId'
+      fullPath: '/$advisor/$studentId'
+      preLoaderRoute: typeof AdvisorStudentIdRouteRouteImport
+      parentRoute: typeof AdvisorRouteRoute
+    }
+    '/student/$award/': {
+      id: '/student/$award/'
+      path: '/'
+      fullPath: '/student/$award/'
+      preLoaderRoute: typeof StudentAwardIndexRouteImport
+      parentRoute: typeof StudentAwardRouteRoute
+    }
+    '/student/$award/$challenge': {
+      id: '/student/$award/$challenge'
+      path: '/$challenge'
+      fullPath: '/student/$award/$challenge'
+      preLoaderRoute: typeof StudentAwardChallengeRouteImport
+      parentRoute: typeof StudentAwardRouteRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$advisor/$studentId/$award': {
+      id: '/$advisor/$studentId/$award'
+      path: '/$award'
+      fullPath: '/$advisor/$studentId/$award'
+      preLoaderRoute: typeof AdvisorStudentIdAwardRouteRouteImport
+      parentRoute: typeof AdvisorStudentIdRouteRoute
+    }
+    '/$advisor/$studentId/$award/$challenge': {
+      id: '/$advisor/$studentId/$award/$challenge'
+      path: '/$challenge'
+      fullPath: '/$advisor/$studentId/$award/$challenge'
+      preLoaderRoute: typeof AdvisorStudentIdAwardChallengeRouteImport
+      parentRoute: typeof AdvisorStudentIdAwardRouteRoute
+    }
+  }
 }
 
 interface AdvisorStudentIdAwardRouteRouteChildren {
-    AdvisorStudentIdAwardChallengeRoute: typeof AdvisorStudentIdAwardChallengeRoute
+  AdvisorStudentIdAwardChallengeRoute: typeof AdvisorStudentIdAwardChallengeRoute
 }
 
 const AdvisorStudentIdAwardRouteRouteChildren: AdvisorStudentIdAwardRouteRouteChildren =
-    {
-        AdvisorStudentIdAwardChallengeRoute:
-            AdvisorStudentIdAwardChallengeRoute,
-    }
+  {
+    AdvisorStudentIdAwardChallengeRoute: AdvisorStudentIdAwardChallengeRoute,
+  }
 
 const AdvisorStudentIdAwardRouteRouteWithChildren =
-    AdvisorStudentIdAwardRouteRoute._addFileChildren(
-        AdvisorStudentIdAwardRouteRouteChildren,
-    )
+  AdvisorStudentIdAwardRouteRoute._addFileChildren(
+    AdvisorStudentIdAwardRouteRouteChildren,
+  )
 
 interface AdvisorStudentIdRouteRouteChildren {
-    AdvisorStudentIdAwardRouteRoute: typeof AdvisorStudentIdAwardRouteRouteWithChildren
+  AdvisorStudentIdAwardRouteRoute: typeof AdvisorStudentIdAwardRouteRouteWithChildren
 }
 
 const AdvisorStudentIdRouteRouteChildren: AdvisorStudentIdRouteRouteChildren = {
-    AdvisorStudentIdAwardRouteRoute:
-        AdvisorStudentIdAwardRouteRouteWithChildren,
+  AdvisorStudentIdAwardRouteRoute: AdvisorStudentIdAwardRouteRouteWithChildren,
 }
 
 const AdvisorStudentIdRouteRouteWithChildren =
-    AdvisorStudentIdRouteRoute._addFileChildren(
-        AdvisorStudentIdRouteRouteChildren,
-    )
+  AdvisorStudentIdRouteRoute._addFileChildren(
+    AdvisorStudentIdRouteRouteChildren,
+  )
 
 interface AdvisorRouteRouteChildren {
-    AdvisorStudentIdRouteRoute: typeof AdvisorStudentIdRouteRouteWithChildren
+  AdvisorStudentIdRouteRoute: typeof AdvisorStudentIdRouteRouteWithChildren
 }
 
 const AdvisorRouteRouteChildren: AdvisorRouteRouteChildren = {
-    AdvisorStudentIdRouteRoute: AdvisorStudentIdRouteRouteWithChildren,
+  AdvisorStudentIdRouteRoute: AdvisorStudentIdRouteRouteWithChildren,
 }
 
 const AdvisorRouteRouteWithChildren = AdvisorRouteRoute._addFileChildren(
-    AdvisorRouteRouteChildren,
+  AdvisorRouteRouteChildren,
 )
 
 interface StudentAwardRouteRouteChildren {
-    StudentAwardChallengeRoute: typeof StudentAwardChallengeRoute
-    StudentAwardIndexRoute: typeof StudentAwardIndexRoute
+  StudentAwardChallengeRoute: typeof StudentAwardChallengeRoute
+  StudentAwardIndexRoute: typeof StudentAwardIndexRoute
 }
 
 const StudentAwardRouteRouteChildren: StudentAwardRouteRouteChildren = {
-    StudentAwardChallengeRoute: StudentAwardChallengeRoute,
-    StudentAwardIndexRoute: StudentAwardIndexRoute,
+  StudentAwardChallengeRoute: StudentAwardChallengeRoute,
+  StudentAwardIndexRoute: StudentAwardIndexRoute,
 }
 
 const StudentAwardRouteRouteWithChildren =
-    StudentAwardRouteRoute._addFileChildren(StudentAwardRouteRouteChildren)
+  StudentAwardRouteRoute._addFileChildren(StudentAwardRouteRouteChildren)
 
 interface StudentRouteRouteChildren {
-    StudentAwardRouteRoute: typeof StudentAwardRouteRouteWithChildren
+  StudentAwardRouteRoute: typeof StudentAwardRouteRouteWithChildren
 }
 
 const StudentRouteRouteChildren: StudentRouteRouteChildren = {
-    StudentAwardRouteRoute: StudentAwardRouteRouteWithChildren,
+  StudentAwardRouteRoute: StudentAwardRouteRouteWithChildren,
 }
 
 const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(
-    StudentRouteRouteChildren,
+  StudentRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
-    IndexRoute: IndexRoute,
-    AdvisorRouteRoute: AdvisorRouteRouteWithChildren,
-    StudentRouteRoute: StudentRouteRouteWithChildren,
-    LoginRoute: LoginRoute,
-    SignupRoute: SignupRoute,
-    ApiAuthSplatRoute: ApiAuthSplatRoute,
+  IndexRoute: IndexRoute,
+  AdvisorRouteRoute: AdvisorRouteRouteWithChildren,
+  StudentRouteRoute: StudentRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
-    ._addFileChildren(rootRouteChildren)
-    ._addFileTypes<FileRouteTypes>()
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
 import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
-    interface Register {
-        ssr: true
-        router: Awaited<ReturnType<typeof getRouter>>
-    }
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
 }

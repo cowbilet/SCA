@@ -10,15 +10,14 @@ export const Route = createFileRoute('/student/$award')({
         award: awardSchema,
     }),
     loader: async ({ params, context: { queryClient, user } }) => {
-        const promises = []
-        for (const challenge of Object.values(ALL_CHALLENGES)) {
-            promises.push(
-                queryClient.ensureQueryData(
-                    challengeQueryOptions(params.award, challenge, user.userId),
-                ),
-            )
-        }
-        await Promise.all(promises)
+        const prefetches = Object.values(ALL_CHALLENGES).map((challenge) =>
+            queryClient.ensureQueryData(
+                challengeQueryOptions(params.award, challenge, user.userId),
+            ),
+        )
+
+        // Prefetch all challenge cards, but do not fail route hydration if one challenge query errors.
+        await Promise.allSettled(prefetches)
     },
 })
 

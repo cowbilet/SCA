@@ -1,15 +1,20 @@
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
+import clsx from 'clsx'
+import type { HTMLAttributes} from 'react';
 
 export default function FeedbackForm({
     onValidSubmit,
+    className,
+    ...props
 }: {
     onValidSubmit: (data: {
         feedback: string
         accepted: boolean
     }) => Promise<void>
-}) {
+    className?: string
+} & HTMLAttributes<HTMLFormElement>) {
     const [decision, setDecision] = useState<boolean | null>(null)
     const [submitError, setSubmitError] = useState<string | null>(null)
     const form = useForm({
@@ -39,6 +44,8 @@ export default function FeedbackForm({
                 e.preventDefault()
                 form.handleSubmit()
             }}
+            className={className}
+            {...props}
         >
             <form.Field name="feedback">
                 {(field) => (
@@ -73,7 +80,7 @@ export default function FeedbackForm({
                 onClick={() => setDecision(false)}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150"
             >
-                Reject Proposal
+                Reject
             </button>
             <button
                 id="approve"
@@ -81,7 +88,7 @@ export default function FeedbackForm({
                 onClick={() => setDecision(true)}
                 className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2"
             >
-                Approve Proposal
+                Approve
             </button>
         </form>
     )

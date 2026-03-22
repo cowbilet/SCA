@@ -1,4 +1,4 @@
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import z from 'zod'
 import MainAdvisorStudentDash from '@/features/dashboard/components/advisor/mainAdvisorStudentDash'
