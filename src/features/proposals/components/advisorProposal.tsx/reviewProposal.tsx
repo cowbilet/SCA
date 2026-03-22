@@ -25,23 +25,29 @@ export default function ReviewProposal() {
     if (isError || !proposal) {
         return <div>Error loading proposal. Please try again later.</div>
     }
+    const isGivingFeedback =
+        (isMentor && proposal.status === 'pending mentor') ||
+        (!isMentor && proposal.status === 'pending assessor')
     return (
-        <Card className="h-full flex flex-col flex-1 gap-4">
-            {/* TODO: Should show instructions for the advisors */}
-            <Feedback data={proposal} />
-            <ProposalForm
-                values={proposal}
-                disabled={true}
-                award={proposal.award}
-                challenge={proposal.challenge}
-            />
-            {isMentor && proposal.status === 'pending mentor' && (
-                <ProposalFeedbackForm />
+        <div className="flex flex-row gap-4 max-lg:flex-col">
+            <Card className="flex-1">
+                    <Feedback data={proposal} />
+                    <ProposalForm
+                        values={proposal}
+                        disabled={true}
+                        award={proposal.award}
+                        challenge={proposal.challenge}
+                    />
+
+
+            </Card>
+            {isGivingFeedback && (
+                <Card className="flex-1">
+                    <ProposalFeedbackForm />
+                </Card>
             )}
-            {!isMentor && proposal.status === 'pending assessor' && (
-                <ProposalFeedbackForm />
-            )}
-        </Card>
+        </div>
+            
     )
 }
 function ProposalFeedbackForm() {
