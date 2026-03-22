@@ -20,7 +20,6 @@ export function SubmitProposal({
     })
     return (
         <Card className="h-full flex flex-col">
-            <Instructions state={proposalStatus} />
             <ProposalForm
                 award={award}
                 challenge={challenge}
@@ -67,7 +66,6 @@ export function ActiveProposal({
     }
     return (
         <Card className="h-full flex flex-col">
-            <Instructions state={proposalStatus} />
             {proposalStatus !== 'pending mentor' && (
                 <Feedback data={proposalData} />
             )}

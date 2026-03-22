@@ -20,7 +20,7 @@ export function CardHeader({
         <div
             className={clsx(
                 'flex items-center gap-2 w-full h-fit p-4 rounded-t-lg border-b-2',
-                 className,
+                className,
             )}
             {...props}
         >

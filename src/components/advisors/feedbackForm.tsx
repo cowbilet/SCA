@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import clsx from 'clsx'
-import type { HTMLAttributes} from 'react';
+import type { HTMLAttributes } from 'react'
 
 export default function FeedbackForm({
     onValidSubmit,

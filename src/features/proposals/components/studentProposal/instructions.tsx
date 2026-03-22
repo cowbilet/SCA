@@ -9,7 +9,7 @@ export function Instructions({ state }: { state: SubmissionState }) {
     switch (state) {
         case 'not started':
             return (
-                <Notification className="bg-yellow-100 border-yellow-500">
+                <Notification className="bg-yellow-100">
                     <NotificationHeader className="text-yellow-700 font-bold text-lg">
                         📋 Step 1: Submit Proposal
                     </NotificationHeader>
@@ -23,7 +23,7 @@ export function Instructions({ state }: { state: SubmissionState }) {
             )
         case 'withdrawn':
             return (
-                <Notification className="bg-gray-100 border-gray-500">
+                <Notification className="bg-gray-100">
                     <NotificationHeader className="text-gray-700 font-bold text-lg">
                         🚫 Proposal Withdrawn
                     </NotificationHeader>
@@ -35,7 +35,7 @@ export function Instructions({ state }: { state: SubmissionState }) {
             )
         case 'pending mentor':
             return (
-                <Notification className="bg-blue-100 border-blue-500">
+                <Notification className="bg-blue-100">
                     <NotificationHeader className="text-blue-700 font-bold text-lg">
                         ⏳ Pending Mentor Review
                     </NotificationHeader>
@@ -47,7 +47,7 @@ export function Instructions({ state }: { state: SubmissionState }) {
             )
         case 'pending assessor':
             return (
-                <Notification className="bg-blue-100 border-blue-500">
+                <Notification className="bg-blue-100">
                     <NotificationHeader className="text-blue-700 font-bold text-lg">
                         ⏳ Pending Assessor Review
                     </NotificationHeader>
@@ -60,7 +60,7 @@ export function Instructions({ state }: { state: SubmissionState }) {
             )
         case 'rejected mentor':
             return (
-                <Notification className="bg-red-100 border-red-500">
+                <Notification className="bg-red-100">
                     <NotificationHeader className="text-red-700 font-bold text-lg">
                         ❌ Rejected by Mentor
                     </NotificationHeader>
@@ -73,7 +73,7 @@ export function Instructions({ state }: { state: SubmissionState }) {
             )
         case 'rejected assessor':
             return (
-                <Notification className="bg-red-100 border-red-500">
+                <Notification className="bg-red-100">
                     <NotificationHeader className="text-red-700 font-bold text-lg">
                         ❌ Rejected by Assessor
                     </NotificationHeader>
@@ -86,7 +86,7 @@ export function Instructions({ state }: { state: SubmissionState }) {
             )
         case 'completed':
             return (
-                <Notification className="bg-green-100 border-green-500">
+                <Notification className="bg-green-100">
                     <NotificationHeader className="text-green-700 font-bold text-lg">
                         ✅ Proposal Approved
                     </NotificationHeader>

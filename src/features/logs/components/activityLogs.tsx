@@ -51,7 +51,11 @@ export function SubmittedActivityLogs({
     challengeData: StudentChallengeWithProposalAndSubmission
 }) {
     const location = useLocation()
-    const isGivingFeedback = (location.pathname.includes("mentor") && challengeData.student_challenge.status === "pending mentor") || (location.pathname.includes("assessor") && challengeData.student_challenge.status === "pending assessor")
+    const isGivingFeedback =
+        (location.pathname.includes('mentor') &&
+            challengeData.student_challenge.status === 'pending mentor') ||
+        (location.pathname.includes('assessor') &&
+            challengeData.student_challenge.status === 'pending assessor')
     return (
         <div className="flex flex-col h-full gap-4">
             <div className="flex flex-row max-lg:flex-col h-full gap-4">
@@ -61,7 +65,9 @@ export function SubmittedActivityLogs({
                 <div className="flex-1 flex flex-col gap-4">
                     <Card className=" p-0! flex-1">
                         <Reflection
-                            reflection={challengeData.student_challenge.reflection}
+                            reflection={
+                                challengeData.student_challenge.reflection
+                            }
                         />
                     </Card>
                     {isGivingFeedback && (
@@ -74,14 +80,15 @@ export function SubmittedActivityLogs({
                             </CardHeader>
                             <CardBody>
                                 <FeedbackForm
-                                    onValidSubmit={async ({ feedback, accepted }) => {}}
+                                    onValidSubmit={async ({
+                                        feedback,
+                                        accepted,
+                                    }) => {}}
                                 />
                             </CardBody>
                         </Card>
                     )}
                 </div>
-                
-                   
             </div>
         </div>
     )

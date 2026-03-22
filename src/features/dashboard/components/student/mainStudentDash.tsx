@@ -44,10 +44,15 @@ export default function Main() {
     if (challengeData.proposals && challengeData.proposals.accepted !== true) {
         switch (challengeData.proposals.status) {
             case 'not started':
+                
                 return (
-                    <SubmitProposal
-                        proposalStatus={challengeData.proposals.status}
-                    />
+                    <>
+                        <Instructions state={challengeData.proposals.status} />
+                        <SubmitProposal
+                            proposalStatus={challengeData.proposals.status}
+                        />
+                    
+                    </>
                 )
             case 'withdrawn':
             case 'pending mentor':
@@ -55,9 +60,13 @@ export default function Main() {
             case 'rejected mentor':
             case 'rejected assessor':
                 return (
-                    <ActiveProposal
-                        proposalStatus={challengeData.proposals.status}
-                    />
+                    <>
+                        <Instructions state={challengeData.proposals.status} />
+                        <ActiveProposal
+                            proposalStatus={challengeData.proposals.status}
+                        />
+                    
+                    </>
                 )
             default:
                 break
