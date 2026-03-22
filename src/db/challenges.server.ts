@@ -1,57 +1,107 @@
-import { and, eq } from "drizzle-orm/sql/expressions/conditions";
-import { db } from "./index.server";
-import { dbGetAllProposals } from "./proposals.server";
-import type { Award, SubmissionState } from "@/types/awards";
-import type { StudentChallengeWithProposalAndSubmission } from "@/types/schemas/challenges";
-import type { Challenge } from "@/types/challenges";
-import { validateStatusTransition } from "@/utils/server/state.server";
-import { studentChallenge } from "@/db/schema";
+import { and, eq } from 'drizzle-orm/sql/expressions/conditions'
+import { db } from './index.server'
+import { dbGetAllProposals } from './proposals.server'
+import type { Award, SubmissionState } from '@/types/awards'
+import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges'
+import type { Challenge } from '@/types/challenges'
+import { validateStatusTransition } from '@/utils/server/state.server'
+import { studentChallenge } from '@/db/schema'
 
-export async function dbGetUserAwardChallenges(userId: string, award: Award): Promise<Array<StudentChallengeWithProposalAndSubmission>> {
+export async function dbGetUserAwardChallenges(
+    userId: string,
+    award: Award,
+): Promise<Array<StudentChallengeWithProposalAndSubmission>> {
     const challengeProposalsSubquery = dbGetAllProposals()
-    return await db.select().from(studentChallenge).where(and(
-        eq(studentChallenge.studentId, userId),
-        eq(studentChallenge.award, award),
-    )).leftJoin(challengeProposalsSubquery, eq(studentChallenge.challenge, challengeProposalsSubquery.challenge))
+    return await db
+        .select()
+        .from(studentChallenge)
+        .where(
+            and(
+                eq(studentChallenge.studentId, userId),
+                eq(studentChallenge.award, award),
+            ),
+        )
+        .leftJoin(
+            challengeProposalsSubquery,
+            eq(
+                studentChallenge.challenge,
+                challengeProposalsSubquery.challenge,
+            ),
+        )
 }
-export async function dbGetUserChallenge(userId: string, award: Award, challenge: Challenge): Promise<StudentChallengeWithProposalAndSubmission | null> {
+export async function dbGetUserChallenge(
+    userId: string,
+    award: Award,
+    challenge: Challenge,
+): Promise<StudentChallengeWithProposalAndSubmission | null> {
     const challengeProposalsSubquery = dbGetAllProposals()
 
-    const results = await db.select().from(studentChallenge).where(and(
-        eq(studentChallenge.studentId, userId),
-        eq(studentChallenge.award, award),
-        eq(studentChallenge.challenge, challenge)
-    )).leftJoin(challengeProposalsSubquery, and(
-        eq(studentChallenge.challenge, challengeProposalsSubquery.challenge),
-        eq(challengeProposalsSubquery.award, award),
-        eq(challengeProposalsSubquery.studentId, userId),
-    ))
+    const results = await db
+        .select()
+        .from(studentChallenge)
+        .where(
+            and(
+                eq(studentChallenge.studentId, userId),
+                eq(studentChallenge.award, award),
+                eq(studentChallenge.challenge, challenge),
+            ),
+        )
+        .leftJoin(
+            challengeProposalsSubquery,
+            and(
+                eq(
+                    studentChallenge.challenge,
+                    challengeProposalsSubquery.challenge,
+                ),
+                eq(challengeProposalsSubquery.award, award),
+                eq(challengeProposalsSubquery.studentId, userId),
+            ),
+        )
     if (results.length === 0) {
         return null
     }
-    
+
     return results[0]
-    
 }
 export function dbGetAllChallenges() {
     const challengeProposalsSubquery = dbGetAllProposals()
-    return db.select().from(studentChallenge).leftJoin(challengeProposalsSubquery, eq(studentChallenge.challenge, challengeProposalsSubquery.challenge)).as("challenges");
+    return db
+        .select()
+        .from(studentChallenge)
+        .leftJoin(
+            challengeProposalsSubquery,
+            eq(
+                studentChallenge.challenge,
+                challengeProposalsSubquery.challenge,
+            ),
+        )
+        .as('challenges')
 }
-export async function dbCreateUserChallenge(studentId: string, mentorId: string, award: Award, challenge: Challenge) {
+export async function dbCreateUserChallenge(
+    studentId: string,
+    mentorId: string,
+    award: Award,
+    challenge: Challenge,
+) {
     await db.insert(studentChallenge).values({
         studentId,
         mentorId,
         award,
         challenge,
-    });
+    })
 }
-export async function dbGetStudentAwardsAndChallenges(studentId: string): Promise<Array<{award: Award, challenges: Challenge}>> {
-    return await db.select({
-        award: studentChallenge.award,
-        challenges: studentChallenge.challenge,
-    }).from(studentChallenge).where(eq(studentChallenge.studentId, studentId))
+export async function dbGetStudentAwardsAndChallenges(
+    studentId: string,
+): Promise<Array<{ award: Award; challenges: Challenge }>> {
+    return await db
+        .select({
+            award: studentChallenge.award,
+            challenges: studentChallenge.challenge,
+        })
+        .from(studentChallenge)
+        .where(eq(studentChallenge.studentId, studentId))
 }
-type ProposalTransitionStatus = SubmissionState | 'withdrawn';
+type ProposalTransitionStatus = SubmissionState | 'withdrawn'
 export async function dbChangeProposalStatus(
     studentId: string,
     award: Award,
@@ -61,29 +111,42 @@ export async function dbChangeProposalStatus(
     assessorId?: string,
 ): Promise<void> {
     await db.transaction(async (tx) => {
-        const proposal = (await tx
-            .select()
-            .from(studentChallenge)
-            .where(and(
-                eq(studentChallenge.studentId, studentId),
-                eq(studentChallenge.award, award),
-                eq(studentChallenge.challenge, challenge),
-            ))
-            .limit(1))[0];
-
+        const proposal = (
+            await tx
+                .select()
+                .from(studentChallenge)
+                .where(
+                    and(
+                        eq(studentChallenge.studentId, studentId),
+                        eq(studentChallenge.award, award),
+                        eq(studentChallenge.challenge, challenge),
+                    ),
+                )
+                .limit(1)
+        )[0]
 
         const currentStatus = proposal.status
 
         if (status === 'not started') {
-            throw new Error("Cannot directly set proposal status to not started");
+            throw new Error(
+                'Cannot directly set proposal status to not started',
+            )
         }
 
-        const basePatch = validateStatusTransition(currentStatus, status, { note, assessorId });
+        const basePatch = validateStatusTransition(currentStatus, status, {
+            note,
+            assessorId,
+        })
 
-        await tx.update(studentChallenge).set(basePatch).where(and(
-            eq(studentChallenge.studentId, studentId),
-            eq(studentChallenge.award, award),
-            eq(studentChallenge.challenge, challenge),
-        ));
-    });
+        await tx
+            .update(studentChallenge)
+            .set(basePatch)
+            .where(
+                and(
+                    eq(studentChallenge.studentId, studentId),
+                    eq(studentChallenge.award, award),
+                    eq(studentChallenge.challenge, challenge),
+                ),
+            )
+    })
 }

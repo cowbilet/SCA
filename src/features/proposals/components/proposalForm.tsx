@@ -10,18 +10,29 @@ import { getUserByEmail } from '@/api/users/getUserByEmail'
 
 interface ProposalFormProps {
     values?: {
-        mentorEmail: string,
-        description: string,
-        goal: string,
+        mentorEmail: string
+        description: string
+        goal: string
     }
-    disabled?: boolean,
-    Button?: FunctionComponent<{isDisabled: boolean, isPending: boolean}>,
-    award?: Award,
-    challenge?: Challenge,
+    disabled?: boolean
+    Button?: FunctionComponent<{ isDisabled: boolean; isPending: boolean }>
+    award?: Award
+    challenge?: Challenge
 }
-export default function ProposalForm({values, disabled, Button, award, challenge}: ProposalFormProps) {
+export default function ProposalForm({
+    values,
+    disabled,
+    Button,
+    award,
+    challenge,
+}: ProposalFormProps) {
     const [submitError, setSubmitError] = useState<string | null>(null)
-    const { mutateAsync: createChallenge, isPending, isError, error } = useCreateChallenge(award, challenge)
+    const {
+        mutateAsync: createChallenge,
+        isPending,
+        isError,
+        error,
+    } = useCreateChallenge(award, challenge)
     const isDisabled = disabled || isPending
     const form = useForm({
         defaultValues: {
@@ -34,14 +45,17 @@ export default function ProposalForm({values, disabled, Button, award, challenge
             onSubmitAsync: async ({ value }) => {
                 const { mentorEmail } = value
                 // Validate with zod first to ensure it's a valid email format
-                const emailValidation = CreateProposalSchema.shape.mentorEmail.safeParse(mentorEmail)
+                const emailValidation =
+                    CreateProposalSchema.shape.mentorEmail.safeParse(
+                        mentorEmail,
+                    )
                 if (!emailValidation.success) {
                     return {
                         fields: {
                             mentorEmail: {
-                                message: "Invalid email format",
-                            }
-                        }
+                                message: 'Invalid email format',
+                            },
+                        },
                     }
                 }
 
@@ -50,29 +64,28 @@ export default function ProposalForm({values, disabled, Button, award, challenge
                     // If it does not throw an error, we return undefined to indicate successful validation
                     await getUserByEmail({ data: { email: mentorEmail } })
                     return undefined
-                }
-                catch {                    
+                } catch {
                     return {
                         fields: {
                             mentorEmail: {
-                                message: "No user found with this email",
-                            }
-                        }
+                                message: 'No user found with this email',
+                            },
+                        },
                     }
                 }
-            }
+            },
         },
-        onSubmit: async ({value}) => {
+        onSubmit: async ({ value }) => {
             if (!award || !challenge) {
                 setSubmitError('Unable to submit proposal from this page.')
                 return
             }
             setSubmitError(null)
             await createChallenge(value)
-        }
+        },
     })
     return (
-        <form 
+        <form
             onSubmit={(e) => {
                 e.preventDefault()
                 form.handleSubmit()
@@ -83,19 +96,28 @@ export default function ProposalForm({values, disabled, Button, award, challenge
                 {(field) => (
                     <div className="flex flex-col">
                         <FormLabel>Mentor's Email</FormLabel>
-                        <input 
+                        <input
                             type="email"
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
-
-                            className={clsx("border border-gray-300 rounded p-2", {
-                                "opacity-50 cursor-not-allowed": isDisabled,
-                            })}
+                            className={clsx(
+                                'border border-gray-300 rounded p-2',
+                                {
+                                    'opacity-50 cursor-not-allowed': isDisabled,
+                                },
+                            )}
                             disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">
+                                {field.state.meta.errors
+                                    .map(
+                                        (validationError) =>
+                                            validationError?.message,
+                                    )
+                                    .join(', ')}
+                            </span>
                         )}
                     </div>
                 )}
@@ -108,13 +130,23 @@ export default function ProposalForm({values, disabled, Button, award, challenge
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
-                            className={clsx("border border-gray-300 rounded p-2 flex-auto resize-y", {
-                                "opacity-50 cursor-not-allowed": isDisabled,
-                            })}
+                            className={clsx(
+                                'border border-gray-300 rounded p-2 flex-auto resize-y',
+                                {
+                                    'opacity-50 cursor-not-allowed': isDisabled,
+                                },
+                            )}
                             disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">
+                                {field.state.meta.errors
+                                    .map(
+                                        (validationError) =>
+                                            validationError?.message,
+                                    )
+                                    .join(', ')}
+                            </span>
                         )}
                     </div>
                 )}
@@ -127,13 +159,23 @@ export default function ProposalForm({values, disabled, Button, award, challenge
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
-                            className={clsx("border border-gray-300 rounded p-2 flex-auto resize-y", {
-                                "opacity-50 cursor-not-allowed": isDisabled,
-                            })}
+                            className={clsx(
+                                'border border-gray-300 rounded p-2 flex-auto resize-y',
+                                {
+                                    'opacity-50 cursor-not-allowed': isDisabled,
+                                },
+                            )}
                             disabled={isDisabled}
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">
+                                {field.state.meta.errors
+                                    .map(
+                                        (validationError) =>
+                                            validationError?.message,
+                                    )
+                                    .join(', ')}
+                            </span>
                         )}
                     </div>
                 )}
@@ -141,29 +183,31 @@ export default function ProposalForm({values, disabled, Button, award, challenge
             {/* //TODO: Add error handling for submission failure (e.g. network error, server error) */}
             {(isError || submitError) && (
                 <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                    {submitError ?? (error instanceof Error ? error.message : 'An error occurred while submitting your proposal. Please try again.')}
+                    {submitError ??
+                        (error instanceof Error
+                            ? error.message
+                            : 'An error occurred while submitting your proposal. Please try again.')}
                 </div>
             )}
             {Button && <Button isDisabled={isDisabled} isPending={isPending} />}
         </form>
     )
 }
-export function ProposalFormButton({disabled}: {disabled?: boolean}) {
+export function ProposalFormButton({ disabled }: { disabled?: boolean }) {
     return (
         <button
-            className={clsx("text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition", {
-                "opacity-50 hover:cursor-not-allowed": disabled,
-            })}
+            className={clsx(
+                'text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition',
+                {
+                    'opacity-50 hover:cursor-not-allowed': disabled,
+                },
+            )}
             disabled={disabled}
         >
             {disabled ? 'Proposal Under Review' : 'Edit Proposal'}
         </button>
     )
 }
-function FormLabel({children}: {children: React.ReactNode}) {
-    return (
-        <label className="text-gray-600 text-base mb-1">
-            {children}*
-        </label>
-    )
+function FormLabel({ children }: { children: React.ReactNode }) {
+    return <label className="text-gray-600 text-base mb-1">{children}*</label>
 }

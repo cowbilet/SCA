@@ -19,23 +19,26 @@ export const Route = createFileRoute('/student/$award/$challenge')({
     // TODO: If you go to the student page and hover over any page it preloads the data, this is not very good for data saving
     loader: async ({ params, context: { queryClient, user } }) => {
         const { award, challenge } = params
-        const data = await queryClient.ensureQueryData(challengeQueryOptions(award, challenge, user.userId))
+        const data = await queryClient.ensureQueryData(
+            challengeQueryOptions(award, challenge, user.userId),
+        )
         if (data && data.proposals?.status !== 'not started') {
-            await queryClient.ensureQueryData(proposalQueryOptions(award, challenge, user.userId))
+            await queryClient.ensureQueryData(
+                proposalQueryOptions(award, challenge, user.userId),
+            )
         }
         return data
-    }
+    },
 })
 
 function RouteComponent() {
     const { challenge, award } = Route.useParams()
     return (
-        <div className='h-full'>
+        <div className="h-full">
             <ChallengeShell challenge={challenge}>
                 {/* To prevent persistance of form */}
-                <div key={`${award}-${challenge}`} className='h-full'>
+                <div key={`${award}-${challenge}`} className="h-full">
                     <MainStudentDash />
-
                 </div>
             </ChallengeShell>
         </div>

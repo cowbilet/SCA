@@ -10,7 +10,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
-import favicon from "@/public/logo.svg"
+import favicon from '@/public/logo.svg'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import type { QueryClient } from '@tanstack/react-query'
@@ -40,8 +40,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
             },
             {
                 rel: 'icon',
-                href: favicon
-            }
+                href: favicon,
+            },
         ],
     }),
 
@@ -50,11 +50,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className='w-full h-full'>
+        <html lang="en" className="w-full h-full">
             <head>
                 <HeadContent />
             </head>
-            <body className='w-full h-full'>
+            <body className="w-full h-full">
                 {children}
                 <TanStackDevtools
                     config={{

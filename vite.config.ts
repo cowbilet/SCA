@@ -9,24 +9,24 @@ import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
 
 const config = defineConfig({
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
     },
-  },
-  plugins: [
-    // this is the plugin that enables path aliases
-    devtools(),
-    tanstackStart(),
-    tailwindcss(),
-    // We can comment this out to get rid of the TypeError: Cannot read properties of undefined (reading 'method')
+    plugins: [
+        // this is the plugin that enables path aliases
+        devtools(),
+        tanstackStart(),
+        tailwindcss(),
+        // We can comment this out to get rid of the TypeError: Cannot read properties of undefined (reading 'method')
 
-    // nitro(),
-    viteReact(),
-    viteTsConfigPaths({
-      projects: ['./tsconfig.json'],
-    }),
-  ],
+        // nitro(),
+        viteReact(),
+        viteTsConfigPaths({
+            projects: ['./tsconfig.json'],
+        }),
+    ],
 })
 
 export default config

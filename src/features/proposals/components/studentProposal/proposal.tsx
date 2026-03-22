@@ -1,20 +1,27 @@
-import { useParams } from "@tanstack/react-router";
-import { LoaderCircle } from "lucide-react";
-import { clsx } from "clsx";
-import ProposalForm from "../proposalForm";
-import { Instructions} from "./instructions";
-import type { SubmissionState } from "@/types/awards";
-import { Card } from "@/components/card";
-import { useProposal } from "@/features/proposals/hooks/useProposal";
-import { Route } from "@/routes/student/route";
-import Feedback from "@/components/feedback";
+import { useParams } from '@tanstack/react-router'
+import { LoaderCircle } from 'lucide-react'
+import { clsx } from 'clsx'
+import ProposalForm from '../proposalForm'
+import { Instructions } from './instructions'
+import type { SubmissionState } from '@/types/awards'
+import { Card } from '@/components/card'
+import { useProposal } from '@/features/proposals/hooks/useProposal'
+import { Route } from '@/routes/student/route'
+import Feedback from '@/components/feedback'
 
-export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
-    const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
+export function SubmitProposal({
+    proposalStatus,
+}: {
+    proposalStatus: SubmissionState
+}) {
+    const { award, challenge } = useParams({
+        from: '/student/$award/$challenge',
+        strict: true,
+    })
     return (
         <Card className="h-full flex flex-col">
             <Instructions state={proposalStatus} />
-            <ProposalForm 
+            <ProposalForm
                 award={award}
                 challenge={challenge}
                 Button={SubmitButton}
@@ -22,15 +29,32 @@ export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionStat
         </Card>
     )
 }
-const disabledStates: Array<SubmissionState> = ['pending mentor', 'pending assessor']
-export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
-    const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
+const disabledStates: Array<SubmissionState> = [
+    'pending mentor',
+    'pending assessor',
+]
+export function ActiveProposal({
+    proposalStatus,
+}: {
+    proposalStatus: SubmissionState
+}) {
+    const { award, challenge } = useParams({
+        from: '/student/$award/$challenge',
+        strict: true,
+    })
     const { user } = Route.useRouteContext()
-    const {data: proposalData, isLoading, isError} = useProposal(award, challenge, user.userId)
+    const {
+        data: proposalData,
+        isLoading,
+        isError,
+    } = useProposal(award, challenge, user.userId)
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
-                <LoaderCircle className="animate-spin text-gray-500" size={48} />
+                <LoaderCircle
+                    className="animate-spin text-gray-500"
+                    size={48}
+                />
             </div>
         )
     }
@@ -44,10 +68,12 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
     return (
         <Card className="h-full flex flex-col">
             <Instructions state={proposalStatus} />
-            {proposalStatus !== "pending mentor" && <Feedback data={proposalData}/>}
-            <ProposalForm 
+            {proposalStatus !== 'pending mentor' && (
+                <Feedback data={proposalData} />
+            )}
+            <ProposalForm
                 values={proposalData}
-                disabled={disabledStates.includes(proposalStatus)} 
+                disabled={disabledStates.includes(proposalStatus)}
                 award={award}
                 challenge={challenge}
                 Button={SubmitButton}
@@ -55,16 +81,30 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
         </Card>
     )
 }
-function SubmitButton({isDisabled, isPending}: {isDisabled: boolean, isPending: boolean}) {
+function SubmitButton({
+    isDisabled,
+    isPending,
+}: {
+    isDisabled: boolean
+    isPending: boolean
+}) {
     return (
         <button
             type="submit"
-            className={clsx("bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 flex items-center justify-center", {
-                "opacity-50 hover:cursor-not-allowed": isPending || isDisabled,
-            })}
+            className={clsx(
+                'bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 flex items-center justify-center',
+                {
+                    'opacity-50 hover:cursor-not-allowed':
+                        isPending || isDisabled,
+                },
+            )}
             disabled={isPending || isDisabled}
         >
-            {isPending ? <LoaderCircle className="animate-spin" /> : 'Submit Proposal'}
+            {isPending ? (
+                <LoaderCircle className="animate-spin" />
+            ) : (
+                'Submit Proposal'
+            )}
         </button>
     )
 }

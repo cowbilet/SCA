@@ -1,16 +1,23 @@
-import { z } from "zod";
-import { challengeSchema } from "./challenges";
-import { awardSchema } from "./award";
+import { z } from 'zod'
+import { challengeSchema } from './challenges'
+import { awardSchema } from './award'
 
-export const futureDate = z.coerce.date<string>().refine((date) => {
-    const today = new Date()
-    return date <= today
-}, {
-    message: 'Date cannot be in the future',
-})
+export const futureDate = z.coerce.date<string>().refine(
+    (date) => {
+        const today = new Date()
+        return date <= today
+    },
+    {
+        message: 'Date cannot be in the future',
+    },
+)
 export const CreateLogEntrySchema = z.object({
     date: futureDate,
-    description: z.string().trim().min(10, 'Description must be at least 10 characters').max(1000, 'Description must be 1000 characters or less'),
+    description: z
+        .string()
+        .trim()
+        .min(10, 'Description must be at least 10 characters')
+        .max(1000, 'Description must be 1000 characters or less'),
 })
 export const LogEntrySchema = z.object({
     logId: z.uuid(),

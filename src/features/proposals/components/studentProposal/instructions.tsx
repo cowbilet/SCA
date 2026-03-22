@@ -1,9 +1,11 @@
 import type { SubmissionState } from '@/types/awards'
-import { Notification, NotificationBody, NotificationHeader } from '@/components/notification'
+import {
+    Notification,
+    NotificationBody,
+    NotificationHeader,
+} from '@/components/notification'
 
-
-
-export function Instructions({state}: {state: SubmissionState}) {
+export function Instructions({ state }: { state: SubmissionState }) {
     switch (state) {
         case 'not started':
             return (
@@ -12,7 +14,10 @@ export function Instructions({state}: {state: SubmissionState}) {
                         📋 Step 1: Submit Proposal
                     </NotificationHeader>
                     <NotificationBody className="text-yellow-700">
-                        Before you can start logging activities, you need to submit a proposal describing what you plan to do. Your mentor will review it first, and if approved, it will be sent to the assessor for final approval.
+                        Before you can start logging activities, you need to
+                        submit a proposal describing what you plan to do. Your
+                        mentor will review it first, and if approved, it will be
+                        sent to the assessor for final approval.
                     </NotificationBody>
                 </Notification>
             )
@@ -23,7 +28,8 @@ export function Instructions({state}: {state: SubmissionState}) {
                         🚫 Proposal Withdrawn
                     </NotificationHeader>
                     <NotificationBody className="text-gray-700">
-                        You have withdrawn your proposal. If this was a mistake, you can re-submit a new proposal for this challenge.
+                        You have withdrawn your proposal. If this was a mistake,
+                        you can re-submit a new proposal for this challenge.
                     </NotificationBody>
                 </Notification>
             )
@@ -34,7 +40,8 @@ export function Instructions({state}: {state: SubmissionState}) {
                         ⏳ Pending Mentor Review
                     </NotificationHeader>
                     <NotificationBody className="text-blue-700">
-                        Your proposal is currently under review by your mentor. You will receive feedback or approval from them soon.
+                        Your proposal is currently under review by your mentor.
+                        You will receive feedback or approval from them soon.
                     </NotificationBody>
                 </Notification>
             )
@@ -45,7 +52,9 @@ export function Instructions({state}: {state: SubmissionState}) {
                         ⏳ Pending Assessor Review
                     </NotificationHeader>
                     <NotificationBody className="text-blue-700">
-                        Your proposal has been approved by your mentor and is now pending review by the assessor. You will receive feedback or approval from them soon.
+                        Your proposal has been approved by your mentor and is
+                        now pending review by the assessor. You will receive
+                        feedback or approval from them soon.
                     </NotificationBody>
                 </Notification>
             )
@@ -56,7 +65,9 @@ export function Instructions({state}: {state: SubmissionState}) {
                         ❌ Rejected by Mentor
                     </NotificationHeader>
                     <NotificationBody className="text-red-700">
-                        Your proposal has been rejected by your mentor. Please review their feedback and submit a new proposal for this challenge.
+                        Your proposal has been rejected by your mentor. Please
+                        review their feedback and submit a new proposal for this
+                        challenge.
                     </NotificationBody>
                 </Notification>
             )
@@ -67,7 +78,9 @@ export function Instructions({state}: {state: SubmissionState}) {
                         ❌ Rejected by Assessor
                     </NotificationHeader>
                     <NotificationBody className="text-red-700">
-                        Your proposal has been rejected by the assessor. Please review their feedback and submit a new proposal for this challenge.
+                        Your proposal has been rejected by the assessor. Please
+                        review their feedback and submit a new proposal for this
+                        challenge.
                     </NotificationBody>
                 </Notification>
             )
@@ -78,7 +91,9 @@ export function Instructions({state}: {state: SubmissionState}) {
                         ✅ Proposal Approved
                     </NotificationHeader>
                     <NotificationBody className="text-green-700">
-                        Congratulations! Your proposal has been approved. You can now start logging activities for this challenge and work towards completing it.
+                        Congratulations! Your proposal has been approved. You
+                        can now start logging activities for this challenge and
+                        work towards completing it.
                     </NotificationBody>
                 </Notification>
             )

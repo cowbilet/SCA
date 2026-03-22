@@ -1,8 +1,15 @@
-import { useState } from "react";
-import { useForm } from "@tanstack/react-form";
-import { z } from "zod";
+import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
+import { z } from 'zod'
 
-export default function FeedbackForm({onValidSubmit}: {onValidSubmit: (data: {feedback: string, accepted: boolean}) => Promise<void>}) {
+export default function FeedbackForm({
+    onValidSubmit,
+}: {
+    onValidSubmit: (data: {
+        feedback: string
+        accepted: boolean
+    }) => Promise<void>
+}) {
     const [decision, setDecision] = useState<boolean | null>(null)
     const [submitError, setSubmitError] = useState<string | null>(null)
     const form = useForm({
@@ -11,20 +18,22 @@ export default function FeedbackForm({onValidSubmit}: {onValidSubmit: (data: {fe
         },
         validators: {
             onSubmit: z.object({
-                feedback: z.string().trim().min(1, "Feedback is required"),
+                feedback: z.string().trim().min(1, 'Feedback is required'),
             }),
         },
-        onSubmit: async ({value}) => {
-            const {feedback} = value
+        onSubmit: async ({ value }) => {
+            const { feedback } = value
             if (decision === null) {
-                setSubmitError("Choose approve or reject before submitting feedback.")
+                setSubmitError(
+                    'Choose approve or reject before submitting feedback.',
+                )
                 return
             }
             setSubmitError(null)
             await onValidSubmit({ feedback, accepted: decision })
-        }
+        },
     })
-    return (    
+    return (
         <form
             onSubmit={(e) => {
                 e.preventDefault()
@@ -43,7 +52,14 @@ export default function FeedbackForm({onValidSubmit}: {onValidSubmit: (data: {fe
                             rows={5}
                         />
                         {!field.state.meta.isValid && (
-                            <span className="text-red-500 text-sm mt-1">{field.state.meta.errors.map((validationError) => validationError?.message).join(', ')}</span>
+                            <span className="text-red-500 text-sm mt-1">
+                                {field.state.meta.errors
+                                    .map(
+                                        (validationError) =>
+                                            validationError?.message,
+                                    )
+                                    .join(', ')}
+                            </span>
                         )}
                     </div>
                 )}
@@ -51,10 +67,20 @@ export default function FeedbackForm({onValidSubmit}: {onValidSubmit: (data: {fe
             {submitError && (
                 <p className="text-red-500 text-sm mb-3">{submitError}</p>
             )}
-            <button id="reject" type="submit" onClick={() => setDecision(false)} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150">
+            <button
+                id="reject"
+                type="submit"
+                onClick={() => setDecision(false)}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150"
+            >
                 Reject Proposal
             </button>
-            <button id="approve" type="submit" onClick={() => setDecision(true)} className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2">
+            <button
+                id="approve"
+                type="submit"
+                onClick={() => setDecision(true)}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2"
+            >
                 Approve Proposal
             </button>
         </form>

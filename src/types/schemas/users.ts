@@ -1,6 +1,7 @@
-//TODO: This should probably be a server
-import { role } from '@/db/schema'
+// TODO: This should probably be a server
 import { email, z } from 'zod'
+import { role } from '@/db/schema'
+
 export const UserSchema = z.object({
     userId: z.string(),
     email: z.email(),

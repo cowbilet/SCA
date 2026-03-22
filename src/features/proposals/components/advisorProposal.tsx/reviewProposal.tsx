@@ -1,18 +1,24 @@
+import { useParams } from '@tanstack/react-router'
+import ProposalForm from '../proposalForm'
+import { useReviewProposal } from '../../hooks/useReviewProposal'
+import { useProposal } from '../../hooks/useProposal'
+import FeedbackForm from '@/components/advisors/feedbackForm'
 
-import { useParams } from "@tanstack/react-router";
-import ProposalForm from "../proposalForm";
-import { useReviewProposal } from "../../hooks/useReviewProposal";
-import { useProposal } from "../../hooks/useProposal";
-import FeedbackForm from "@/components/advisors/feedbackForm";
-
-import Feedback from "@/components/feedback";
-import { Card } from "@/components/card";
+import Feedback from '@/components/feedback'
+import { Card } from '@/components/card'
 
 export default function ReviewProposal() {
-    const { advisor, studentId, award, challenge } = useParams({ from: "/$advisor/$studentId/$award/$challenge", strict: true })
-    const { data: proposal, isError, isLoading } = useProposal(award, challenge, studentId)
+    const { advisor, studentId, award, challenge } = useParams({
+        from: '/$advisor/$studentId/$award/$challenge',
+        strict: true,
+    })
+    const {
+        data: proposal,
+        isError,
+        isLoading,
+    } = useProposal(award, challenge, studentId)
 
-    const isMentor = advisor === "mentor"
+    const isMentor = advisor === 'mentor'
     if (isLoading) {
         return <div>Loading...</div>
     }
@@ -29,18 +35,30 @@ export default function ReviewProposal() {
                 award={proposal.award}
                 challenge={proposal.challenge}
             />
-            {isMentor && proposal.status === "pending mentor" && <ProposalFeedbackForm />}
-            {!isMentor && proposal.status === "pending assessor" && <ProposalFeedbackForm />}  
+            {isMentor && proposal.status === 'pending mentor' && (
+                <ProposalFeedbackForm />
+            )}
+            {!isMentor && proposal.status === 'pending assessor' && (
+                <ProposalFeedbackForm />
+            )}
         </Card>
     )
 }
 function ProposalFeedbackForm() {
-    const { award, challenge, studentId } = useParams({from: "/$advisor/$studentId/$award/$challenge", strict: true})
-    const { mutateAsync: submitProposal } = useReviewProposal(studentId, award, challenge)
-    const onValidSubmit = async (data: {feedback: string, accepted: boolean}) => {
+    const { award, challenge, studentId } = useParams({
+        from: '/$advisor/$studentId/$award/$challenge',
+        strict: true,
+    })
+    const { mutateAsync: submitProposal } = useReviewProposal(
+        studentId,
+        award,
+        challenge,
+    )
+    const onValidSubmit = async (data: {
+        feedback: string
+        accepted: boolean
+    }) => {
         await submitProposal({ notes: data.feedback, accepted: data.accepted })
     }
-    return (    
-        <FeedbackForm onValidSubmit={onValidSubmit} />
-    )
+    return <FeedbackForm onValidSubmit={onValidSubmit} />
 }

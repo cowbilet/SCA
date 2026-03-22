@@ -1,6 +1,6 @@
-import { queryOptions, useQuery } from "@tanstack/react-query"
-import { getAdvisorPending } from "@/api/advisors/getAdvisorPending"
-import { queryKeys } from "@/hooks/queryKeys"
+import { queryOptions, useQuery } from '@tanstack/react-query'
+import { getAdvisorPending } from '@/api/advisors/getAdvisorPending'
+import { queryKeys } from '@/hooks/queryKeys'
 
 export const usePendingProposalsOptions = () => {
     return queryOptions({

@@ -1,14 +1,25 @@
-import { Clipboard, Target } from "lucide-react"
-import { useParams } from "@tanstack/react-router"
-import { useProposal } from "../hooks/useProposal"
+import { Clipboard, Target } from 'lucide-react'
+import { useParams } from '@tanstack/react-router'
+import { useProposal } from '../hooks/useProposal'
 
-import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog"
-import { Route } from "@/routes/student/route"
+import Dialog, {
+    DialogBody,
+    DialogFooter,
+    DialogHeader,
+} from '@/components/dialog'
+import { Route } from '@/routes/student/route'
 
 export function ViewProposal() {
     const { user } = Route.useRouteContext()
-    const {award, challenge} = useParams({ from: '/student/$award/$challenge', strict: true })
-    const {data: proposal, isLoading, isError} = useProposal(award, challenge, user.userId)
+    const { award, challenge } = useParams({
+        from: '/student/$award/$challenge',
+        strict: true,
+    })
+    const {
+        data: proposal,
+        isLoading,
+        isError,
+    } = useProposal(award, challenge, user.userId)
 
     return (
         <Dialog
@@ -28,27 +39,39 @@ export function ViewProposal() {
 
             <DialogBody className="p-8">
                 {/* TODO: This styling is pretty rough... */}
-                {
-                    proposal ? (
-                        <div className="space-y-4">
-                            {/* <Comments proposal={proposal} /> */}
-                            <div>
-                                <h3 className="text-lg font-medium text-gray-900"><Clipboard className="h-5 w-5 inline mr-2" />Description</h3>
-                                <p className="mt-1 text-sm text-gray-700">{proposal.description}</p>
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-medium text-gray-900 flex flex-row items-center"><Target className="h-5 w-5 inline mr-2" />Goals and Objectives</h3>
-                                <p className="mt-1 text-sm text-gray-700">{proposal.goal}</p>
-                            </div>
+                {proposal ? (
+                    <div className="space-y-4">
+                        {/* <Comments proposal={proposal} /> */}
+                        <div>
+                            <h3 className="text-lg font-medium text-gray-900">
+                                <Clipboard className="h-5 w-5 inline mr-2" />
+                                Description
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-700">
+                                {proposal.description}
+                            </p>
                         </div>
-                    ) : isLoading ? (
-                        <p className="text-sm text-gray-500">Loading proposal...</p>
-                    ) : isError ? (
-                        <p className="text-sm text-gray-500">Error loading proposal.</p>
-                    ) : (
-                        <p className="text-sm text-gray-500">No proposal found for this award and challenge.</p>
-                    )
-                }
+                        <div>
+                            <h3 className="text-lg font-medium text-gray-900 flex flex-row items-center">
+                                <Target className="h-5 w-5 inline mr-2" />
+                                Goals and Objectives
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-700">
+                                {proposal.goal}
+                            </p>
+                        </div>
+                    </div>
+                ) : isLoading ? (
+                    <p className="text-sm text-gray-500">Loading proposal...</p>
+                ) : isError ? (
+                    <p className="text-sm text-gray-500">
+                        Error loading proposal.
+                    </p>
+                ) : (
+                    <p className="text-sm text-gray-500">
+                        No proposal found for this award and challenge.
+                    </p>
+                )}
             </DialogBody>
             <DialogFooter>
                 {/* You can add actions here if needed */}

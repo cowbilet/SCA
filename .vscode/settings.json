@@ -1,25 +1,25 @@
 {
-  "files.watcherExclude": {
-    "**/routeTree.gen.ts": true,
-    "**/node_modules/**": true,
-    "**/dist/**": true,
-    "**/build/**": true
-  },
-  "search.exclude": {
-    "**/routeTree.gen.ts": true
-  },
-  "files.readonlyInclude": {
-    "**/routeTree.gen.ts": true
-  },
-  "workbench.settings.enableNaturalLanguageSearch": false,
-  "css.validate": false,
-  "less.validate": false,
-  "scss.validate": false,
-  "[javascript]": {
-    "editor.maxTokenizationLineLength": 2500
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
-  },
-  "editor.codeLens": false
+    "files.watcherExclude": {
+        "**/routeTree.gen.ts": true,
+        "**/node_modules/**": true,
+        "**/dist/**": true,
+        "**/build/**": true
+    },
+    "search.exclude": {
+        "**/routeTree.gen.ts": true
+    },
+    "files.readonlyInclude": {
+        "**/routeTree.gen.ts": true
+    },
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
+    "[javascript]": {
+        "editor.maxTokenizationLineLength": 2500
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
+    "editor.codeLens": false
 }
