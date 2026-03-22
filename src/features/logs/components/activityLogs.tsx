@@ -1,10 +1,10 @@
 import clsx from "clsx";
 import { Circle, Clock } from "lucide-react";
 
-import type { HTMLAttributes } from "react";
+
 import type { LogEntry } from "@/types/schemas/log";
 import { Card } from "@/components/card";
-import { Instructions } from "@/features/submissions/components/notifications";
+
 
 const logStyling = {
     pending: {

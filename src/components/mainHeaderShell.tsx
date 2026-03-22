@@ -1,5 +1,6 @@
-import { HTMLAttributes } from "react"
 import clsx from "clsx"
+import type { HTMLAttributes } from "react"
+
 export default function MainHeaderShell({title, icon, description, className, ...props}: {title: string, icon: React.ReactNode, description?: string} & HTMLAttributes<HTMLDivElement>) {
     return (
         <div className={clsx("flex gap-4 w-full h-32 flex-col p-8 justify-center", className)} {...props}>

@@ -3,31 +3,20 @@ import Skeleton from "react-loading-skeleton"
 import { useParams } from "@tanstack/react-router"
 
 import { useLogs } from "../../hooks/useLogs"
-import { CreateActivity } from "./activityModals/createActivity"
 import { DeleteActivity } from "./activityModals/deleteActivity"
 import {EditActivity} from "./activityModals/editActivity"
 import type { LogEntry } from "@/types/schemas/log"
 import type { SubmissionState } from "@/types/awards"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
-import { StudentSubmission } from "@/features/submissions/components/studentSubmission"
 import { useChallenge } from "@/hooks/useChallenge"
 import { Route } from "@/routes/student/route"
 
 const disabledStatuses: Array<SubmissionState> = ["pending assessor", "pending mentor", "completed"] as const
-export function StudentActivityLogs() {
-    const { award, challenge } = useParams({strict: true, from: "/student/$award/$challenge"})
-    const {user} = Route.useRouteContext()
-    const { data } = useChallenge(award, challenge, user.userId)
+export function StudentActivityLogs({disabled = false}: {disabled?: boolean}) {
     return (
         <div className="flex flex-col h-full gap-4">
-            {!disabledStatuses.includes(data?.student_challenge.status ?? "not started") && (
-                <div className="flex flex-row items-center justify-start gap-4">
-                    <CreateActivity />
-                    <StudentSubmission />
-                </div>
-            )}
             <div className="flex flex-row max-xl:flex-col h-full gap-4">
-                {!disabledStatuses.includes(data?.student_challenge.status ?? "not started") && (
+                {disabled && (
                     <ActivityLogGroupCard type="pending">
                         <StudentLogEntries  type="pending"/>
                     </ActivityLogGroupCard>
@@ -35,7 +24,7 @@ export function StudentActivityLogs() {
                 <ActivityLogGroupCard type="approved">
                     <StudentLogEntries  type="approved"/>
                 </ActivityLogGroupCard>
-                {!disabledStatuses.includes(data?.student_challenge.status ?? "not started") && (
+                {disabled && (
                     <ActivityLogGroupCard type="rejected">
                         <StudentLogEntries  type="rejected"/>
                     </ActivityLogGroupCard>

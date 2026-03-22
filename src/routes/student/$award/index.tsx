@@ -1,6 +1,6 @@
-import { awardSchema } from '@/types/schemas/award'
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
+import { awardSchema } from '@/types/schemas/award'
 
 
 export const Route = createFileRoute('/student/$award/')({

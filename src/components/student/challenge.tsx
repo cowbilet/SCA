@@ -1,6 +1,7 @@
-import { Challenge } from "@/types/challenges"
 import { BookOpen, HandPlatter, Users, Zap } from "lucide-react"
 import MainHeaderShell from "../mainHeaderShell"
+import type { Challenge } from "@/types/challenges"
+
 interface ChallengeProps {
     challenge: Challenge
     children?: React.ReactNode

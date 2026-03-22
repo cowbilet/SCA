@@ -1,12 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
+import type { Award } from '@/types/awards'
+import type { Challenge } from '@/types/challenges'
 import { validateAward } from '@/types/guards/awards'
-import { Award } from '@/types/awards'
 import { validateChallenge } from '@/types/guards/challenges'
-import { Challenge } from '@/types/challenges'
 import { dbChangeProposalStatus, dbGetProposal } from '@/db/proposals.server'
 import { restrictRoles } from '@/utils/auth'
+
 const withdrawProposalSchema = z.object({
     award: z.string().refine((award): award is Award => validateAward(award), {
         message: 'Invalid award',

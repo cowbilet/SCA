@@ -1,13 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useParams  } from '@tanstack/react-router'
 
 import z from 'zod'
-import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/reviewProposal'
-
-import { proposalQueryOptions } from '@/features/proposals/hooks/useProposal'
+import MainAdvisorStudentDash from '@/features/dashboard/components/advisor/mainAdvisorStudentDash'
 import { awardSchema } from '@/types/schemas/award'
 import { challengeSchema } from '@/types/schemas/challenges'
-import { AdvisorActivityLogs } from '@/features/logs/components/advisors/advisorLogs'
-import ReviewActivity from '@/features/logs/components/advisors/reviewActivity'
+import { challengeQueryOptions } from '@/hooks/useChallenge'
 
 const inputSchema = z.object({
     award: awardSchema,
@@ -21,22 +18,12 @@ export const Route = createFileRoute(
     params: inputSchema,
     loader: async ({ params, context: { queryClient } }) => {
         const { award, challenge, studentId } = params
-        const data = await queryClient.ensureQueryData(proposalQueryOptions(award, challenge, studentId))
-        return data 
+        await queryClient.ensureQueryData(challengeQueryOptions(award, challenge, studentId))
     },
 })
 
 function RouteComponent() {
-    const proposalData = Route.useLoaderData()
-    if (proposalData?.accepted === true) {
-        return <ReviewActivity />
-    }
-    else {
-        return (
-            <div className="flex flex-col h-full flex-1 p-4 bg-white rounded-lg shadow">
-                <ReviewProposal />
-    
-            </div>
-        )
-    }
+    return (
+        <MainAdvisorStudentDash />
+    )
 }

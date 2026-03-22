@@ -7,6 +7,7 @@ import { useProposal } from "../../hooks/useProposal";
 import { ReviewProposalFeedbackSchema } from "../../types/schema/forms";
 
 import Feedback from "@/components/feedback";
+import { Card } from "@/components/card";
 
 export default function ReviewProposal() {
     const { advisor, studentId, award, challenge } = useParams({ from: "/$advisor/$studentId/$award/$challenge", strict: true })
@@ -20,7 +21,7 @@ export default function ReviewProposal() {
         return <div>Error loading proposal. Please try again later.</div>
     }
     return (
-        <div className="flex flex-col h-full flex-1 gap-4">
+        <Card className="h-full flex flex-col flex-1 gap-4">
             {/* TODO: Should show instructions for the advisors */}
             <Feedback data={proposal} />
             <ProposalForm
@@ -30,9 +31,8 @@ export default function ReviewProposal() {
                 challenge={proposal.challenge}
             />
             {isMentor && proposal.status === "pending mentor" && <ProposalFeedbackForm />}
-            {!isMentor && proposal.status === "pending assessor" && <ProposalFeedbackForm />}
-            
-        </div>
+            {!isMentor && proposal.status === "pending assessor" && <ProposalFeedbackForm />}  
+        </Card>
     )
 }
 function ProposalFeedbackForm() {
