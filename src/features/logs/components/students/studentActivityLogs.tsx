@@ -6,17 +6,15 @@ import { useLogs } from "../../hooks/useLogs"
 import { DeleteActivity } from "./activityModals/deleteActivity"
 import {EditActivity} from "./activityModals/editActivity"
 import type { LogEntry } from "@/types/schemas/log"
-import type { SubmissionState } from "@/types/awards"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
-import { useChallenge } from "@/hooks/useChallenge"
+
 import { Route } from "@/routes/student/route"
 
-const disabledStatuses: Array<SubmissionState> = ["pending assessor", "pending mentor", "completed"] as const
 export function StudentActivityLogs({disabled = false}: {disabled?: boolean}) {
     return (
         <div className="flex flex-col h-full gap-4">
             <div className="flex flex-row max-xl:flex-col h-full gap-4">
-                {disabled && (
+                {!disabled && (
                     <ActivityLogGroupCard type="pending">
                         <StudentLogEntries  type="pending"/>
                     </ActivityLogGroupCard>
@@ -24,7 +22,7 @@ export function StudentActivityLogs({disabled = false}: {disabled?: boolean}) {
                 <ActivityLogGroupCard type="approved">
                     <StudentLogEntries  type="approved"/>
                 </ActivityLogGroupCard>
-                {disabled && (
+                {!disabled && (
                     <ActivityLogGroupCard type="rejected">
                         <StudentLogEntries  type="rejected"/>
                     </ActivityLogGroupCard>

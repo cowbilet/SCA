@@ -19,7 +19,9 @@ const config = defineConfig({
     devtools(),
     tanstackStart(),
     tailwindcss(),
-    nitro(),
+    // We can comment this out to get rid of the TypeError: Cannot read properties of undefined (reading 'method')
+
+    // nitro(),
     viteReact(),
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],

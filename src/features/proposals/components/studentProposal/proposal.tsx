@@ -2,7 +2,7 @@ import { useParams } from "@tanstack/react-router";
 import { LoaderCircle } from "lucide-react";
 import { clsx } from "clsx";
 import ProposalForm from "../proposalForm";
-import { Instructions} from "../notifications";
+import { Instructions} from "./instructions";
 import type { SubmissionState } from "@/types/awards";
 import { Card } from "@/components/card";
 import { useProposal } from "@/features/proposals/hooks/useProposal";

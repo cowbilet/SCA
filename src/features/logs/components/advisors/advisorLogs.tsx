@@ -6,18 +6,24 @@ import { useApproveLog } from "../../hooks/useApproveLog"
 import type { LogEntry } from "@/types/schemas/log"
 import { ActivityLogGroupCard, LogEntryScaffold } from "@/features/logs/components/activityLogs"
 
-export function AdvisorActivityLogs() {
+export function AdvisorActivityLogs({disabled = false}: {disabled?: boolean}) {
     return (
-        <div className="flex flex-row max-xl:flex-col h-full gap-4">
-            <ActivityLogGroupCard type="pending">
-                <AdvisorLogEntries  type="pending"/>
-            </ActivityLogGroupCard>
-            <ActivityLogGroupCard type="approved">
-                <AdvisorLogEntries  type="approved"/>
-            </ActivityLogGroupCard>
-            <ActivityLogGroupCard type="rejected">
-                <AdvisorLogEntries  type="rejected"/>
-            </ActivityLogGroupCard>
+        <div className="flex flex-col h-full gap-4">
+            <div className="flex flex-row max-xl:flex-col h-full gap-4">
+                {disabled && (
+                    <ActivityLogGroupCard type="pending">
+                        <AdvisorLogEntries  type="pending"/>
+                    </ActivityLogGroupCard>
+                )}
+                <ActivityLogGroupCard type="approved">
+                    <AdvisorLogEntries  type="approved"/>
+                </ActivityLogGroupCard>
+                {disabled && (
+                    <ActivityLogGroupCard type="rejected">
+                        <AdvisorLogEntries  type="rejected"/>
+                    </ActivityLogGroupCard>
+                )}
+            </div>
         </div>
     )
 }

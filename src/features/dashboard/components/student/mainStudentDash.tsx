@@ -4,8 +4,10 @@ import { useChallenge } from "@/hooks/useChallenge"
 import { Route } from "@/routes/student/$award/$challenge"
 import { ActiveProposal, SubmitProposal } from '@/features/proposals/components/studentProposal/proposal'
 import { StudentActivityLogs } from '@/features/logs/components/students/studentActivityLogs'
-import { StudentSubmission } from "@/features/submissions/components/studentSubmission"
+import { StudentSubmission } from "@/features/submissions/components/student/submitChallenge"
 import { CreateActivity } from "@/features/logs/components/students/activityModals/createActivity"
+import { Instructions } from "@/features/submissions/components/student/instructions"
+import Feedback from "@/components/feedback"
 
 export default function Main() {
     const { user } = Route.useRouteContext()
@@ -26,15 +28,15 @@ export default function Main() {
     if (challengeData.proposals && challengeData.proposals.accepted !== true) {
         switch (challengeData.proposals.status) {
             case 'not started':
-                return <SubmitProposal proposalStatus={challengeData.proposals.status} />;
+                return <SubmitProposal proposalStatus={challengeData.proposals.status} />
             case 'withdrawn':
             case 'pending mentor':
             case 'pending assessor':
             case 'rejected mentor':
             case 'rejected assessor':
-                return <ActiveProposal proposalStatus={challengeData.proposals.status} />;
+                return <ActiveProposal proposalStatus={challengeData.proposals.status} />
             default:
-                break;
+                break
         }
     }
     if (challengeData.proposals && challengeData.proposals.accepted === true) {
@@ -43,24 +45,32 @@ export default function Main() {
             case 'rejected mentor':
             case 'rejected assessor':
                 return (
-                    <>
+                    <div className="space-y-4">
                         <div className="flex flex-row items-center justify-start gap-4">
                             <CreateActivity />
                             <StudentSubmission />
                         </div>
-                        <StudentActivityLogs />;
-                    </>
+                        <Instructions state={challengeData.student_challenge.status} />
+                        <Feedback data={challengeData.student_challenge} />
+                        <StudentActivityLogs />
+                    </div>
                 )
             case 'pending mentor':
             case 'pending assessor':
-                return <StudentActivityLogs disabled />;
+                return (
+                    <>
+                        <Instructions state={challengeData.student_challenge.status} />
+                        <Feedback data={challengeData.student_challenge} />
+                        <StudentActivityLogs disabled />
+                    </>
+                )
             case 'completed':
                 return (
                     <>
                         <p>
                             You did it! Your submission has been marked as completed. You can still view your activity logs below.
                         </p>
-                        <StudentActivityLogs disabled />;
+                        <StudentActivityLogs disabled />
                     </>
                 )
         }

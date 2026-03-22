@@ -1,16 +1,29 @@
 import type { SubmissionState } from '@/types/awards'
 import { Notification, NotificationBody, NotificationHeader } from '@/components/notification'
 
+
+
 export function Instructions({state}: {state: SubmissionState}) {
     switch (state) {
         case 'not started':
             return (
                 <Notification className="bg-yellow-100 border-yellow-500">
                     <NotificationHeader className="text-yellow-700 font-bold text-lg">
-                        📋 Step 1: Submit Logs
+                        📋 Step 1: Create Activities
                     </NotificationHeader>
                     <NotificationBody className="text-yellow-700">
-                            Now that your proposal has been approved, you can start logging activities for this challenge. Make sure to provide detailed descriptions and evidence for each activity you log to help your mentor and assessor understand your progress.
+                        Before you can submit your activity, you need to create at least one activity log describing what you plan to do. This will help your mentor and assessor understand your plan and provide better feedback.
+                    </NotificationBody>
+                </Notification>
+            )
+        case 'withdrawn':
+            return (
+                <Notification className="bg-gray-100 border-gray-500">
+                    <NotificationHeader className="text-gray-700 font-bold text-lg">
+                        🚫 Submission Withdrawn
+                    </NotificationHeader>
+                    <NotificationBody className="text-gray-700">
+                        You have withdrawn your submission. If this was a mistake, you can re-submit a new submission for this challenge.
                     </NotificationBody>
                 </Notification>
             )
@@ -65,7 +78,7 @@ export function Instructions({state}: {state: SubmissionState}) {
                         ✅ Submission Approved
                     </NotificationHeader>
                     <NotificationBody className="text-green-700">
-                        Congratulations! Your submission has been approved and this challenge is now complete. You can view your completed challenge in your profile and share your achievement with others.
+                        Congratulations! Your submission has been approved. You have now completed this challenge. You can still view your activity logs and feedback from your mentor and assessor below.
                     </NotificationBody>
                 </Notification>
             )
