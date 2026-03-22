@@ -22,7 +22,7 @@ export default function ReviewProposal() {
     return (
         <div className="flex flex-col h-full flex-1 gap-4">
             {/* TODO: Should show instructions for the advisors */}
-            <Feedback status={proposal.status} mentorNote={proposal.mentorNote} assessorNote={proposal.assessorNote} />
+            <Feedback data={proposal} />
             <ProposalForm
                 values={proposal}
                 disabled={true}

@@ -5,7 +5,7 @@ import { Notification, NotificationBody, NotificationHeader } from "@/components
 export const positiveClass = "bg-green-100 border-green-500 text-green-700"
 export const negativeClass = "bg-red-100 border-red-500 text-red-700"
 
-export default function Feedback(data: {status: SubmissionState, mentorNote: string | null, assessorNote: string | null}) {
+export default function Feedback<T extends { status: SubmissionState, mentorNote: string | null, assessorNote: string | null }>({data}: {data: T}) {
     const comments: Array<ReactNode> = [];
     if (data.status === "pending mentor" || data.status === "not started") {
         return comments

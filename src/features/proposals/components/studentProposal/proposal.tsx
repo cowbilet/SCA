@@ -2,11 +2,12 @@ import { useParams } from "@tanstack/react-router";
 import { LoaderCircle } from "lucide-react";
 import { clsx } from "clsx";
 import ProposalForm from "../proposalForm";
-import {Comments, Instructions} from "../notifications";
+import { Instructions} from "../notifications";
 import type { SubmissionState } from "@/types/awards";
 import { Card } from "@/components/card";
 import { useProposal } from "@/features/proposals/hooks/useProposal";
 import { Route } from "@/routes/student/route";
+import Feedback from "@/components/feedback";
 
 export function SubmitProposal({proposalStatus}: {proposalStatus: SubmissionState}) {
     const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
@@ -43,7 +44,7 @@ export function ActiveProposal({proposalStatus}: {proposalStatus: SubmissionStat
     return (
         <Card className="h-full flex flex-col">
             <Instructions state={proposalStatus} />
-            {proposalStatus !== "pending mentor" && <Comments proposal={proposalData} />}
+            {proposalStatus !== "pending mentor" && <Feedback data={proposalData}/>}
             <ProposalForm 
                 values={proposalData}
                 disabled={disabledStates.includes(proposalStatus)} 

@@ -1,7 +1,7 @@
 import { Clipboard, Target } from "lucide-react"
 import { useParams } from "@tanstack/react-router"
 import { useProposal } from "../hooks/useProposal"
-import { Comments } from "./notifications"
+
 import Dialog, { DialogBody, DialogFooter, DialogHeader } from "@/components/dialog"
 import { Route } from "@/routes/student/route"
 
@@ -31,7 +31,7 @@ export function ViewProposal() {
                 {
                     proposal ? (
                         <div className="space-y-4">
-                            <Comments proposal={proposal} />
+                            {/* <Comments proposal={proposal} /> */}
                             <div>
                                 <h3 className="text-lg font-medium text-gray-900"><Clipboard className="h-5 w-5 inline mr-2" />Description</h3>
                                 <p className="mt-1 text-sm text-gray-700">{proposal.description}</p>

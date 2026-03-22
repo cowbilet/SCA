@@ -1,17 +1,8 @@
-import type { Proposal } from '@/types/schemas/proposal'
 import type { SubmissionState } from '@/types/awards'
 import { Notification, NotificationBody, NotificationHeader } from '@/components/notification'
-import Feedback from '@/components/feedback'
 
 
-export function Comments({proposal}: {proposal: Proposal}) {
-    return (
-        <>
-            <Instructions state={proposal.status} />
-            <Feedback status={proposal.status} mentorNote={proposal.mentorNote} assessorNote={proposal.assessorNote} />
-        </>
-    )
-}
+
 export function Instructions({state}: {state: SubmissionState}) {
     switch (state) {
         case 'not started':
