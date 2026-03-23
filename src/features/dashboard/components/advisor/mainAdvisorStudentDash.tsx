@@ -2,12 +2,12 @@ import { useParams } from '@tanstack/react-router'
 import Skeleton from 'react-loading-skeleton'
 import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/reviewProposal'
 import { useChallenge } from '@/hooks/useChallenge'
-import Feedback from '@/components/feedback'
 import { AdvisorLogEntries } from '@/features/logs/components/advisors/advisorLogs'
 import {
     StandardActivityLogs,
     SubmittedActivityLogs,
 } from '@/features/logs/components/activityLogs'
+import InstructionAndFeedback from '@/components/feedback'
 
 export default function MainAdvisorStudentDash() {
     const { studentId, award, challenge } = useParams({
@@ -41,7 +41,10 @@ export default function MainAdvisorStudentDash() {
             case 'rejected mentor':
                 return (
                     <>
-                        <Feedback data={challengeData.student_challenge} />
+                        <InstructionAndFeedback 
+                            Instructions={(status) => null}
+                            data={challengeData.student_challenge} 
+                        />
                         <StandardActivityLogs
                             LogEntryComponent={AdvisorLogEntries}
                         />
@@ -50,7 +53,10 @@ export default function MainAdvisorStudentDash() {
             default:
                 return (
                     <>
-                        <Feedback data={challengeData.student_challenge} />
+                        <InstructionAndFeedback 
+                            Instructions={(status) => null}
+                            data={challengeData.student_challenge} 
+                        />
                         <SubmittedActivityLogs
                             challengeData={challengeData}
                             LogEntryComponent={AdvisorLogEntries}

@@ -1,101 +1,63 @@
 import type { SubmissionState } from '@/types/awards'
-import {
-    Notification,
-    NotificationBody,
-    NotificationHeader,
-} from '@/components/notification'
+import Instructions from '@/components/instructions'
 
-export function Instructions({ state }: { state: SubmissionState }) {
+export default function StudentProposalInstructions({ state }: { state: SubmissionState }) {
     switch (state) {
         case 'not started':
             return (
-                <Notification className="bg-yellow-100">
-                    <NotificationHeader className="text-yellow-700 font-bold text-lg">
-                        📋 Step 1: Submit Proposal
-                    </NotificationHeader>
-                    <NotificationBody className="text-yellow-700">
-                        Before you can start logging activities, you need to
-                        submit a proposal describing what you plan to do. Your
-                        mentor will review it first, and if approved, it will be
-                        sent to the assessor for final approval.
-                    </NotificationBody>
-                </Notification>
+                <Instructions
+                    title="📋 Step 1: Submit Proposal"
+                    description="Before you can start logging activities, you need to submit a proposal describing what you plan to do. Your mentor will review it first, and if approved, it will be sent to the assessor for final approval."
+                    className="bg-yellow-100 text-yellow-700"
+                />
             )
         case 'withdrawn':
             return (
-                <Notification className="bg-gray-100">
-                    <NotificationHeader className="text-gray-700 font-bold text-lg">
-                        🚫 Proposal Withdrawn
-                    </NotificationHeader>
-                    <NotificationBody className="text-gray-700">
-                        You have withdrawn your proposal. If this was a mistake,
-                        you can re-submit a new proposal for this challenge.
-                    </NotificationBody>
-                </Notification>
+                <Instructions
+                    title="🚫 Proposal Withdrawn"
+                    description="You have withdrawn your proposal. If this was a mistake, you can re-submit a new proposal for this challenge."
+                    className="bg-red-100 text-red-700"
+                />
             )
         case 'pending mentor':
             return (
-                <Notification className="bg-blue-100">
-                    <NotificationHeader className="text-blue-700 font-bold text-lg">
-                        ⏳ Pending Mentor Review
-                    </NotificationHeader>
-                    <NotificationBody className="text-blue-700">
-                        Your proposal is currently under review by your mentor.
-                        You will receive feedback or approval from them soon.
-                    </NotificationBody>
-                </Notification>
+                <Instructions
+                    title="⏳ Pending Mentor Review"
+                    description="Your proposal is currently under review by your mentor. You will receive feedback or approval from them soon."
+                    className="bg-blue-100 text-blue-700"
+                />
             )
         case 'pending assessor':
             return (
-                <Notification className="bg-blue-100">
-                    <NotificationHeader className="text-blue-700 font-bold text-lg">
-                        ⏳ Pending Assessor Review
-                    </NotificationHeader>
-                    <NotificationBody className="text-blue-700">
-                        Your proposal has been approved by your mentor and is
-                        now pending review by the assessor. You will receive
-                        feedback or approval from them soon.
-                    </NotificationBody>
-                </Notification>
+                <Instructions
+                    title="⏳ Pending Assessor Review"
+                    description="Your proposal has been approved by your mentor and is now pending review by the assessor. You will receive feedback or approval from them soon."
+                    className="bg-blue-100 text-blue-700"
+                />
             )
         case 'rejected mentor':
             return (
-                <Notification className="bg-red-100">
-                    <NotificationHeader className="text-red-700 font-bold text-lg">
-                        ❌ Rejected by Mentor
-                    </NotificationHeader>
-                    <NotificationBody className="text-red-700">
-                        Your proposal has been rejected by your mentor. Please
-                        review their feedback and submit a new proposal for this
-                        challenge.
-                    </NotificationBody>
-                </Notification>
+                <Instructions
+                    title="❌ Rejected by Mentor"
+                    description="Your proposal has been rejected by your mentor. Please review their feedback and submit a new proposal for this challenge."
+                    className="bg-red-100 text-red-700"
+                />
             )
         case 'rejected assessor':
             return (
-                <Notification className="bg-red-100">
-                    <NotificationHeader className="text-red-700 font-bold text-lg">
-                        ❌ Rejected by Assessor
-                    </NotificationHeader>
-                    <NotificationBody className="text-red-700">
-                        Your proposal has been rejected by the assessor. Please
-                        review their feedback and submit a new proposal for this
-                        challenge.
-                    </NotificationBody>
-                </Notification>
+                <Instructions
+                    title="❌ Rejected by Assessor"
+                    description="Your proposal has been rejected by the assessor. Please review their feedback and submit a new proposal for this challenge."
+                    className="bg-red-100 text-red-700"
+                />
             )
-        case 'completed':
-            return (
-                <Notification className="bg-green-100">
-                    <NotificationHeader className="text-green-700 font-bold text-lg">
-                        ✅ Proposal Approved
-                    </NotificationHeader>
-                    <NotificationBody className="text-green-700">
-                        Congratulations! Your proposal has been approved. You
-                        can now start logging activities for this challenge and
-                        work towards completing it.
-                    </NotificationBody>
-                </Notification>
-            )
+            case 'completed':
+                return (
+                    <Instructions
+                        title="✅ Proposal Approved"
+                        description="Congratulations! Your proposal has been approved. You can now start logging activities for this challenge and work towards completing it."
+                        className="bg-green-100 text-green-700"
+                    />
+                )
+        }
     }
-}

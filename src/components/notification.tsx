@@ -6,7 +6,7 @@ export function Notification({
     ...props
 }: HTMLAttributes<HTMLDivElement>) {
     return (
-        <div className={clsx(' shadow p-4 mb-4', className)} {...props}>
+        <div className={clsx('shadow p-4', className)} {...props}>
             {props.children}
         </div>
     )

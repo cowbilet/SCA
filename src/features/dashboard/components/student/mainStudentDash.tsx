@@ -8,13 +8,14 @@ import {
 } from '@/features/proposals/components/studentProposal/proposal'
 import { StudentSubmission } from '@/features/submissions/components/student/submitChallenge'
 import { CreateActivity } from '@/features/logs/components/students/activityModals/createActivity'
-import { Instructions } from '@/features/submissions/components/student/instructions'
-import Feedback from '@/components/feedback'
+import StudentSubmissionInstructions from '@/features/submissions/components/student/instructions'
 import {
     StandardActivityLogs,
     SubmittedActivityLogs,
 } from '@/features/logs/components/activityLogs'
 import { StudentLogEntries } from '@/features/logs/components/students/studentActivityLogs'
+import InstructionAndFeedback from '@/components/feedback'
+import StudentProposalInstructions from '@/features/proposals/components/studentProposal/instructions'
 
 export default function Main() {
     const { user } = Route.useRouteContext()
@@ -44,10 +45,14 @@ export default function Main() {
     if (challengeData.proposals && challengeData.proposals.accepted !== true) {
         switch (challengeData.proposals.status) {
             case 'not started':
-                
                 return (
                     <>
-                        <Instructions state={challengeData.proposals.status} />
+                        <InstructionAndFeedback
+                            data={challengeData.proposals}
+                            Instructions={({ status }) => (
+                                <StudentProposalInstructions state={status} />
+                            )}
+                        />
                         <SubmitProposal
                             proposalStatus={challengeData.proposals.status}
                         />
@@ -61,7 +66,13 @@ export default function Main() {
             case 'rejected assessor':
                 return (
                     <>
-                        <Instructions state={challengeData.proposals.status} />
+
+                        <InstructionAndFeedback
+                            data={challengeData.proposals}
+                            Instructions={({ status }) => (
+                                <StudentProposalInstructions state={status} />
+                            )}
+                        />
                         <ActiveProposal
                             proposalStatus={challengeData.proposals.status}
                         />
@@ -83,10 +94,12 @@ export default function Main() {
                             <CreateActivity />
                             <StudentSubmission />
                         </div>
-                        <Instructions
-                            state={challengeData.student_challenge.status}
+                        <InstructionAndFeedback
+                            data={challengeData.student_challenge}
+                            Instructions={({ status }) => (
+                                <StudentSubmissionInstructions state={status} />
+                            )}
                         />
-                        <Feedback data={challengeData.student_challenge} />
                         <StandardActivityLogs
                             LogEntryComponent={StudentLogEntries}
                         />
@@ -96,10 +109,12 @@ export default function Main() {
             case 'pending assessor':
                 return (
                     <>
-                        <Instructions
-                            state={challengeData.student_challenge.status}
+                        <InstructionAndFeedback
+                            data={challengeData.student_challenge}
+                            Instructions={({ status }) => (
+                                <StudentSubmissionInstructions state={status} />
+                            )}
                         />
-                        <Feedback data={challengeData.student_challenge} />
                         <SubmittedActivityLogs
                             challengeData={challengeData}
                             LogEntryComponent={StudentLogEntries}

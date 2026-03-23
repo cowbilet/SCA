@@ -31,7 +31,6 @@ export default function ReviewProposal() {
     return (
         <div className="flex flex-row gap-4 max-lg:flex-col">
             <Card className="flex-1">
-                <Feedback data={proposal} />
                 <ProposalForm
                     values={proposal}
                     disabled={true}
