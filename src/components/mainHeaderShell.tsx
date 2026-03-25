@@ -15,7 +15,7 @@ export default function MainHeaderShell({
     return (
         <div
             className={clsx(
-                'flex gap-4 w-full h-32 flex-col p-8 justify-center',
+                'flex gap-4 w-full min-h-32 h-32 flex-col p-8 justify-center',
                 className,
             )}
             {...props}

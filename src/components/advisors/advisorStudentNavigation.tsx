@@ -139,7 +139,7 @@ function AwardLink({
         <Link
             {...link}
             disabled={disable}
-            className={`bg-white border-2 border-gray-400 text-black px-4 py-2 rounded-lg ${disable ? 'opacity-50 hover:cursor-not-allowed' : ''}`}
+            className={`bg-white border-2 border-gray-400 flex justify-center items-center text-black px-4 py-2 rounded-lg ${disable ? 'opacity-50 hover:cursor-not-allowed' : ''}`}
         >
             {name}
         </Link>
