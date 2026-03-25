@@ -26,10 +26,10 @@ export function validateStatusTransition(
     data: { note?: string; assessorId?: string },
 ): {
     status: SubmissionState
-    accepted: boolean | null
-    mentorNote: string | null
-    assessorNote: string | null
-    assessorId: string | null
+    accepted?: boolean
+    mentorNote?: string
+    assessorNote?: string
+    assessorId?: string
 } {
     const validTransitions: Record<SubmissionState, Array<SubmissionState>> = {
         'not started': ['pending mentor'],
@@ -77,50 +77,36 @@ export function validateStatusTransition(
         case 'pending mentor':
             return {
                 status: 'pending mentor',
-                accepted: null,
-                mentorNote: null,
-                assessorNote: null,
-                assessorId: null,
             }
         case 'rejected mentor':
             return {
                 status: 'rejected mentor',
                 accepted: false,
-                mentorNote: data.note ?? null,
-                assessorNote: null,
-                assessorId: null,
+                mentorNote: data.note,
             }
         case 'pending assessor':
             return {
                 status: 'pending assessor',
-                accepted: null,
-                mentorNote: data.note ?? null,
-                assessorNote: null,
-                assessorId: null,
+                mentorNote: data.note,
             }
         case 'rejected assessor':
             return {
                 status: 'rejected assessor',
                 accepted: false,
-                mentorNote: null,
-                assessorNote: data.note ?? null,
-                assessorId: data.assessorId ?? null,
+                assessorNote: data.note,
+                assessorId: data.assessorId,
             }
         case 'completed':
             return {
                 status: 'completed',
                 accepted: true,
-                mentorNote: null,
-                assessorNote: null,
-                assessorId: data.assessorId ?? null,
+
+                assessorNote: data.note,
+                assessorId: data.assessorId,
             }
         case 'not started':
             return {
                 status: 'not started',
-                accepted: null,
-                mentorNote: null,
-                assessorNote: null,
-                assessorId: null,
             }
         default:
             throw new Error(`Unhandled status: ${nextStatus}`)

@@ -7,7 +7,7 @@ export default function StudentReflection({ reflection }: { reflection: string |
     }
     return (
         <Card className=" p-0! flex-1">
-            <div className="flex flex-col gap-4 h-full">
+            <div className="flex flex-col h-full">
                 <CardHeader variant="accent">
                     <BookOpen className="h-6 w-6 text-purple-500" />
                     <h2 className="text-lg font-semibold">Reflection</h2>
