@@ -27,7 +27,7 @@ export const Route = createFileRoute('/$advisor/$studentId')({
 function RouteComponent() {
     const { student } = Route.useLoaderData()
     return (
-        <div className="flex flex-col h-full flex-1">
+        <div className="flex flex-col flex-1 overflow-scroll">
             <MainHeaderShell
                 title={student.name}
                 description={student.email}

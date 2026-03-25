@@ -40,7 +40,7 @@ export default function MainAdvisorStudentDash() {
             case 'rejected assessor':
             case 'rejected mentor':
                 return (
-                    <>
+                    <div className="space-y-4">
                         <InstructionAndFeedback 
                             Instructions={(status) => null}
                             data={challengeData.student_challenge} 
@@ -48,7 +48,7 @@ export default function MainAdvisorStudentDash() {
                         <StandardActivityLogs
                             LogEntryComponent={AdvisorLogEntries}
                         />
-                    </>
+                    </div>
                 )
             default:
                 return (

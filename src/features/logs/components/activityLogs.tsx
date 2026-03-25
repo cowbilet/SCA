@@ -57,7 +57,7 @@ export function SubmittedActivityLogs({
         (location.pathname.includes('assessor') &&
             challengeData.student_challenge.status === 'pending assessor')
     return (
-        <div className="flex flex-col h-full gap-4">
+        <div className="flex flex-col flex-1 gap-4">
             <div className="flex flex-row max-lg:flex-col h-full gap-4">
                 <ActivityLogGroupCard type="approved">
                     <LogEntryComponent type="approved" />

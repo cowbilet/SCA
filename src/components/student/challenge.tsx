@@ -13,7 +13,7 @@ export default function ChallengeShell({
     return (
         <div className="flex flex-col h-full">
             <ChallengeHeader challenge={challenge} />
-            <div className="flex-1 p-4">{children}</div>
+            <div className="flex-1 p-4 flex flex-col overflow-hidden">{children}</div>
         </div>
     )
 }

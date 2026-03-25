@@ -46,7 +46,7 @@ export default function Main() {
         switch (challengeData.proposals.status) {
             case 'not started':
                 return (
-                    <>
+                    <div className="space-y-4">
                         <InstructionAndFeedback
                             data={challengeData.proposals}
                             Instructions={({ status }) => (
@@ -57,7 +57,7 @@ export default function Main() {
                             proposalStatus={challengeData.proposals.status}
                         />
                     
-                    </>
+                    </div>
                 )
             case 'withdrawn':
             case 'pending mentor':
@@ -65,7 +65,7 @@ export default function Main() {
             case 'rejected mentor':
             case 'rejected assessor':
                 return (
-                    <>
+                    <div className="space-y-4">
 
                         <InstructionAndFeedback
                             data={challengeData.proposals}
@@ -77,7 +77,7 @@ export default function Main() {
                             proposalStatus={challengeData.proposals.status}
                         />
                     
-                    </>
+                    </div>
                 )
             default:
                 break
@@ -108,7 +108,7 @@ export default function Main() {
             case 'pending mentor':
             case 'pending assessor':
                 return (
-                    <>
+                    <div className="space-y-4">
                         <InstructionAndFeedback
                             data={challengeData.student_challenge}
                             Instructions={({ status }) => (
@@ -119,7 +119,7 @@ export default function Main() {
                             challengeData={challengeData}
                             LogEntryComponent={StudentLogEntries}
                         />
-                    </>
+                    </div>
                 )
             case 'completed':
                 return (

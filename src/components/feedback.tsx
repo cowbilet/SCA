@@ -11,7 +11,7 @@ const negativeClass = 'bg-red-500 border-red-500 text-red-500'
 
 export default function InstructionAndFeedback<T extends {mentorNote: string | null, status: SubmissionState, assessorNote: string | null}>({data, Instructions}: {data: T, Instructions: React.ComponentType<{ status: SubmissionState }>}): JSX.Element {
     return (
-    <div className="flex flex-col mb-4">
+    <div className="flex flex-col">
         <Instructions status={data.status} />
         <Feedback data={data} />
     </div>
