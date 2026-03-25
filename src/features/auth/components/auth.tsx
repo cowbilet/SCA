@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import type { LinkOptions } from '@tanstack/react-router'
 import { LoginSchema, SignupSchema } from '@/types/schemas/auth'
@@ -7,6 +7,7 @@ import { authClient } from '@/integrations/better-auth/authClient'
 
 export default function Auth() {
     const location = useLocation()
+
     if (location.pathname === '/login') {
         return (
             <CardShell
@@ -28,6 +29,7 @@ export default function Auth() {
     }
 }
 function LoginForm() {
+    const navigate = useNavigate()
     const [submitError, setSubmitError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
@@ -46,7 +48,10 @@ function LoginForm() {
             })
             if (signInResult.error?.message) {
                 setSubmitError(signInResult.error.message)
+                return
             }
+
+            await navigate({ to: '/', replace: true })
         },
     })
     return (
@@ -127,6 +132,7 @@ function LoginForm() {
     )
 }
 function SignupForm() {
+    const navigate = useNavigate()
     const [submitError, setSubmitError] = useState<string | null>(null)
     const form = useForm({
         defaultValues: {
@@ -151,7 +157,10 @@ function SignupForm() {
             })
             if (signUpResult.error?.message) {
                 setSubmitError(signUpResult.error.message)
+                return
             }
+
+            await navigate({ to: '/', replace: true })
         },
     })
     return (

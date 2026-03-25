@@ -1,16 +1,14 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import Auth from '@/features/auth/components/auth'
 import { getSession } from '@/utils/auth'
+import { getRoleRedirect, isSessionRole } from '@/utils/authRedirect'
 
 export const Route = createFileRoute('/login')({
-    beforeLoad: async ({ context }) => {
+    beforeLoad: async () => {
         const session = await getSession()
-        if (session) {
-            if (session.user.role === 'student') {
-                throw redirect({ to: '/student' })
-            } else if (session.user.role === 'mentor') {
-                throw redirect({ to: '/mentor' })
-            }
+
+        if (isSessionRole(session?.user.role)) {
+            throw redirect(getRoleRedirect(session.user.role))
         }
     },
     component: RouteComponent,
