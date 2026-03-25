@@ -16,6 +16,7 @@ import {
 import { StudentLogEntries } from '@/features/logs/components/students/studentActivityLogs'
 import InstructionAndFeedback from '@/components/feedback'
 import StudentProposalInstructions from '@/features/proposals/components/studentProposal/instructions'
+import StudentReflection from '@/features/submissions/components/reflection'
 
 export default function Main() {
     const { user } = Route.useRouteContext()
@@ -115,25 +116,38 @@ export default function Main() {
                                 <StudentSubmissionInstructions state={status} />
                             )}
                         />
-                        <SubmittedActivityLogs
-                            challengeData={challengeData}
-                            LogEntryComponent={StudentLogEntries}
-                        />
+                        <div className="flex flex-col flex-1 gap-4">
+                            <div className="flex flex-row max-lg:flex-col h-full gap-4">
+                                <SubmittedActivityLogs
+                                    challengeData={challengeData}
+                                    LogEntryComponent={StudentLogEntries}
+                                />
+                                <div className="flex-1 flex flex-col gap-4">
+                                    <StudentReflection reflection={challengeData.student_challenge.reflection} />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )
             case 'completed':
                 return (
-                    <>
+                    <div className="space-y-4">
                         <p>
                             You did it! Your submission has been marked as
                             completed. You can still view your activity logs
                             below.
                         </p>
-                        <SubmittedActivityLogs
-                            challengeData={challengeData}
-                            LogEntryComponent={StudentLogEntries}
-                        />
-                    </>
+                        <div className="flex flex-col flex-1 gap-4">
+                            <div className="flex flex-row max-lg:flex-col h-full gap-4"></div>
+                                <SubmittedActivityLogs
+                                    challengeData={challengeData}
+                                    LogEntryComponent={StudentLogEntries}
+                                />
+                                <div className="flex-1 flex flex-col gap-4">
+                                    <StudentReflection reflection={challengeData.student_challenge.reflection} />
+                                </div>
+                            </div>
+                    </div>
                 )
         }
     }

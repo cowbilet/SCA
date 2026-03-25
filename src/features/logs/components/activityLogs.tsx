@@ -1,12 +1,10 @@
 import clsx from 'clsx'
 import { Circle, Clock } from 'lucide-react'
 
-import { useLocation } from '@tanstack/react-router'
-import Reflection from './reflection'
 import type { LogEntry } from '@/types/schemas/log'
 import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges'
-import { Card, CardBody, CardHeader } from '@/components/card'
-import FeedbackForm from '@/components/advisors/feedbackForm'
+import { Card } from '@/components/card'
+
 
 const logStyling = {
     pending: {
@@ -50,47 +48,11 @@ export function SubmittedActivityLogs({
     LogEntryComponent: React.FC<{ type: 'pending' | 'approved' | 'rejected' }>
     challengeData: StudentChallengeWithProposalAndSubmission
 }) {
-    const location = useLocation()
-    const isGivingFeedback =
-        (location.pathname.includes('mentor') &&
-            challengeData.student_challenge.status === 'pending mentor') ||
-        (location.pathname.includes('assessor') &&
-            challengeData.student_challenge.status === 'pending assessor')
+    
     return (
-        <div className="flex flex-col flex-1 gap-4">
-            <div className="flex flex-row max-lg:flex-col h-full gap-4">
-                <ActivityLogGroupCard type="approved">
-                    <LogEntryComponent type="approved" />
-                </ActivityLogGroupCard>
-                <div className="flex-1 flex flex-col gap-4">
-                    <Card className=" p-0! flex-1">
-                        <Reflection
-                            reflection={
-                                challengeData.student_challenge.reflection
-                            }
-                        />
-                    </Card>
-                    {isGivingFeedback && (
-                        <Card className="p-0! h-fit">
-                            <CardHeader className="bg-blue-100/50 border-blue-400/75">
-                                <Clock className="h-5 w-5 text-blue-600" />
-                                <h2 className="text-lg font-semibold text-block flex flex-row items-center gap-2">
-                                    Feedback
-                                </h2>
-                            </CardHeader>
-                            <CardBody>
-                                <FeedbackForm
-                                    onValidSubmit={async ({
-                                        feedback,
-                                        accepted,
-                                    }) => {}}
-                                />
-                            </CardBody>
-                        </Card>
-                    )}
-                </div>
-            </div>
-        </div>
+        <ActivityLogGroupCard type="approved">
+            <LogEntryComponent type="approved" />
+        </ActivityLogGroupCard>        
     )
 }
 

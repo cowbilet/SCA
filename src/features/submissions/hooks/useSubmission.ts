@@ -51,7 +51,7 @@ export function useSubmission({
             )
             queryClient.invalidateQueries({ queryKey: challengeKey })
         },
-        onError: (err, newSubmission, context) => {
+        onError: (_err, _newSubmission, context) => {
             const challengeKey = queryKeys.challenges.detail(
                 award,
                 challenge,

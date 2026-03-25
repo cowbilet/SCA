@@ -8,6 +8,9 @@ import {
     SubmittedActivityLogs,
 } from '@/features/logs/components/activityLogs'
 import InstructionAndFeedback from '@/components/feedback'
+import StudentReflection from '@/features/submissions/components/reflection'
+import FeedbackForm from '@/components/advisors/feedbackForm'
+import SubmissionFeedback from '@/features/submissions/components/advisor/submissionFeedback'
 
 export default function MainAdvisorStudentDash() {
     const { studentId, award, challenge } = useParams({
@@ -52,17 +55,26 @@ export default function MainAdvisorStudentDash() {
                 )
             default:
                 return (
-                    <>
+                    <div className="space-y-4">
                         <InstructionAndFeedback 
                             Instructions={(status) => null}
                             data={challengeData.student_challenge} 
                         />
-                        <SubmittedActivityLogs
-                            challengeData={challengeData}
-                            LogEntryComponent={AdvisorLogEntries}
-                        />
-                    </>
+                        <div className="flex flex-col flex-1 gap-4">
+                            <div className="flex flex-row max-lg:flex-col h-full gap-4">
+                                <SubmittedActivityLogs
+                                    challengeData={challengeData}
+                                    LogEntryComponent={AdvisorLogEntries}
+                                />
+                                <div className="flex-1 flex flex-col gap-4">
+                                    <StudentReflection reflection={challengeData.student_challenge.reflection} />
+                                    <SubmissionFeedback challengeData={challengeData} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 )
         }
     }
 }
+
