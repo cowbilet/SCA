@@ -1,4 +1,6 @@
 import { useRef } from 'react'
+import { useParams } from '@tanstack/react-router'
+import { useSubmission } from '../../hooks/useSubmission'
 import type { ButtonHTMLAttributes } from 'react'
 import Dialog, {
     DialogBody,
@@ -8,6 +10,18 @@ import Dialog, {
 
 export function StudentSubmission() {
     const modalRef = useRef<HTMLDialogElement>(null)
+    const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
+    const { mutate: submitChallenge } = useSubmission({
+        award,
+        challenge,
+    })
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+        const note = formData.get('reflection') as string
+        submitChallenge({ note })
+        modalRef.current?.close()
+    }
     return (
         <Dialog
             ref={modalRef}
@@ -23,7 +37,7 @@ export function StudentSubmission() {
                     Please fill out the reflection below to submit your activity
                     for this challenge.
                 </p>
-                <form id="submission-form" className="flex flex-col gap-4">
+                <form id="submission-form" className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     <label
                         htmlFor="reflection"
                         className="text-sm font-medium text-gray-700"
@@ -33,6 +47,7 @@ export function StudentSubmission() {
                     <textarea
                         id="reflection"
                         name="reflection"
+                        required
                         rows={4}
                         className=" p-2 mt-1 block w-full rounded-md border border-gray-300 bg-white focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                     />

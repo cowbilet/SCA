@@ -102,7 +102,35 @@ export async function dbGetStudentAwardsAndChallenges(
         .where(eq(studentChallenge.studentId, studentId))
 }
 type ProposalTransitionStatus = SubmissionState | 'withdrawn'
-export async function dbChangeProposalStatus(
+export async function dbChangeChallengeStatus(
+    studentId: string,
+    award: Award,
+    challenge: Challenge,
+    status: 'rejected mentor' | 'pending assessor',
+    note: string,
+): Promise<void>
+export async function dbChangeChallengeStatus(
+    studentId: string,
+    award: Award,
+    challenge: Challenge,
+    status: 'completed' | 'rejected assessor',
+    note: string,
+    assessorId: string,
+): Promise<void>
+export async function dbChangeChallengeStatus(
+    studentId: string,
+    award: Award,
+    challenge: Challenge,
+    status: 'pending mentor',
+    note: string,
+): Promise<void>
+export async function dbChangeChallengeStatus(
+    studentId: string,
+    award: Award,
+    challenge: Challenge,
+    status: 'withdrawn',
+): Promise<void>
+export async function dbChangeChallengeStatus(
     studentId: string,
     award: Award,
     challenge: Challenge,
@@ -111,7 +139,7 @@ export async function dbChangeProposalStatus(
     assessorId?: string,
 ): Promise<void> {
     await db.transaction(async (tx) => {
-        const proposal = (
+        const challengeData = (
             await tx
                 .select()
                 .from(studentChallenge)
@@ -125,11 +153,11 @@ export async function dbChangeProposalStatus(
                 .limit(1)
         )[0]
 
-        const currentStatus = proposal.status
+        const currentStatus = challengeData.status
 
         if (status === 'not started') {
             throw new Error(
-                'Cannot directly set proposal status to not started',
+                'Cannot directly set challenge status to not started',
             )
         }
 
@@ -137,10 +165,18 @@ export async function dbChangeProposalStatus(
             note,
             assessorId,
         })
+        const challengePatch: typeof basePatch & { reflection?: string } = {
+            ...basePatch,
+        }
+        if (basePatch.status === 'pending mentor' && !note) {
+            throw new Error('Reflection is required to set status to pending mentor')
+        } else if (basePatch.status === 'pending mentor' && note) {
+            challengePatch.reflection = note
+        }
 
         await tx
             .update(studentChallenge)
-            .set(basePatch)
+            .set(challengePatch)
             .where(
                 and(
                     eq(studentChallenge.studentId, studentId),
