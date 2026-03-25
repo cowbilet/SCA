@@ -3,6 +3,7 @@ import { reviewProposal } from '../api/reviewProposal'
 import type { Proposal, ProposalWithStudent } from '@/types/schemas/proposal'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
+import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges'
 import { queryKeys } from '@/hooks/queryKeys'
 
 export function useReviewProposal(
@@ -13,6 +14,8 @@ export function useReviewProposal(
     const queryClient = useQueryClient()
     const proposalKey = queryKeys.proposals.detail(award, challenge, studentId)
     const pendingProposalsKey = queryKeys.proposals.pending()
+    // TODO: I believe the challenge is causing deduplication, for the future maybe lets seperate them but do two seperate requests?
+    const challengeKey = queryKeys.challenges.detail(award, challenge, studentId)
     return useMutation({
         mutationKey: ['reviewProposal', studentId, award, challenge],
         mutationFn: (data: { notes: string; accepted: boolean }) =>
@@ -21,12 +24,14 @@ export function useReviewProposal(
             // Invalidate the proposal query to refetch the updated proposal data
             queryClient.cancelQueries({ queryKey: proposalKey })
             queryClient.cancelQueries({ queryKey: pendingProposalsKey })
+            queryClient.cancelQueries({ queryKey: challengeKey })
             const previousProposal =
                 queryClient.getQueryData<Proposal>(proposalKey)
             const previousPendingProposals =
                 queryClient.getQueryData<Array<ProposalWithStudent>>(
                     pendingProposalsKey,
                 )
+            const previousChallenge = queryClient.getQueryData(challengeKey)
             if (!previousProposal) return
             const newProposal = generateNewProposal(
                 previousProposal,
@@ -48,7 +53,14 @@ export function useReviewProposal(
                     )
                 },
             )
-            return { previousProposal, previousPendingProposals }
+            queryClient.setQueryData<StudentChallengeWithProposalAndSubmission>(challengeKey, (oldData) => {
+                if (!oldData) return oldData
+                return {
+                    ...oldData,
+                    proposals: newProposal,
+                }
+            })
+            return { previousProposal, previousPendingProposals, previousChallenge }
         },
         onError: (_error, _data, context) => {
             if (context?.previousProposal) {
@@ -60,10 +72,15 @@ export function useReviewProposal(
                     context.previousPendingProposals,
                 )
             }
+            if (context?.previousChallenge) {
+                queryClient.setQueryData(challengeKey, context.previousChallenge)
+            }
+
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: proposalKey })
             queryClient.invalidateQueries({ queryKey: pendingProposalsKey })
+            queryClient.invalidateQueries({ queryKey: challengeKey })
         },
     })
 }
