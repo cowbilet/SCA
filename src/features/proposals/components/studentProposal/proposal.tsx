@@ -1,31 +1,31 @@
 import { useParams } from '@tanstack/react-router'
-import { LoaderCircle } from 'lucide-react'
+import { BookOpen, LoaderCircle } from 'lucide-react'
 import { clsx } from 'clsx'
 import ProposalForm from '../proposalForm'
-import StudentProposalInstructions from './instructions'
 import type { SubmissionState } from '@/types/awards'
-import InstructionAndFeedback from '@/components/feedback'
-import { Card } from '@/components/card'
+import { Card, CardHeader } from '@/components/card'
 import { useProposal } from '@/features/proposals/hooks/useProposal'
 import { Route } from '@/routes/student/route'
 
 
-export function SubmitProposal({
-    proposalStatus,
-}: {
-    proposalStatus: SubmissionState
-}) {
+export function SubmitProposal() {
     const { award, challenge } = useParams({
         from: '/student/$award/$challenge',
         strict: true,
     })
     return (
-        <Card className="h-full flex flex-col">
-            <ProposalForm
-                award={award}
-                challenge={challenge}
-                Button={SubmitButton}
-            />
+        <Card className="h-full flex flex-col p-0!">
+            <CardHeader variant="neutral">
+                <BookOpen className="h-5 w-5 text-amber-600" />
+                <h2 className="text-lg font-semibold">New Proposal</h2>
+            </CardHeader>
+            <div className="p-4 flex-1">
+                <ProposalForm
+                    award={award}
+                    challenge={challenge}
+                    Button={SubmitButton}
+                />
+            </div>
         </Card>
     )
 }
@@ -66,14 +66,20 @@ export function ActiveProposal({
         )
     }
     return (
-        <Card className="h-full flex flex-col">
-            <ProposalForm
-                values={proposalData}
-                disabled={disabledStates.includes(proposalStatus)}
-                award={award}
-                challenge={challenge}
-                Button={SubmitButton}
-            />
+        <Card className="h-full flex flex-col p-0!">
+            <CardHeader variant="neutral">
+                <BookOpen className="h-5 w-5 text-gray-600" />
+                <h2 className="text-lg font-semibold">Your Proposal</h2>
+            </CardHeader>
+            <div className="p-4 flex-1 overflow-y-auto">
+                <ProposalForm
+                    values={proposalData}
+                    disabled={disabledStates.includes(proposalStatus)}
+                    award={award}
+                    challenge={challenge}
+                    Button={SubmitButton}
+                />
+            </div>
         </Card>
     )
 }

@@ -41,7 +41,7 @@ export default function Main() {
     }
     // If there is no challenge data this means that the user has not started yet
     if (!challengeData) {
-        return <SubmitProposal proposalStatus="not started" />
+        return <SubmitProposal />
     }
     if (challengeData.proposals && challengeData.proposals.accepted !== true) {
         switch (challengeData.proposals.status) {
@@ -54,9 +54,7 @@ export default function Main() {
                                 <StudentProposalInstructions state={status} />
                             )}
                         />
-                        <SubmitProposal
-                            proposalStatus={challengeData.proposals.status}
-                        />
+                        <SubmitProposal/>
                     
                     </div>
                 )
@@ -119,7 +117,6 @@ export default function Main() {
                         <div className="flex flex-col flex-1 gap-4">
                             <div className="flex flex-row max-lg:flex-col h-full gap-4">
                                 <SubmittedActivityLogs
-                                    challengeData={challengeData}
                                     LogEntryComponent={StudentLogEntries}
                                 />
                                 <div className="flex-1 flex flex-col gap-4">
@@ -140,7 +137,6 @@ export default function Main() {
                         <div className="flex flex-col flex-1 gap-4">
                             <div className="flex flex-row max-lg:flex-col h-full gap-4"></div>
                                 <SubmittedActivityLogs
-                                    challengeData={challengeData}
                                     LogEntryComponent={StudentLogEntries}
                                 />
                                 <div className="flex-1 flex flex-col gap-4">

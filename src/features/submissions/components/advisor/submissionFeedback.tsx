@@ -35,7 +35,7 @@ export default function SubmissionFeedback({challengeData}: {challengeData: Stud
     }
     return (
         <Card className="p-0! h-fit">
-            <CardHeader className="bg-blue-100/50 border-blue-400/75">
+            <CardHeader variant="info">
                 <Clock className="h-5 w-5 text-blue-600" />
                 <h2 className="text-lg font-semibold text-block flex flex-row items-center gap-2">
                     Feedback

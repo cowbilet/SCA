@@ -1,22 +1,21 @@
-import clsx from 'clsx'
 import { Circle, Clock } from 'lucide-react'
+import clsx from 'clsx'
 
 import type { LogEntry } from '@/types/schemas/log'
-import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges'
-import { Card } from '@/components/card'
+import { Card, CardHeader } from '@/components/card'
 
 
 const logStyling = {
     pending: {
-        card: 'bg-yellow-100/50 border-b-yellow-400/75',
+        variant: 'warning' as const,
         icon: <Clock className="w-5 h-5 text-yellow-600" />,
     },
     rejected: {
-        card: 'bg-red-100/50 border-b-red-400/75',
+        variant: 'danger' as const,
         icon: <Clock className="w-5 h-5 text-red-600" />,
     },
     approved: {
-        card: 'bg-green-100/50 border-b-green-400/75',
+        variant: 'success' as const,
         icon: <Clock className="w-5 h-5 text-green-600" />,
     },
 }
@@ -43,10 +42,8 @@ export function StandardActivityLogs({
 }
 export function SubmittedActivityLogs({
     LogEntryComponent,
-    challengeData,
 }: {
     LogEntryComponent: React.FC<{ type: 'pending' | 'approved' | 'rejected' }>
-    challengeData: StudentChallengeWithProposalAndSubmission
 }) {
     
     return (
@@ -65,36 +62,16 @@ export function ActivityLogGroupCard({
 }) {
     return (
         <Card className="p-0! flex-1">
-            <ActivityLogHeader
-                className={clsx(logStyling[type].card, 'border-b-2')}
-            >
+            <CardHeader variant={logStyling[type].variant}>
                 {logStyling[type].icon}
                 <h2 className="text-lg font-semibold text-block flex flex-row items-center gap-2">
                     {type.charAt(0).toUpperCase() + type.slice(1)} Logs
                 </h2>
-            </ActivityLogHeader>
+            </CardHeader>
             <div className="p-4 flex flex-col gap-4 overflow-y-auto">
                 {children}
             </div>
         </Card>
-    )
-}
-
-function ActivityLogHeader({
-    className,
-    children,
-    ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-    return (
-        <div
-            className={clsx(
-                'w-full h-fit p-4 rounded-t-lg flex flex-row items-center gap-2',
-                className,
-            )}
-            {...props}
-        >
-            {children}
-        </div>
     )
 }
 export function LogEntryScaffold({
