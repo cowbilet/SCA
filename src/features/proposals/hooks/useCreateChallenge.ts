@@ -50,7 +50,8 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
                 description: newProposal.description,
                 goal: newProposal.goal,
                 mentorNote: null,
-                assessorNote: null,
+                stateAssessorNote: null,
+                nationalAssessorNote: null,
                 accepted: null,
                 status: 'pending mentor',
             }

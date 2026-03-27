@@ -20,7 +20,8 @@ export async function dbGetProposal(
             goal: challengeProposals.goal,
             mentorEmail: users.email,
             mentorNote: challengeProposals.mentorNote,
-            assessorNote: challengeProposals.assessorNote,
+            stateAssessorNote: challengeProposals.stateAssessorNote,
+            nationalAssessorNote: challengeProposals.nationalAssessorNote,
             accepted: challengeProposals.accepted,
             status: challengeProposals.status,
         })
@@ -60,7 +61,8 @@ export async function dbCreateChallengeProposal(
         status: 'pending mentor',
         accepted: null,
         mentorNote: null,
-        assessorNote: null,
+        stateAssessorNote: null,
+        nationalAssessorNote: null,
     })
 
     return await dbGetProposal(studentId, award, challenge)
@@ -95,30 +97,10 @@ export async function dbChangeProposalStatus(
     studentId: string,
     award: Award,
     challenge: Challenge,
-    status: 'rejected mentor' | 'pending assessor',
-    note: string,
-): Promise<void>
-export async function dbChangeProposalStatus(
-    studentId: string,
-    award: Award,
-    challenge: Challenge,
-    status: 'completed' | 'rejected assessor',
-    note: string,
-    assessorId: string,
-): Promise<void>
-export async function dbChangeProposalStatus(
-    studentId: string,
-    award: Award,
-    challenge: Challenge,
-    status: 'withdrawn' | 'pending mentor',
-): Promise<void>
-export async function dbChangeProposalStatus(
-    studentId: string,
-    award: Award,
-    challenge: Challenge,
     status: ProposalTransitionStatus,
     note?: string,
-    assessorId?: string,
+    stateAssessorId?: string,
+    nationalAssessorId?: string,
 ): Promise<void> {
     await db.transaction(async (tx) => {
         const proposal = (
@@ -144,7 +126,9 @@ export async function dbChangeProposalStatus(
         }
         const basePatch = validateStatusTransition(currentStatus, status, {
             note,
-            assessorId,
+            award,
+            stateAssessorId,
+            nationalAssessorId,
         })
         await tx
             .update(challengeProposals)

@@ -6,10 +6,13 @@ type AdvisorRole = 'mentor' | 'assessor'
 export default function AdvisorSubmissionInstructions({
     state,
     advisor,
+    assessorState,
 }: {
     state: SubmissionState
     advisor: AdvisorRole
+    assessorState?: string
 }) {
+    const isNationalAssessor = assessorState === 'NAT'
     switch (state) {
         case 'not started':
             return (
@@ -44,20 +47,37 @@ export default function AdvisorSubmissionInstructions({
                     className="bg-amber-100 text-amber-700"
                 />
             )
-        case 'pending assessor':
-            if (advisor === 'assessor') {
+        case 'pending state assessor':
+            if (advisor === 'assessor' && !isNationalAssessor) {
                 return (
                     <Instructions
                         title="⏳ Your Review Required"
-                        description="The mentor has approved this submission. Please provide your final assessment by reviewing the activity logs and feedback below."
+                        description="The mentor has approved this submission. Please review and make your state assessor decision."
                         className="bg-blue-100 text-blue-700"
                     />
                 )
             }
             return (
                 <Instructions
-                    title="✅ Approved - Awaiting Assessor"
-                    description="You have approved this submission. It is now waiting for the assessor's final review."
+                    title="✅ Approved - Awaiting State Assessor"
+                    description="You have approved this submission. It is now waiting for state assessor review."
+                    className="bg-green-100 text-green-700"
+                />
+            )
+        case 'pending national assessor':
+            if (advisor === 'assessor' && isNationalAssessor) {
+                return (
+                    <Instructions
+                        title="⏳ Your Final Review Required"
+                        description="The state assessor has approved this submission. As a national assessor, please review and make your final decision. This approval will complete the submission review process."
+                        className="bg-blue-100 text-blue-700"
+                    />
+                )
+            }
+            return (
+                <Instructions
+                    title="✅ Approved - Awaiting National Assessor"
+                    description="This submission is now awaiting final review from the national assessor."
                     className="bg-green-100 text-green-700"
                 />
             )
@@ -69,11 +89,19 @@ export default function AdvisorSubmissionInstructions({
                     className="bg-red-100 text-red-700"
                 />
             )
-        case 'rejected assessor':
+        case 'rejected state assessor':
             return (
                 <Instructions
-                    title="❌ Rejected by Assessor"
-                    description="The assessor has rejected this submission. The student has been notified and can submit a new submission with improvements."
+                    title="❌ Rejected by State Assessor"
+                    description="The state assessor has rejected this submission. The student can submit a revised attempt."
+                    className="bg-red-100 text-red-700"
+                />
+            )
+        case 'rejected national assessor':
+            return (
+                <Instructions
+                    title="❌ Rejected by National Assessor"
+                    description="The national assessor has rejected this submission. The student can submit a revised attempt."
                     className="bg-red-100 text-red-700"
                 />
             )
@@ -81,7 +109,7 @@ export default function AdvisorSubmissionInstructions({
             return (
                 <Instructions
                     title="✅ Submission Approved"
-                    description="This submission has been approved by both mentor and assessor. The challenge is now complete."
+                    description="This submission has been fully approved. The challenge is now complete."
                     className="bg-green-100 text-green-700"
                 />
             )

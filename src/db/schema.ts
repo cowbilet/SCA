@@ -33,8 +33,10 @@ export const status = pgEnum('application_states', [
     'withdrawn',
     'pending mentor',
     'rejected mentor',
-    'pending assessor',
-    'rejected assessor',
+    'pending state assessor',
+    'rejected state assessor',
+    'pending national assessor',
+    'rejected national assessor',
     'completed',
 ])
 
@@ -53,9 +55,11 @@ export const challengeProposals = pgTable(
         description: text().notNull(),
         goal: text().notNull(),
         mentorId: uuid().notNull(),
-        assessorId: uuid(),
+        stateAssessorId: uuid(),
+        nationalAssessorId: uuid(),
         mentorNote: text(),
-        assessorNote: text(),
+        stateAssessorNote: text(),
+        nationalAssessorNote: text(),
         accepted: boolean(),
         status: status().notNull(),
     },
@@ -65,9 +69,14 @@ export const challengeProposals = pgTable(
             name: 'challenge_proposals_pkey',
         }),
         foreignKey({
-            columns: [table.assessorId],
+            columns: [table.stateAssessorId],
             foreignColumns: [assessors.assessorId],
-            name: 'challenge_proposals_assessorId_fkey',
+            name: 'challenge_proposals_stateAssessorId_fkey',
+        }),
+        foreignKey({
+            columns: [table.nationalAssessorId],
+            foreignColumns: [assessors.assessorId],
+            name: 'challenge_proposals_nationalAssessorId_fkey',
         }),
         foreignKey({
             columns: [table.mentorId],
@@ -116,7 +125,8 @@ export const studentChallenge = pgTable(
     'student_challenge',
     {
         mentorId: uuid().notNull(),
-        assessorId: uuid(),
+        stateAssessorId: uuid(),
+        nationalAssessorId: uuid(),
         studentId: uuid().notNull(),
         award: awardTiers().notNull(),
         challenge: challenge().notNull(),
@@ -124,7 +134,8 @@ export const studentChallenge = pgTable(
         accepted: boolean(),
         reflection: text(),
         mentorNote: text(),
-        assessorNote: text(),
+        stateAssessorNote: text(),
+        nationalAssessorNote: text(),
     },
     (table) => [
         foreignKey({
@@ -138,9 +149,14 @@ export const studentChallenge = pgTable(
             name: 'student_challenge_studentId_fkey',
         }),
         foreignKey({
-            columns: [table.assessorId],
+            columns: [table.stateAssessorId],
             foreignColumns: [assessors.assessorId],
-            name: 'student_challenge_assessorId_fkey',
+            name: 'student_challenge_stateAssessorId_fkey',
+        }),
+        foreignKey({
+            columns: [table.nationalAssessorId],
+            foreignColumns: [assessors.assessorId],
+            name: 'student_challenge_nationalAssessorId_fkey',
         }),
         primaryKey({
             columns: [table.studentId, table.award, table.challenge],

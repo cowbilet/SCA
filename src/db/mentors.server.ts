@@ -64,6 +64,7 @@ export function dbGetMentorStudents(mentorId: string) {
             email: users.email,
             role: users.role,
             name: users.name,
+            state: users.state,
         })
         .from(users)
         .innerJoin(

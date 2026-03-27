@@ -20,12 +20,38 @@ export const reviewProposal = createServerFn()
             const user = await restrictStudentData({ data: studentId })
 
             if (user.role === 'assessor') {
+                if (user.state === 'NAT') {
+                    if (accepted) {
+                        return await dbChangeProposalStatus(
+                            studentId,
+                            award,
+                            challenge,
+                            'completed',
+                            notes,
+                            undefined,
+                            user.userId,
+                        )
+                    }
+
+                    return await dbChangeProposalStatus(
+                        studentId,
+                        award,
+                        challenge,
+                        'rejected national assessor',
+                        notes,
+                        undefined,
+                        user.userId,
+                    )
+                }
+
                 if (accepted) {
                     return await dbChangeProposalStatus(
                         studentId,
                         award,
                         challenge,
-                        'completed',
+                        award === 'gold'
+                            ? 'pending national assessor'
+                            : 'completed',
                         notes,
                         user.userId,
                     )
@@ -34,7 +60,7 @@ export const reviewProposal = createServerFn()
                         studentId,
                         award,
                         challenge,
-                        'rejected assessor',
+                        'rejected state assessor',
                         notes,
                         user.userId,
                     )
@@ -45,7 +71,7 @@ export const reviewProposal = createServerFn()
                         studentId,
                         award,
                         challenge,
-                        'pending assessor',
+                        'pending state assessor',
                         notes,
                     )
                 } else {

@@ -31,11 +31,19 @@ export default function StudentProposalInstructions({
                     className="bg-blue-100 text-blue-700"
                 />
             )
-        case 'pending assessor':
+        case 'pending state assessor':
             return (
                 <Instructions
-                    title="⏳ Pending Assessor Review"
-                    description="Your proposal has been approved by your mentor and is now pending review by the assessor. You will receive feedback or approval from them soon."
+                    title="⏳ Pending State Assessor Review"
+                    description="Your proposal has been approved by your mentor and is now pending review by your state assessor."
+                    className="bg-blue-100 text-blue-700"
+                />
+            )
+        case 'pending national assessor':
+            return (
+                <Instructions
+                    title="⏳ Pending National Assessor Review"
+                    description="Your state assessor approved this proposal. It is now awaiting national assessor review."
                     className="bg-blue-100 text-blue-700"
                 />
             )
@@ -47,11 +55,19 @@ export default function StudentProposalInstructions({
                     className="bg-red-100 text-red-700"
                 />
             )
-        case 'rejected assessor':
+        case 'rejected state assessor':
             return (
                 <Instructions
-                    title="❌ Rejected by Assessor"
-                    description="Your proposal has been rejected by the assessor. Please review their feedback and submit a new proposal for this challenge."
+                    title="❌ Rejected by State Assessor"
+                    description="Your proposal has been rejected by your state assessor. Please review their feedback and submit a new proposal for this challenge."
+                    className="bg-red-100 text-red-700"
+                />
+            )
+        case 'rejected national assessor':
+            return (
+                <Instructions
+                    title="❌ Rejected by National Assessor"
+                    description="Your proposal has been rejected by the national assessor. Please review their feedback and submit a new proposal for this challenge."
                     className="bg-red-100 text-red-700"
                 />
             )

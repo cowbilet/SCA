@@ -10,6 +10,7 @@ export async function dbCreateUserById(userId: string): Promise<User | null> {
             name: users.name,
             email: users.email,
             role: users.role,
+            state: users.state,
         })
         .from(users)
         .where(eq(users.id, userId))
@@ -26,6 +27,7 @@ export async function dbGetUserByEmail(email: string): Promise<User | null> {
             name: users.name,
             email: users.email,
             role: users.role,
+            state: users.state,
         })
         .from(users)
         .where(eq(users.email, email))
@@ -42,6 +44,7 @@ export async function dbGetUserById(userId: string): Promise<User | null> {
             name: users.name,
             email: users.email,
             role: users.role,
+            state: users.state,
         })
         .from(users)
         .where(eq(users.id, userId))

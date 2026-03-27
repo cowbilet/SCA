@@ -80,14 +80,33 @@ function generateNewProposal(
     if (previousProposal.status === 'pending mentor') {
         return {
             ...previousProposal,
-            status: accepted ? 'pending assessor' : 'rejected mentor',
+            status: accepted ? 'pending state assessor' : 'rejected mentor',
             mentorNote: note,
         }
-    } else {
+    }
+
+    if (previousProposal.status === 'pending state assessor') {
         return {
             ...previousProposal,
-            status: accepted ? 'completed' : 'rejected assessor',
-            assessorNote: note,
+            status:
+                previousProposal.award === 'gold'
+                    ? accepted
+                        ? 'pending national assessor'
+                        : 'rejected state assessor'
+                    : accepted
+                      ? 'completed'
+                      : 'rejected state assessor',
+            stateAssessorNote: note,
         }
     }
+
+    if (previousProposal.status === 'pending national assessor') {
+        return {
+            ...previousProposal,
+            status: accepted ? 'completed' : 'rejected national assessor',
+            nationalAssessorNote: note,
+        }
+    }
+
+    return previousProposal
 }

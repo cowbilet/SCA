@@ -55,7 +55,8 @@ export const createUserProposal = createServerFn({ method: 'POST' })
             const status = existingProposal?.status ?? 'not started'
             if (
                 status === 'pending mentor' ||
-                status === 'pending assessor' ||
+                status === 'pending state assessor' ||
+                status === 'pending national assessor' ||
                 status === 'completed'
             ) {
                 throw new Error(

@@ -4,6 +4,7 @@ import ProposalForm from '../proposalForm'
 import { useReviewProposal } from '../../hooks/useReviewProposal'
 import { useProposal } from '../../hooks/useProposal'
 import FeedbackForm from '@/components/advisors/feedbackForm'
+import { useSession } from '@/integrations/better-auth/authClient'
 
 import { Card, CardHeader } from '@/components/card'
 
@@ -17,17 +18,24 @@ export default function ReviewProposal() {
         isError,
         isLoading,
     } = useProposal(award, challenge, studentId)
+    const { data: session } = useSession()
 
     const isMentor = advisor === 'mentor'
+    const isAssessor = advisor === 'assessor'
     if (isLoading) {
         return <div>Loading...</div>
     }
     if (isError || !proposal) {
         return <div>Error loading proposal. Please try again later.</div>
     }
+    const isNationalAssessor = session?.user.state === 'NAT'
     const isGivingFeedback =
         (isMentor && proposal.status === 'pending mentor') ||
-        (!isMentor && proposal.status === 'pending assessor')
+        (isAssessor &&
+            ((proposal.status === 'pending state assessor' &&
+                !isNationalAssessor) ||
+                (proposal.status === 'pending national assessor' &&
+                    isNationalAssessor)))
     return (
         <div className="flex flex-row gap-4 flex-1 max-lg:flex-col">
             <Card className="flex-1 p-0! flex flex-col">

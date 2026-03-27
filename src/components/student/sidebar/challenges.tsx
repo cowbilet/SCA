@@ -111,9 +111,11 @@ interface ActiveActivityCardProps extends GenericSidebarCardProps {
 }
 const ChallengeStatuses: Record<SubmissionState, React.ReactNode> = {
     'not started': 'Not started',
-    'pending assessor': 'Pending assessor review',
+    'pending state assessor': 'Pending state assessor review',
+    'pending national assessor': 'Pending national assessor review',
     'pending mentor': 'Pending mentor review',
-    'rejected assessor': 'Rejected by assessor',
+    'rejected state assessor': 'Rejected by state assessor',
+    'rejected national assessor': 'Rejected by national assessor',
     'rejected mentor': 'Rejected by mentor',
     withdrawn: 'Withdrawn',
     completed: 'Completed',

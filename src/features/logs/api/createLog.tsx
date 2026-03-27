@@ -4,7 +4,6 @@ import { restrictRoles } from '@/utils/auth'
 import { dbCreateLogEntry } from '@/db/logs.server'
 import { challengeSchema } from '@/types/schemas/challenges'
 import { awardSchema } from '@/types/schemas/award'
-import { dbGetStudentChallenge } from '@/db/challenges.server'
 import { futureDate } from '@/types/schemas/log'
 import { dbGetProposal } from '@/db/proposals.server'
 
@@ -20,11 +19,6 @@ export const createLog = createServerFn({ method: 'POST' })
     .handler(async ({ data }) => {
         const { award, challenge, description, date } = data
         const student = await restrictRoles({ data: ['student'] })
-        const challengeData = await dbGetStudentChallenge(
-            student.userId,
-            award,
-            challenge,
-        )
         const proposalData = await dbGetProposal(
             student.userId,
             award,

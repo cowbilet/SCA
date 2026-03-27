@@ -61,16 +61,31 @@ function generateNewStudentChallenge(
     if (previousStudentChallenge.status === 'pending mentor') {
         return {
             ...previousStudentChallenge,
-            status: accepted ? 'pending assessor' : 'rejected mentor',
+            status: accepted ? 'pending state assessor' : 'rejected mentor',
             mentorNote: note,
         }
     }
 
-    if (previousStudentChallenge.status === 'pending assessor') {
+    if (previousStudentChallenge.status === 'pending state assessor') {
         return {
             ...previousStudentChallenge,
-            status: accepted ? 'completed' : 'rejected assessor',
-            assessorNote: note,
+            status:
+                previousStudentChallenge.award === 'gold'
+                    ? accepted
+                        ? 'pending national assessor'
+                        : 'rejected state assessor'
+                    : accepted
+                      ? 'completed'
+                      : 'rejected state assessor',
+            stateAssessorNote: note,
+        }
+    }
+
+    if (previousStudentChallenge.status === 'pending national assessor') {
+        return {
+            ...previousStudentChallenge,
+            status: accepted ? 'completed' : 'rejected national assessor',
+            nationalAssessorNote: note,
         }
     }
 

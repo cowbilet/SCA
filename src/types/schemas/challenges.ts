@@ -15,7 +15,8 @@ export const challengeSchema = z
     )
 export const StudentChallengeSchema = z.object({
     mentorId: z.uuid(),
-    assessorId: z.uuid().nullable(),
+    stateAssessorId: z.uuid().nullable(),
+    nationalAssessorId: z.uuid().nullable(),
     studentId: z.uuid(),
     award: awardSchema,
     challenge: challengeSchema,
@@ -23,6 +24,7 @@ export const StudentChallengeSchema = z.object({
     reflection: z.string().max(1000).nullable(),
     accepted: z.boolean().nullable(),
     mentorNote: z.string().max(1000).nullable(),
-    assessorNote: z.string().max(1000).nullable(),
+    stateAssessorNote: z.string().max(1000).nullable(),
+    nationalAssessorNote: z.string().max(1000).nullable(),
 })
     export type StudentChallenge = z.infer<typeof StudentChallengeSchema>

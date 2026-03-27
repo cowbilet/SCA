@@ -74,37 +74,10 @@ export async function dbChangeChallengeStatus(
     studentId: string,
     award: Award,
     challenge: Challenge,
-    status: 'rejected mentor' | 'pending assessor',
-    note: string,
-): Promise<void>
-export async function dbChangeChallengeStatus(
-    studentId: string,
-    award: Award,
-    challenge: Challenge,
-    status: 'completed' | 'rejected assessor',
-    note: string,
-    assessorId: string,
-): Promise<void>
-export async function dbChangeChallengeStatus(
-    studentId: string,
-    award: Award,
-    challenge: Challenge,
-    status: 'pending mentor',
-    note: string,
-): Promise<void>
-export async function dbChangeChallengeStatus(
-    studentId: string,
-    award: Award,
-    challenge: Challenge,
-    status: 'withdrawn',
-): Promise<void>
-export async function dbChangeChallengeStatus(
-    studentId: string,
-    award: Award,
-    challenge: Challenge,
     status: ProposalTransitionStatus,
     note?: string,
-    assessorId?: string,
+    stateAssessorId?: string,
+    nationalAssessorId?: string,
 ): Promise<void> {
     await db.transaction(async (tx) => {
         const challengeData = (
@@ -131,7 +104,9 @@ export async function dbChangeChallengeStatus(
 
         const basePatch = validateStatusTransition(currentStatus, status, {
             note,
-            assessorId,
+            award,
+            stateAssessorId,
+            nationalAssessorId,
         })
         const challengePatch: typeof basePatch & { reflection?: string } = {
             ...basePatch,

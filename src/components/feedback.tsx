@@ -13,7 +13,8 @@ export default function InstructionAndFeedback<
     T extends {
         mentorNote: string | null
         status: SubmissionState
-        assessorNote: string | null
+        stateAssessorNote: string | null
+        nationalAssessorNote: string | null
     },
 >({
     data,
@@ -32,7 +33,8 @@ export default function InstructionAndFeedback<
 function Feedback<
     T extends {
         mentorNote: string | null
-        assessorNote: string | null
+        stateAssessorNote: string | null
+        nationalAssessorNote: string | null
         status: SubmissionState
     },
 >({ data }: { data: T }): Array<ReactNode> {
@@ -41,7 +43,29 @@ function Feedback<
         return comments
     }
     switch (data.status) {
-        case 'pending assessor':
+        case 'pending state assessor':
+            if (data.mentorNote) {
+                comments.push(
+                    <AccordionFeedback
+                        key="mentorFeedback"
+                        feedback={data.mentorNote}
+                        name="Mentor"
+                        className={positiveClass}
+                    />,
+                )
+            }
+            break
+        case 'pending national assessor':
+            if (data.stateAssessorNote) {
+                comments.push(
+                    <AccordionFeedback
+                        key="stateAssessorFeedback"
+                        feedback={data.stateAssessorNote}
+                        name="State Assessor"
+                        className={positiveClass}
+                    />,
+                )
+            }
             if (data.mentorNote) {
                 comments.push(
                     <AccordionFeedback
@@ -65,13 +89,13 @@ function Feedback<
                 )
             }
             break
-        case 'rejected assessor':
-            if (data.assessorNote) {
+        case 'rejected state assessor':
+            if (data.stateAssessorNote) {
                 comments.push(
                     <AccordionFeedback
-                        key="assessorFeedback"
-                        feedback={data.assessorNote}
-                        name="Assessor"
+                        key="stateAssessorFeedback"
+                        feedback={data.stateAssessorNote}
+                        name="State Assessor"
                         className={negativeClass}
                     />,
                 )
@@ -87,13 +111,55 @@ function Feedback<
                 )
             }
             break
-        case 'completed':
-            if (data.assessorNote) {
+        case 'rejected national assessor':
+            if (data.nationalAssessorNote) {
                 comments.push(
                     <AccordionFeedback
-                        key="assessorFeedback"
-                        feedback={data.assessorNote}
-                        name="Assessor"
+                        key="nationalAssessorFeedback"
+                        feedback={data.nationalAssessorNote}
+                        name="National Assessor"
+                        className={negativeClass}
+                    />,
+                )
+            }
+            if (data.stateAssessorNote) {
+                comments.push(
+                    <AccordionFeedback
+                        key="stateAssessorFeedback"
+                        feedback={data.stateAssessorNote}
+                        name="State Assessor"
+                        className={positiveClass}
+                    />,
+                )
+            }
+            if (data.mentorNote) {
+                comments.push(
+                    <AccordionFeedback
+                        key="mentorFeedback"
+                        feedback={data.mentorNote}
+                        name="Mentor"
+                        className={positiveClass}
+                    />,
+                )
+            }
+            break
+        case 'completed':
+            if (data.nationalAssessorNote) {
+                comments.push(
+                    <AccordionFeedback
+                        key="nationalAssessorFeedback"
+                        feedback={data.nationalAssessorNote}
+                        name="National Assessor"
+                        className={positiveClass}
+                    />,
+                )
+            }
+            if (data.stateAssessorNote) {
+                comments.push(
+                    <AccordionFeedback
+                        key="stateAssessorFeedback"
+                        feedback={data.stateAssessorNote}
+                        name="State Assessor"
                         className={positiveClass}
                     />,
                 )
@@ -118,7 +184,7 @@ function AccordionFeedback({
     className,
 }: {
     feedback?: string
-    name?: 'Mentor' | 'Assessor'
+    name?: 'Mentor' | 'State Assessor' | 'National Assessor'
     className?: string
 }) {
     const [isOpen, setIsOpen] = useState(false)

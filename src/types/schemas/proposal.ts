@@ -11,7 +11,8 @@ export const ProposalSchema = z.object({
     description: z.string().min(1).max(1000),
     goal: z.string().min(1).max(1000),
     accepted: z.boolean().nullable(),
-    assessorNote: z.string().max(1000).nullable(),
+    stateAssessorNote: z.string().max(1000).nullable(),
+    nationalAssessorNote: z.string().max(1000).nullable(),
     mentorNote: z.string().max(1000).nullable(),
     status: z.enum(status.enumValues),
 })

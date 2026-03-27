@@ -3,6 +3,7 @@ import { useLocation, useParams } from '@tanstack/react-router'
 import { useReviewSubmission } from '../../hooks/useReviewSubmission'
 import type { StudentChallenge } from '@/types/schemas/challenges'
 import FeedbackForm from '@/components/advisors/feedbackForm'
+import { useSession } from '@/integrations/better-auth/authClient'
 import { Card, CardBody, CardHeader } from '@/components/card'
 
 export default function SubmissionFeedback({
@@ -15,16 +16,22 @@ export default function SubmissionFeedback({
         from: '/$advisor/$studentId/$award/$challenge',
         strict: true,
     })
+    const { data: session } = useSession()
     const {
         mutate: reviewSubmission,
         isPending,
         isError,
     } = useReviewSubmission(studentId, award, challenge)
+    const isMentor = location.pathname.includes('mentor')
+    const isAssessor = location.pathname.includes('assessor')
+    const isNationalAssessor = session?.user.state === 'NAT'
     const isGivingFeedback =
-        (location.pathname.includes('mentor') &&
-            challengeData.status === 'pending mentor') ||
-        (location.pathname.includes('assessor') &&
-            challengeData.status === 'pending assessor')
+        (isMentor && challengeData.status === 'pending mentor') ||
+        (isAssessor &&
+            ((challengeData.status === 'pending state assessor' &&
+                !isNationalAssessor) ||
+                (challengeData.status === 'pending national assessor' &&
+                    isNationalAssessor)))
     if (!isGivingFeedback) {
         return null
     }

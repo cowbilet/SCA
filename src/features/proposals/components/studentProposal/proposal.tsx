@@ -30,7 +30,8 @@ export function SubmitProposal() {
 }
 const disabledStates: Array<SubmissionState> = [
     'pending mentor',
-    'pending assessor',
+    'pending state assessor',
+    'pending national assessor',
 ]
 export function ActiveProposal({
     proposalStatus,

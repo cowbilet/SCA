@@ -68,9 +68,11 @@ export default function Main() {
                 )
             case 'withdrawn':
             case 'pending mentor':
-            case 'pending assessor':
+            case 'pending state assessor':
+            case 'pending national assessor':
             case 'rejected mentor':
-            case 'rejected assessor':
+            case 'rejected state assessor':
+            case 'rejected national assessor':
                 return (
                     <div className="h-full flex flex-col gap-4">
                         <InstructionAndFeedback
@@ -93,7 +95,8 @@ export default function Main() {
         switch (challengeData.status) {
             case 'not started':
             case 'rejected mentor':
-            case 'rejected assessor':
+            case 'rejected state assessor':
+            case 'rejected national assessor':
                 return (
                     <div className="h-full flex flex-col gap-4">
                         <div className="flex flex-row items-center justify-start gap-4">
@@ -112,7 +115,8 @@ export default function Main() {
                     </div>
                 )
             case 'pending mentor':
-            case 'pending assessor':
+            case 'pending state assessor':
+            case 'pending national assessor':
                 return (
                     <div className="h-full flex flex-col gap-4">
                         <InstructionAndFeedback

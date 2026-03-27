@@ -1,5 +1,6 @@
 import { useParams } from '@tanstack/react-router'
 import Skeleton from 'react-loading-skeleton'
+import { useSession } from '@/integrations/better-auth/authClient'
 import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/reviewProposal'
 import { useChallenge } from '@/hooks/useChallenge'
 import { useProposal } from '@/features/proposals/hooks/useProposal'
@@ -19,6 +20,7 @@ export default function MainAdvisorStudentDash() {
         from: '/$advisor/$studentId/$award/$challenge',
         strict: true,
     })
+    const { data: session } = useSession()
     const {
         data: challengeData,
         isLoading: isChallengeLoading,
@@ -50,6 +52,7 @@ export default function MainAdvisorStudentDash() {
                         <AdvisorProposalInstructions
                             advisor={advisor}
                             state={status}
+                            assessorState={session?.user.state}
                         />
                     )}
                 />
@@ -59,7 +62,8 @@ export default function MainAdvisorStudentDash() {
     } else {
         switch (challengeData.status) {
             case 'not started':
-            case 'rejected assessor':
+            case 'rejected state assessor':
+            case 'rejected national assessor':
             case 'rejected mentor':
                 return (
                     <div className="h-full flex flex-col flex-1 gap-4">
@@ -68,6 +72,7 @@ export default function MainAdvisorStudentDash() {
                                 <AdvisorSubmissionInstructions
                                     state={status}
                                     advisor={advisor}
+                                    assessorState={session?.user.state}
                                 />
                             )}
                             data={challengeData}
@@ -85,6 +90,7 @@ export default function MainAdvisorStudentDash() {
                                 <AdvisorSubmissionInstructions
                                     state={status}
                                     advisor={advisor}
+                                    assessorState={session?.user.state}
                                 />
                             )}
                             data={challengeData}
