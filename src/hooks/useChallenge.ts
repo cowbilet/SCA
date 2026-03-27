@@ -20,5 +20,6 @@ export function useChallenge(
     challenge: Challenge,
     studentId: string,
 ) {
+    
     return useQuery(challengeQueryOptions(award, challenge, studentId))
 }

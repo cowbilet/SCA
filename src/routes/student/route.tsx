@@ -11,7 +11,7 @@ export const Route = createFileRoute('/student')({
     },
     component: StudentPage,
 })
-export function StudentPage() {
+function StudentPage() {
     return (
         <div className="w-full h-full flex flex-row justify-start">
             <Sidebar />
