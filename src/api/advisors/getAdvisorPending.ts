@@ -1,23 +1,19 @@
 import { createServerFn } from '@tanstack/react-start'
-import type { Proposal } from '@/types/schemas/proposal'
-import { dbGetMentorPendingProposals } from '@/db/mentors.server'
-import { dbGetAssessorPendingProposals } from '@/db/assessor.server'
+import { dbGetMentorPending } from '@/db/mentors.server'
+import { dbGetAssessorPending } from '@/db/assessor.server'
 import { restrictRoles } from '@/utils/auth'
 
 export const getAdvisorPending = createServerFn({ method: 'GET' }).handler(
-    async (): Promise<Array<Proposal>> => {
+    async () => {
         const user = await restrictRoles({ data: ['mentor', 'assessor'] })
         if (user.role === 'mentor') {
-            const pendingProposals = await dbGetMentorPendingProposals(
+            return await dbGetMentorPending(
                 user.userId,
             )
-
-            return pendingProposals
         } else {
-            const pendingProposals = await dbGetAssessorPendingProposals(
+            return await dbGetAssessorPending(
                 user.userId,
             )
-            return pendingProposals
         }
     },
 )

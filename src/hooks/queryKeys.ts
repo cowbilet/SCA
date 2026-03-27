@@ -11,7 +11,9 @@ export const queryKeys = {
     proposals: {
         detail: (award: Award, challenge: Challenge, studentId: string) =>
             ['proposals', award, challenge, studentId] as const,
-        pending: () => ['pendingProposals'] as const,
+    },
+    pending: {
+        list: () => ["pending"] as const,
     },
     logs: {
         list: (

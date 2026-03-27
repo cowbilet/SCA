@@ -1,23 +1,18 @@
-import { and, eq } from 'drizzle-orm/sql/expressions/conditions'
+import { and, eq, isNull, not } from 'drizzle-orm/sql/expressions/conditions'
+import { sql } from 'drizzle-orm/sql/sql'
 import { db } from './index.server'
 
-import { challengeProposals, users } from './schema'
-import type { Proposal } from '@/types/schemas/proposal'
+import { challengeProposals, logs, studentChallenge, users  } from './schema'
 
-export async function dbGetMentorPendingProposals(
+export async function dbGetMentorPending(
     mentorId: string,
-): Promise<Array<Proposal>> {
-    return await db
+){
+    const pendingProposals = await db
         .select({
-            studentId: challengeProposals.studentId,
             award: challengeProposals.award,
             challenge: challengeProposals.challenge,
-            description: challengeProposals.description,
-            goal: challengeProposals.goal,
-            mentorNote: challengeProposals.mentorNote,
-            assessorNote: challengeProposals.assessorNote,
-            accepted: challengeProposals.accepted,
-            status: challengeProposals.status,
+            studentId: challengeProposals.studentId,
+            type: sql<'proposal'>`'proposal'`,
         })
         .from(challengeProposals)
         .where(
@@ -26,6 +21,41 @@ export async function dbGetMentorPendingProposals(
                 eq(challengeProposals.status, 'pending mentor'),
             ),
         )
+    const pendingSubmissions = await db
+        .select({
+            award: studentChallenge.award,
+            challenge: studentChallenge.challenge,
+            studentId: studentChallenge.studentId,
+            type: sql<'submission'>`'submission'`,
+        })
+        .from(studentChallenge)
+        .where(
+            and(
+                eq(studentChallenge.mentorId, mentorId),
+                eq(studentChallenge.status, 'pending mentor'),
+            ),
+        )
+    const pendingLogs = await db
+        .select({
+            award: studentChallenge.award,
+            challenge: studentChallenge.challenge,
+            studentId: studentChallenge.studentId,
+            type: sql<'log'>`'log'`,
+        })
+        .from(logs)
+        .innerJoin(studentChallenge, and(
+            eq(logs.studentId, studentChallenge.studentId),
+            eq(logs.award, studentChallenge.award),
+            eq(logs.challenge, studentChallenge.challenge),
+        ))
+        .where(
+            and(
+                eq(studentChallenge.mentorId, mentorId),
+                isNull(logs.approved),
+                not(eq(studentChallenge.status, 'completed')),
+            ),
+        )
+    return [...pendingProposals, ...pendingSubmissions, ...pendingLogs]
 }
 export function dbGetMentorStudents(mentorId: string) {
     return db

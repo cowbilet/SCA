@@ -12,7 +12,7 @@ export function useReviewProposal(
 ) {
     const queryClient = useQueryClient()
     const proposalKey = queryKeys.proposals.detail(award, challenge, studentId)
-    const pendingProposalsKey = queryKeys.proposals.pending()
+    const pendingProposalsKey = queryKeys.pending.list()
     return useMutation({
         mutationKey: ['reviewProposal', studentId, award, challenge],
         mutationFn: (data: { notes: string; accepted: boolean }) =>
@@ -31,13 +31,19 @@ export function useReviewProposal(
                 data.notes,
             )
             queryClient.setQueryData(proposalKey, newProposal)
-            queryClient.setQueryData<Array<Proposal>>(
+            queryClient.setQueryData<Array<{
+                studentId: string,
+                award: Award,
+                challenge: Challenge,
+                type: 'log' | 'proposal' | 'submission',
+            }>>(
                 pendingProposalsKey,
                 (oldData) => {
                     if (!oldData) return oldData
                     return oldData.filter(
                         (proposal) =>
                             !(
+                                proposal.type === 'proposal' &&
                                 proposal.award === award &&
                                 proposal.challenge === challenge &&
                                 proposal.studentId === studentId
