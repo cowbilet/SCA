@@ -15,8 +15,7 @@ export const getRouter = () => {
         },
         defaultNotFoundComponent: () => <div>404: Page Not Found</div>,
         defaultPreload: 'intent',
-        defaultPreloadDelay: 100,
-        defaultPreloadStaleTime: 10000,
+        defaultPreloadDelay: 200,
     })
 
     setupRouterSsrQueryIntegration({ router, queryClient })

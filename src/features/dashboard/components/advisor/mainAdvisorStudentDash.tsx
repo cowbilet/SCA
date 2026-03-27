@@ -58,8 +58,6 @@ export default function MainAdvisorStudentDash() {
         )
     } else {
         switch (challengeData.status) {
-            case 'completed':
-                return <p>Challenge completed! No further action is needed.</p>
             case 'not started':
             case 'rejected assessor':
             case 'rejected mentor':

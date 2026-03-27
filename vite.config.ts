@@ -6,7 +6,7 @@ import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 
 import tailwindcss from '@tailwindcss/vite'
-import { nitro } from 'nitro/vite'
+import { nitroV2Plugin as nitro } from '@tanstack/nitro-v2-vite-plugin'
 
 const config = defineConfig({
     resolve: {

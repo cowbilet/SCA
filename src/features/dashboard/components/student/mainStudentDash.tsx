@@ -138,21 +138,19 @@ export default function Main() {
             case 'completed':
                 return (
                     <div className="h-full flex flex-col gap-4">
-                        <p>
-                            You did it! Your submission has been marked as
-                            completed. You can still view your activity logs
-                            below.
-                        </p>
-                        <div className="flex flex-col flex-1 gap-4">
-                            <div className="flex flex-row max-lg:flex-col h-full gap-4"></div>
+                        <InstructionAndFeedback
+                            data={challengeData}
+                            Instructions={({ status }) => (
+                                <StudentSubmissionInstructions state={status} />
+                            )}
+                        />
+                        <div className="flex flex-row flex-1 gap-4">
                             <SubmittedActivityLogs
                                 LogEntryComponent={StudentLogEntries}
                             />
-                            <div className="flex-1 flex flex-col gap-4">
-                                <StudentReflection
-                                    reflection={challengeData.reflection}
-                                />
-                            </div>
+                            <StudentReflection
+                                reflection={challengeData.reflection}
+                            />
                         </div>
                     </div>
                 )
