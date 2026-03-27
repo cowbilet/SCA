@@ -1,20 +1,27 @@
-import { Link, useLoaderData, useParams } from '@tanstack/react-router'
+import { Link, useLocation, useParams } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import type { ActiveLinkOptions } from '@tanstack/react-router'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
+import { useStudentChallenges } from '@/hooks/useStudentChallenges'
 
 export default function AdvisorStudentNavigation() {
-    const { award } = useParams({ strict: false })
-    const student = useLoaderData({ strict: false })
+    const { studentId } = useParams({ from: '/$advisor/$studentId' })
+    const location = useLocation()
+    const { data: studentChallenges } = useStudentChallenges(studentId)
 
-    // TODO: Make this more robust by validating the loader data format and handling loading/error states
-    if (!student) {
-        return null
-    }
-    const studentChallenges = student.studentChallenges
+    const isAwardPage = useMemo(() => {
+        const pathParts = location.pathname.split('/')
+        return pathParts.length >= 4 && ['bronze', 'silver', 'gold'].includes(pathParts[3])
+    }, [location.pathname])
 
-    const isAwardPage = !(award === undefined)
+    const currentAward = useMemo(() => {
+        const pathParts = location.pathname.split('/')
+        if (pathParts.length >= 4 && ['bronze', 'silver', 'gold'].includes(pathParts[3])) {
+            return pathParts[3] as Award
+        }
+        return undefined
+    }, [location.pathname])
 
     const [availableNavigation, setAvailableAwards] = useState<Record<
         Award,
@@ -27,15 +34,15 @@ export default function AdvisorStudentNavigation() {
                 silver: [],
                 gold: [],
             }
-            studentChallenges.forEach(({ award, challenges }) => {
-                awards[award].push(challenges)
+            studentChallenges.forEach(({ award: awardTier, challenges: challenge }) => {
+                awards[awardTier].push(challenge)
             })
             setAvailableAwards(awards)
         }
     }, [studentChallenges])
     const availableAwards = availableNavigation
         ? Object.keys(availableNavigation).filter(
-              (award) => availableNavigation[award as Award].length > 0,
+              (awardKey) => availableNavigation[awardKey as Award].length > 0,
           )
         : []
     return (
@@ -77,49 +84,53 @@ export default function AdvisorStudentNavigation() {
                 <AwardLink
                     link={{
                         to: '/$advisor/$studentId/$award/$challenge',
-                        params: { award: award, challenge: 'relationships' },
+                        params: { award: currentAward!, challenge: 'relationships' },
                         activeProps: { className: 'relationships' },
                     }}
                     name="Relationships"
                     disable={
                         !isAwardPage ||
-                        !availableNavigation?.[award].includes('relationships')
+                        !currentAward ||
+                        !availableNavigation?.[currentAward].includes('relationships')
                     }
                 />
                 <AwardLink
                     link={{
                         to: '/$advisor/$studentId/$award/$challenge',
-                        params: { award: award, challenge: 'challenge' },
+                        params: { award: currentAward!, challenge: 'challenge' },
                         activeProps: { className: 'challenge' },
                     }}
                     name="Challenge"
                     disable={
                         !isAwardPage ||
-                        !availableNavigation?.[award].includes('challenge')
+                        !currentAward ||
+                        !availableNavigation?.[currentAward].includes('challenge')
                     }
                 />
                 <AwardLink
                     link={{
                         to: '/$advisor/$studentId/$award/$challenge',
-                        params: { award: award, challenge: 'community' },
+                        params: { award: currentAward!, challenge: 'community' },
                         activeProps: { className: 'community' },
                     }}
                     name="Community"
                     disable={
                         !isAwardPage ||
-                        !availableNavigation?.[award].includes('community')
+                        !currentAward ||
+                        !availableNavigation?.[currentAward].includes('community')
                     }
                 />
                 <AwardLink
                     link={{
                         to: '/$advisor/$studentId/$award/$challenge',
-                        params: { award: award, challenge: 'service' },
+                        params: { award: currentAward!, challenge: 'service' },
                         activeProps: { className: 'service' },
                     }}
                     name="Service"
                     disable={
                         !isAwardPage ||
-                        !availableNavigation?.[award].includes('service')
+                        !currentAward ||
+                        !availableNavigation?.[currentAward].includes('service')
                     }
                 />
             </div>
