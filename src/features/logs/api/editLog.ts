@@ -9,16 +9,26 @@ export const editLog = createServerFn({ method: 'POST' })
             logId: z.uuid(),
             description: z.string().min(1),
             date: z.coerce.date(),
+            approved: z.boolean().optional().nullable(),
         }),
     )
     .handler(async ({ data }) => {
-        const { logId, description, date } = data
+        const { logId, description, date, approved } = data
         const log = await dbGetLogEntry(logId)
         if (!log) {
             throw new Error('Log entry not found')
         }
         await restrictToSelf({ data: log.studentId })
-        const logEntry = await dbEditLogEntry(logId, date, description)
+        if (log.approved) {
+            throw new Error('Cannot edit a log entry that has already been accepted')
+        }
+        if (log.approved === null && approved !== undefined) {
+            throw new Error('Cannot change the approval status of a pending log entry')
+        }
+        if (log.approved === false && approved) {
+            throw new Error('Cannot change a rejected log entry to approved')
+        }
+        const logEntry = await dbEditLogEntry(logId, date, description, approved)
         if (!logEntry) {
             throw new Error('Failed to edit log entry')
         }

@@ -19,7 +19,8 @@ export default function EditActivityForm({
             id="edit-activity-form"
             log={log}
             onValidSubmit={async ({ date, description }) => {
-                await editLog({ description, date })
+                const approved = log.approved === false ? null : undefined
+                await editLog({ description, date, approved })
                 onSubmit?.()
             }}
             {...props}

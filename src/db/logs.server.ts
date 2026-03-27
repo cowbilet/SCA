@@ -65,10 +65,11 @@ export async function dbEditLogEntry(
     logId: string,
     date: Date,
     description: string,
+    approved?: boolean | null,
 ) {
     const updatedLog = await db
         .update(logs)
-        .set({ date: date.toISOString(), description })
+        .set({ date: date.toISOString(), description, approved })
         .where(eq(logs.logId, logId))
         .returning()
     if (updatedLog.length === 0) {
