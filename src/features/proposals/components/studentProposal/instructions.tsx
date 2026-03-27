@@ -1,7 +1,11 @@
 import type { SubmissionState } from '@/types/awards'
 import Instructions from '@/components/instructions'
 
-export default function StudentProposalInstructions({ state }: { state: SubmissionState }) {
+export default function StudentProposalInstructions({
+    state,
+}: {
+    state: SubmissionState
+}) {
     switch (state) {
         case 'not started':
             return (
@@ -51,13 +55,13 @@ export default function StudentProposalInstructions({ state }: { state: Submissi
                     className="bg-red-100 text-red-700"
                 />
             )
-            case 'completed':
-                return (
-                    <Instructions
-                        title="✅ Proposal Approved"
-                        description="Congratulations! Your proposal has been approved. You can now start logging activities for this challenge and work towards completing it."
-                        className="bg-green-100 text-green-700"
-                    />
-                )
-        }
+        case 'completed':
+            return (
+                <Instructions
+                    title="✅ Proposal Approved"
+                    description="Congratulations! Your proposal has been approved. You can now start logging activities for this challenge and work towards completing it."
+                    className="bg-green-100 text-green-700"
+                />
+            )
     }
+}

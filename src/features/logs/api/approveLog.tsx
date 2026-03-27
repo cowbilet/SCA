@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { createServerFn } from '@tanstack/react-start'
 import { restrictRoles } from '@/utils/auth'
 import { dbApproveLogEntry, dbGetLogEntry } from '@/db/logs.server'
-import { dbGetUserChallenge } from '@/db/challenges.server'
+import { dbGetStudentChallenge } from '@/db/challenges.server'
 
 export const approveLog = createServerFn({ method: 'POST' })
     .inputValidator(
@@ -22,7 +22,7 @@ export const approveLog = createServerFn({ method: 'POST' })
         if (logEntry.approved !== null) {
             throw new Error('Log entry already reviewed')
         }
-        const challengeData = await dbGetUserChallenge(
+        const challengeData = await dbGetStudentChallenge(
             logEntry.studentId,
             logEntry.award,
             logEntry.challenge,
@@ -30,7 +30,7 @@ export const approveLog = createServerFn({ method: 'POST' })
         if (!challengeData) {
             throw new Error('Challenge data not found')
         }
-        if (challengeData.student_challenge.mentorId !== mentor.userId) {
+        if (challengeData.mentorId !== mentor.userId) {
             throw new Error('Unauthorized')
         }
         return await dbApproveLogEntry(logId, approved, feedback ?? null)

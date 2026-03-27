@@ -2,7 +2,11 @@ import type { SubmissionState } from '@/types/awards'
 
 import Instructions from '@/components/instructions'
 
-export default function StudentSubmissionInstructions({ state }: { state: SubmissionState }) {
+export default function StudentSubmissionInstructions({
+    state,
+}: {
+    state: SubmissionState
+}) {
     switch (state) {
         case 'not started':
             return (

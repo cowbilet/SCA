@@ -1,12 +1,12 @@
 import Skeleton from 'react-loading-skeleton'
 import { Link, useParams } from '@tanstack/react-router'
-import type { ProposalWithStudent } from '@/types/schemas/proposal'
+import type { Proposal } from '@/types/schemas/proposal'
 import type { Challenge } from '@/types/challenges'
 import type { User } from '@/types/schemas/users'
 import type { Award } from '@/types/awards'
 import { usePendingProposals } from '@/hooks/usePendingProposals'
 import { capitalizeFirstLetter } from '@/utils/stringUtils'
-import { useStudents } from '@/hooks/useStudents'
+import { useStudentById, useStudents } from '@/hooks/useStudents'
 
 export default function StudentList() {
     const { data: pendingProposals, isLoading, isError } = usePendingProposals()
@@ -37,7 +37,7 @@ export default function StudentList() {
                         return pendingProposals.map((proposal) => (
                             <PendingListItem
                                 proposal={proposal}
-                                key={`${proposal.student.userId}-${proposal.proposal.award}-${proposal.proposal.challenge}`}
+                                key={`${proposal.studentId}-${proposal.award}-${proposal.challenge}`}
                             />
                         ))
                     }
@@ -89,31 +89,54 @@ function StudentListItem({ student }: { student: User }) {
         </Link>
     )
 }
-function PendingListItem({ proposal }: { proposal: ProposalWithStudent }) {
+function PendingListItem({
+    proposal,
+}: {
+    proposal: Proposal
+}) {
     const { advisor } = useParams({ from: '/$advisor', strict: true })
+    const { data: student, isLoading, isError } = useStudentById(
+        proposal.studentId,
+    )
+
+    const studentName = isLoading
+        ? 'Loading student...'
+        : isError
+          ? 'Error loading student'
+          : (student?.name ?? 'Unknown student')
+
+    const studentEmail = isLoading
+        ? 'Loading contact...'
+        : isError
+          ? 'Unable to load student email'
+          : (student?.email ?? 'No email available')
+
     return (
         <Link
             to="/$advisor/$studentId/$award/$challenge"
             params={{
                 advisor,
-                studentId: proposal.student.userId,
-                award: proposal.proposal.award,
-                challenge: proposal.proposal.challenge,
+                studentId: proposal.studentId,
+                award: proposal.award,
+                challenge: proposal.challenge,
             }}
             activeProps={{ className: 'border-purple-500 border-2' }}
             className="w-full border-2 gap-1 transition duration-150 flex-1 border-gray-400 p-4 rounded-lg flex flex-col space-x-2 cursor-pointer hover:shadow-lg hover:border-purple-500 text-white"
         >
             <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold mr-0 text-black">
-                    {proposal.student.name}
+                    {studentName}
                 </h1>
             </div>
-            <p className="text-gray-500 text-xs min-h-5">
-                {proposal.student.email}
-            </p>
+            <p className="text-gray-500 text-xs min-h-5">{studentEmail}</p>
+            {isError && (
+                <p className="text-red-600 text-xs min-h-5">
+                    Student details unavailable. You can still review this proposal.
+                </p>
+            )}
             <div className="flex flex-row justify-start gap-2">
-                <ChallengeTag challenge={proposal.proposal.challenge} />
-                <AwardTag award={proposal.proposal.award} />
+                <ChallengeTag challenge={proposal.challenge} />
+                <AwardTag award={proposal.award} />
                 <PendingProposalTag />
             </div>
         </Link>

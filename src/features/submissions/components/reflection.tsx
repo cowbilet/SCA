@@ -1,7 +1,11 @@
-import { BookOpen } from "lucide-react";
-import { Card, CardBody, CardHeader } from "@/components/card";
+import { BookOpen } from 'lucide-react'
+import { Card, CardBody, CardHeader } from '@/components/card'
 
-export default function StudentReflection({ reflection }: { reflection: string | null }) {
+export default function StudentReflection({
+    reflection,
+}: {
+    reflection: string | null
+}) {
     if (!reflection) {
         return null
     }

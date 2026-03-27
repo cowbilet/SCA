@@ -1,7 +1,7 @@
-import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges'
+import type { StudentChallenge } from '@/types/schemas/challenges'
 
 export default function AdvisorButtons({
     challengeData,
 }: {
-    challengeData: StudentChallengeWithProposalAndSubmission
+    challengeData: StudentChallenge
 }) {}

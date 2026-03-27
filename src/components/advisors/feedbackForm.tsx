@@ -61,7 +61,13 @@ export default function FeedbackForm({
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
-                            className={clsx("w-full border-2 border-gray-400 p-2 rounded-lg mb-4", {isLoading: 'opacity-50 cursor-not-allowed', isError: 'border-red-500'})}
+                            className={clsx(
+                                'w-full border-2 border-gray-400 p-2 rounded-lg mb-4',
+                                {
+                                    isLoading: 'opacity-50 cursor-not-allowed',
+                                    isError: 'border-red-500',
+                                },
+                            )}
                             placeholder="Enter feedback for the student..."
                             rows={5}
                         />
@@ -81,14 +87,15 @@ export default function FeedbackForm({
             {submitError && (
                 <p className="text-red-500 text-sm mb-3">{submitError}</p>
             )}
-            {isError && (
-                <p className="text-red-500 text-sm mb-3">{error}</p>
-            )}
+            {isError && <p className="text-red-500 text-sm mb-3">{error}</p>}
             <button
                 id="reject"
                 type="submit"
                 onClick={() => setDecision(false)}
-                className={clsx("bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150", {isLoading: 'opacity-50 cursor-not-allowed'})}
+                className={clsx(
+                    'bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150',
+                    { isLoading: 'opacity-50 cursor-not-allowed' },
+                )}
             >
                 Reject
             </button>
@@ -96,7 +103,10 @@ export default function FeedbackForm({
                 id="approve"
                 type="submit"
                 onClick={() => setDecision(true)}
-                className={clsx("bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2", {isLoading: 'opacity-50 cursor-not-allowed'})}
+                className={clsx(
+                    'bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2',
+                    { isLoading: 'opacity-50 cursor-not-allowed' },
+                )}
             >
                 Approve
             </button>

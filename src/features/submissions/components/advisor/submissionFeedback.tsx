@@ -1,23 +1,30 @@
-import { Clock } from "lucide-react"
-import { useLocation, useParams } from "@tanstack/react-router"
-import { useReviewSubmission } from "../../hooks/useReviewSubmission"
-import type { StudentChallengeWithProposalAndSubmission } from "@/types/schemas/challenges"
-import FeedbackForm from "@/components/advisors/feedbackForm"
-import { Card, CardBody, CardHeader } from "@/components/card"
+import { Clock } from 'lucide-react'
+import { useLocation, useParams } from '@tanstack/react-router'
+import { useReviewSubmission } from '../../hooks/useReviewSubmission'
+import type { StudentChallenge } from '@/types/schemas/challenges'
+import FeedbackForm from '@/components/advisors/feedbackForm'
+import { Card, CardBody, CardHeader } from '@/components/card'
 
-export default function SubmissionFeedback({challengeData}: {challengeData: StudentChallengeWithProposalAndSubmission}) {
+export default function SubmissionFeedback({
+    challengeData,
+}: {
+    challengeData: StudentChallenge
+}) {
     const location = useLocation()
-    const { award, challenge, studentId } = useParams({from: "/$advisor/$studentId/$award/$challenge", strict: true})
-    const {mutate: reviewSubmission, isPending, isError } = useReviewSubmission(
-        studentId,
-        award,
-        challenge,
-    )
+    const { award, challenge, studentId } = useParams({
+        from: '/$advisor/$studentId/$award/$challenge',
+        strict: true,
+    })
+    const {
+        mutate: reviewSubmission,
+        isPending,
+        isError,
+    } = useReviewSubmission(studentId, award, challenge)
     const isGivingFeedback =
         (location.pathname.includes('mentor') &&
-            challengeData.student_challenge.status === 'pending mentor') ||
+            challengeData.status === 'pending mentor') ||
         (location.pathname.includes('assessor') &&
-            challengeData.student_challenge.status === 'pending assessor')
+            challengeData.status === 'pending assessor')
     if (!isGivingFeedback) {
         return null
     }

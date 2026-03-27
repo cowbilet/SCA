@@ -1,93 +1,93 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { reviewSubmission } from '../api/reviewSubmission'
-import type {
-	StudentChallenge,
-	StudentChallengeWithProposalAndSubmission,
-} from '@/types/schemas/challenges'
+import type { StudentChallenge } from '@/types/schemas/challenges'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
 import { queryKeys } from '@/hooks/queryKeys'
 
 export function useReviewSubmission(
-	studentId: string,
-	award: Award,
-	challenge: Challenge,
+    studentId: string,
+    award: Award,
+    challenge: Challenge,
 ) {
-	const queryClient = useQueryClient()
-	const challengeKey = queryKeys.challenges.detail(award, challenge, studentId)
+    const queryClient = useQueryClient()
+    const challengeKey = queryKeys.challenges.detail(
+        award,
+        challenge,
+        studentId,
+    )
 
-	return useMutation({
-		mutationKey: ['reviewSubmission', studentId, award, challenge],
-		mutationFn: (data: { notes: string; accepted: boolean }) =>
-			reviewSubmission({ data: { studentId, award, challenge, ...data } }),
-		onMutate: async (data) => {
-			await queryClient.cancelQueries({ queryKey: challengeKey })
+    return useMutation({
+        mutationKey: ['reviewSubmission', studentId, award, challenge],
+        mutationFn: (data: { notes: string; accepted: boolean }) =>
+            reviewSubmission({
+                data: { studentId, award, challenge, ...data },
+            }),
+        onMutate: async (data) => {
+            await queryClient.cancelQueries({ queryKey: challengeKey })
 
-			const previousChallenge =
-				queryClient.getQueryData<StudentChallengeWithProposalAndSubmission>(
-					challengeKey,
-				)
+            const previousChallenge =
+                queryClient.getQueryData<StudentChallenge>(challengeKey)
 
-			if (!previousChallenge) {
-				return { previousChallenge }
-			}
+            if (!previousChallenge) {
+                return { previousChallenge }
+            }
 
-			const newChallenge = generateNewChallengeData(
-				previousChallenge,
-				data.accepted,
-				data.notes,
-			)
+            const newChallenge = generateNewChallengeData(
+                previousChallenge,
+                data.accepted,
+                data.notes,
+            )
 
-			queryClient.setQueryData(challengeKey, newChallenge)
+            queryClient.setQueryData(challengeKey, newChallenge)
 
-			return { previousChallenge }
-		},
-		onError: (_error, _data, context) => {
-			if (context?.previousChallenge) {
-				queryClient.setQueryData(challengeKey, context.previousChallenge)
-			}
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: challengeKey })
-		},
-	})
+            return { previousChallenge }
+        },
+        onError: (_error, _data, context) => {
+            if (context?.previousChallenge) {
+                queryClient.setQueryData(
+                    challengeKey,
+                    context.previousChallenge,
+                )
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: challengeKey })
+        },
+    })
 }
 
 function generateNewStudentChallenge(
-	previousStudentChallenge: StudentChallenge,
-	accepted: boolean,
-	note: string,
+    previousStudentChallenge: StudentChallenge,
+    accepted: boolean,
+    note: string,
 ): StudentChallenge {
-	if (previousStudentChallenge.status === 'pending mentor') {
-		return {
-			...previousStudentChallenge,
-			status: accepted ? 'pending assessor' : 'rejected mentor',
-			mentorNote: note,
-		}
-	}
+    if (previousStudentChallenge.status === 'pending mentor') {
+        return {
+            ...previousStudentChallenge,
+            status: accepted ? 'pending assessor' : 'rejected mentor',
+            mentorNote: note,
+        }
+    }
 
-	if (previousStudentChallenge.status === 'pending assessor') {
-		return {
-			...previousStudentChallenge,
-			status: accepted ? 'completed' : 'rejected assessor',
-			assessorNote: note,
-		}
-	}
+    if (previousStudentChallenge.status === 'pending assessor') {
+        return {
+            ...previousStudentChallenge,
+            status: accepted ? 'completed' : 'rejected assessor',
+            assessorNote: note,
+        }
+    }
 
-	return previousStudentChallenge
+    return previousStudentChallenge
 }
 
 function generateNewChallengeData(
-	previousChallengeData: StudentChallengeWithProposalAndSubmission,
-	accepted: boolean,
-	note: string,
-): StudentChallengeWithProposalAndSubmission {
-	return {
-		...previousChallengeData,
-		student_challenge: generateNewStudentChallenge(
-			previousChallengeData.student_challenge,
-			accepted,
-			note,
-		),
-	}
+    previousChallengeData: StudentChallenge,
+    accepted: boolean,
+    note: string,
+): StudentChallenge {
+    return {
+        ...previousChallengeData,
+        ...generateNewStudentChallenge(previousChallengeData, accepted, note),
+    }
 }

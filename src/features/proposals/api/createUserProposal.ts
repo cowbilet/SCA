@@ -1,43 +1,26 @@
 import { createServerFn } from '@tanstack/react-start'
 
-import { z } from 'zod'
 import { CreateProposalSchema } from '../types/schema/forms'
-import type { Award } from '@/types/awards'
-import type { Challenge } from '@/types/challenges'
 import type { Proposal } from '@/types/schemas/proposal'
 import { dbGetUserByEmail } from '@/db/users.server'
 
-import { validateAward } from '@/types/guards/awards'
-
-import { validateChallenge } from '@/types/guards/challenges'
-
 import {
     dbCreateUserChallenge,
-    dbGetUserChallenge,
+    dbGetStudentChallenge,
 } from '@/db/challenges.server'
 import {
     dbChangeProposalStatus,
     dbCreateChallengeProposal,
     dbEditProposal,
+    dbGetProposal,
 } from '@/db/proposals.server'
 import { restrictRoles } from '@/utils/auth'
+import { awardSchema } from '@/types/schemas/award'
+import { challengeSchema } from '@/types/schemas/challenges'
 
 const createUserProposalSchema = CreateProposalSchema.extend({
-    award: z
-        .string()
-        .refine((award): award is Award => validateAward(award), {
-            message: 'Invalid award',
-        })
-        .optional(),
-    challenge: z
-        .string()
-        .refine(
-            (challenge): challenge is Challenge => validateChallenge(challenge),
-            {
-                message: 'Invalid challenge',
-            },
-        )
-        .optional(),
+    award: awardSchema.optional(),
+    challenge: challengeSchema.optional(),
 })
 export const createUserProposal = createServerFn({ method: 'POST' })
     .inputValidator(createUserProposalSchema)
@@ -56,15 +39,20 @@ export const createUserProposal = createServerFn({ method: 'POST' })
         const mentorId = mentor.userId
 
         // See if they already have a challenge created
-        const challengeData = await dbGetUserChallenge(
+        const challengeData = await dbGetStudentChallenge(
             studentId,
             award,
             challenge,
         )
         let proposal = null
         if (challengeData) {
+            const existingProposal = await dbGetProposal(
+                studentId,
+                award,
+                challenge,
+            )
             // Then they have created a challenge before, so we need to check the status of their proposal and update it to pending mentor if it's not already in progress
-            const status = challengeData.proposals?.status ?? 'not started'
+            const status = existingProposal?.status ?? 'not started'
             if (
                 status === 'pending mentor' ||
                 status === 'pending assessor' ||
@@ -74,21 +62,31 @@ export const createUserProposal = createServerFn({ method: 'POST' })
                     'You already have a proposal in progress for this challenge',
                 )
             }
-            // TODO: Make this a transaction
-
-            await dbChangeProposalStatus(
-                studentId,
-                award,
-                challenge,
-                'pending mentor',
-            )
-            proposal = await dbEditProposal(
-                studentId,
-                award,
-                challenge,
-                description,
-                goal,
-            )
+            if (existingProposal) {
+                // TODO: Make this a transaction
+                await dbChangeProposalStatus(
+                    studentId,
+                    award,
+                    challenge,
+                    'pending mentor',
+                )
+                proposal = await dbEditProposal(
+                    studentId,
+                    award,
+                    challenge,
+                    description,
+                    goal,
+                )
+            } else {
+                proposal = await dbCreateChallengeProposal(
+                    studentId,
+                    mentorId,
+                    award,
+                    challenge,
+                    description,
+                    goal,
+                )
+            }
         } else {
             // They haven't created a challenge before, so we need to create a new one with their proposal
             await dbCreateUserChallenge(studentId, mentorId, award, challenge)

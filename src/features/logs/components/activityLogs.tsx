@@ -4,7 +4,6 @@ import clsx from 'clsx'
 import type { LogEntry } from '@/types/schemas/log'
 import { Card, CardHeader } from '@/components/card'
 
-
 const logStyling = {
     pending: {
         variant: 'warning' as const,
@@ -45,11 +44,10 @@ export function SubmittedActivityLogs({
 }: {
     LogEntryComponent: React.FC<{ type: 'pending' | 'approved' | 'rejected' }>
 }) {
-    
     return (
         <ActivityLogGroupCard type="approved">
             <LogEntryComponent type="approved" />
-        </ActivityLogGroupCard>        
+        </ActivityLogGroupCard>
     )
 }
 

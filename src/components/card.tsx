@@ -1,7 +1,13 @@
 import clsx from 'clsx'
 import type { HTMLAttributes } from 'react'
 
-type CardHeaderVariant = 'success' | 'warning' | 'danger' | 'info' | 'neutral' | 'accent'
+type CardHeaderVariant =
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'info'
+    | 'neutral'
+    | 'accent'
 
 const headerVariantStyles: Record<CardHeaderVariant, string> = {
     success: 'bg-green-100/50 border-green-400/75',

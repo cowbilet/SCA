@@ -3,10 +3,10 @@ import Instructions from '@/components/instructions'
 
 type AdvisorRole = 'mentor' | 'assessor'
 
-export default function AdvisorSubmissionInstructions({ 
-    state, 
-    advisor 
-}: { 
+export default function AdvisorSubmissionInstructions({
+    state,
+    advisor,
+}: {
     state: SubmissionState
     advisor: AdvisorRole
 }) {

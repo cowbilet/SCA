@@ -14,6 +14,7 @@ export const challengeQueryOptions = (
         queryFn: () =>
             getUserChallenge({ data: { award, challenge, studentId } }),
     })
+    
 export function useChallenge(
     award: Award,
     challenge: Challenge,

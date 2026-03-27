@@ -5,7 +5,7 @@ import { H1Title } from '../../titles'
 import type { SubmissionState } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
 import { Route } from '@/routes/student/route'
-import { useChallenge } from '@/hooks/useChallenge'
+import { useProposal } from '@/features/proposals/hooks/useProposal'
 // TODO: Clean this up
 const challenges: Record<
     Challenge,
@@ -128,17 +128,17 @@ function ActiveActivityCard({
 }: ActiveActivityCardProps) {
     const params = useParams({ from: '/student/$award', strict: true })
     const { user } = Route.useRouteContext()
-    const { data, isLoading, isError } = useChallenge(
-        params.award,
-        challenge,
-        user.userId,
-    )
-    const status = isLoading ? (
+    const {
+        data: proposal,
+        isLoading: isProposalLoading,
+        isError: isProposalError,
+    } = useProposal(params.award, challenge, user.userId)
+    const status = isProposalLoading ? (
         <Skeleton />
-    ) : isError ? (
+    ) : isProposalError ? (
         'Error loading challenge status'
     ) : (
-        (ChallengeStatuses[data?.proposals?.status ?? 'not started'] ??
+        (ChallengeStatuses[proposal?.status ?? 'not started'] ??
         'Unknown status')
     )
     return (

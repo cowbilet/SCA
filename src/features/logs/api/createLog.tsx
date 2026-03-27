@@ -4,7 +4,7 @@ import { restrictRoles } from '@/utils/auth'
 import { dbCreateLogEntry } from '@/db/logs.server'
 import { challengeSchema } from '@/types/schemas/challenges'
 import { awardSchema } from '@/types/schemas/award'
-import { dbGetUserChallenge } from '@/db/challenges.server'
+import { dbGetStudentChallenge } from '@/db/challenges.server'
 import { futureDate } from '@/types/schemas/log'
 
 export const createLog = createServerFn({ method: 'POST' })
@@ -19,12 +19,12 @@ export const createLog = createServerFn({ method: 'POST' })
     .handler(async ({ data }) => {
         const { award, challenge, description, date } = data
         const student = await restrictRoles({ data: ['student'] })
-        const challengeData = await dbGetUserChallenge(
+        const challengeData = await dbGetStudentChallenge(
             student.userId,
             award,
             challenge,
         )
-        if (!challengeData || challengeData.proposals?.status !== 'completed') {
+        if (!challengeData || challengeData.status !== 'completed') {
             throw new Error("You don't have a proposal for this challenge")
         }
         const logEntry = await dbCreateLogEntry(

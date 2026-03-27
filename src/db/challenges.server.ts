@@ -1,8 +1,7 @@
 import { and, eq } from 'drizzle-orm/sql/expressions/conditions'
 import { db } from './index.server'
-import { dbGetAllProposals } from './proposals.server'
 import type { Award, SubmissionState } from '@/types/awards'
-import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges'
+import type { StudentChallenge } from '@/types/schemas/challenges'
 import type { Challenge } from '@/types/challenges'
 import { validateStatusTransition } from '@/utils/server/state.server'
 import { studentChallenge } from '@/db/schema'
@@ -10,8 +9,7 @@ import { studentChallenge } from '@/db/schema'
 export async function dbGetUserAwardChallenges(
     userId: string,
     award: Award,
-): Promise<Array<StudentChallengeWithProposalAndSubmission>> {
-    const challengeProposalsSubquery = dbGetAllProposals()
+): Promise<Array<StudentChallenge>> {
     return await db
         .select()
         .from(studentChallenge)
@@ -21,21 +19,12 @@ export async function dbGetUserAwardChallenges(
                 eq(studentChallenge.award, award),
             ),
         )
-        .leftJoin(
-            challengeProposalsSubquery,
-            eq(
-                studentChallenge.challenge,
-                challengeProposalsSubquery.challenge,
-            ),
-        )
 }
-export async function dbGetUserChallenge(
+export async function dbGetStudentChallenge(
     userId: string,
     award: Award,
     challenge: Challenge,
-): Promise<StudentChallengeWithProposalAndSubmission | null> {
-    const challengeProposalsSubquery = dbGetAllProposals()
-
+): Promise<StudentChallenge | null> {
     const results = await db
         .select()
         .from(studentChallenge)
@@ -46,17 +35,7 @@ export async function dbGetUserChallenge(
                 eq(studentChallenge.challenge, challenge),
             ),
         )
-        .leftJoin(
-            challengeProposalsSubquery,
-            and(
-                eq(
-                    studentChallenge.challenge,
-                    challengeProposalsSubquery.challenge,
-                ),
-                eq(challengeProposalsSubquery.award, award),
-                eq(challengeProposalsSubquery.studentId, userId),
-            ),
-        )
+
     if (results.length === 0) {
         return null
     }
@@ -64,18 +43,7 @@ export async function dbGetUserChallenge(
     return results[0]
 }
 export function dbGetAllChallenges() {
-    const challengeProposalsSubquery = dbGetAllProposals()
-    return db
-        .select()
-        .from(studentChallenge)
-        .leftJoin(
-            challengeProposalsSubquery,
-            eq(
-                studentChallenge.challenge,
-                challengeProposalsSubquery.challenge,
-            ),
-        )
-        .as('challenges')
+    return db.select().from(studentChallenge).as('challenges')
 }
 export async function dbCreateUserChallenge(
     studentId: string,
@@ -169,7 +137,9 @@ export async function dbChangeChallengeStatus(
             ...basePatch,
         }
         if (basePatch.status === 'pending mentor' && !note) {
-            throw new Error('Reflection is required to set status to pending mentor')
+            throw new Error(
+                'Reflection is required to set status to pending mentor',
+            )
         } else if (basePatch.status === 'pending mentor' && note) {
             challengePatch.reflection = note
         }

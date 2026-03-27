@@ -6,24 +6,6 @@ import { challengeProposals, users } from '@/db/schema'
 import { db } from '@/db/index.server'
 import { validateStatusTransition } from '@/utils/server/state.server'
 
-export function dbGetAllProposals() {
-    return db
-        .select({
-            studentId: challengeProposals.studentId,
-            award: challengeProposals.award,
-            challenge: challengeProposals.challenge,
-            description: challengeProposals.description,
-            goal: challengeProposals.goal,
-            mentorNote: challengeProposals.mentorNote,
-            assessorNote: challengeProposals.assessorNote,
-            accepted: challengeProposals.accepted,
-            mentorEmail: users.email,
-            status: challengeProposals.status,
-        })
-        .from(challengeProposals)
-        .innerJoin(users, eq(challengeProposals.mentorId, users.id))
-        .as('proposals')
-}
 export async function dbGetProposal(
     studentId: string,
     award: Award,
@@ -36,10 +18,10 @@ export async function dbGetProposal(
             challenge: challengeProposals.challenge,
             description: challengeProposals.description,
             goal: challengeProposals.goal,
+            mentorEmail: users.email,
             mentorNote: challengeProposals.mentorNote,
             assessorNote: challengeProposals.assessorNote,
             accepted: challengeProposals.accepted,
-            mentorEmail: users.email,
             status: challengeProposals.status,
         })
         .from(challengeProposals)

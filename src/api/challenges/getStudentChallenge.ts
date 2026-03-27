@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import type { StudentChallengeWithProposalAndSubmission } from '@/types/schemas/challenges'
+import type { StudentChallenge } from '@/types/schemas/challenges'
 
-import { dbGetUserChallenge } from '@/db/challenges.server'
+import { dbGetStudentChallenge } from '@/db/challenges.server'
 import { restrictStudentData } from '@/utils/auth'
 import { awardSchema } from '@/types/schemas/award'
 
@@ -15,13 +15,9 @@ const inputSchema = z.object({
 })
 export const getUserChallenge = createServerFn({ method: 'GET' })
     .inputValidator(inputSchema)
-    .handler(
-        async ({
-            data,
-        }): Promise<StudentChallengeWithProposalAndSubmission | null> => {
-            const { award, challenge, studentId } = data
-            await restrictStudentData({ data: studentId })
-            const result = await dbGetUserChallenge(studentId, award, challenge)
-            return result
-        },
-    )
+    .handler(async ({ data }): Promise<StudentChallenge | null> => {
+        const { award, challenge, studentId } = data
+        await restrictStudentData({ data: studentId })
+        const result = await dbGetStudentChallenge(studentId, award, challenge)
+        return result
+    })

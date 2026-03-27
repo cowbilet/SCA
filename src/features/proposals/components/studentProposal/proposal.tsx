@@ -7,7 +7,6 @@ import { Card, CardHeader } from '@/components/card'
 import { useProposal } from '@/features/proposals/hooks/useProposal'
 import { Route } from '@/routes/student/route'
 
-
 export function SubmitProposal() {
     const { award, challenge } = useParams({
         from: '/student/$award/$challenge',

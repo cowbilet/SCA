@@ -7,7 +7,6 @@ import { restrictRoles, restrictStudentData } from '@/utils/auth'
 import { challengeSchema } from '@/types/schemas/challenges'
 import { awardSchema } from '@/types/schemas/award'
 
-
 const reviewSubmissionSchema = z.object({
     award: awardSchema,
     challenge: challengeSchema,

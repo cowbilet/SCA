@@ -1,6 +1,7 @@
 import { useParams } from '@tanstack/react-router'
 import Skeleton from 'react-loading-skeleton'
 import { useChallenge } from '@/hooks/useChallenge'
+import { useProposal } from '@/features/proposals/hooks/useProposal'
 import { Route } from '@/routes/student/$award/$challenge'
 import {
     ActiveProposal,
@@ -26,36 +27,41 @@ export default function Main() {
     })
     const {
         data: challengeData,
-        isLoading,
-        isError,
+        isLoading: isChallengeLoading,
+        isError: isChallengeError,
     } = useChallenge(award, challenge, user.userId)
-    if (isLoading) {
+    const {
+        data: proposalData,
+        isLoading: isProposalLoading,
+        isError: isProposalError,
+    } = useProposal(award, challenge, user.userId)
+
+    if (isChallengeLoading || isProposalLoading) {
         return (
             <div className="space-y-4">
                 <Skeleton count={3} />
             </div>
         )
     }
-    if (isError) {
+    if (isChallengeError || isProposalError) {
         return <div>Error loading challenge data. Please try again later.</div>
     }
     // If there is no challenge data this means that the user has not started yet
     if (!challengeData) {
         return <SubmitProposal />
     }
-    if (challengeData.proposals && challengeData.proposals.accepted !== true) {
-        switch (challengeData.proposals.status) {
+    if (proposalData && proposalData.accepted !== true) {
+        switch (proposalData.status) {
             case 'not started':
                 return (
                     <div className="space-y-4">
                         <InstructionAndFeedback
-                            data={challengeData.proposals}
+                            data={proposalData}
                             Instructions={({ status }) => (
                                 <StudentProposalInstructions state={status} />
                             )}
                         />
-                        <SubmitProposal/>
-                    
+                        <SubmitProposal />
                     </div>
                 )
             case 'withdrawn':
@@ -65,25 +71,21 @@ export default function Main() {
             case 'rejected assessor':
                 return (
                     <div className="space-y-4">
-
                         <InstructionAndFeedback
-                            data={challengeData.proposals}
+                            data={proposalData}
                             Instructions={({ status }) => (
                                 <StudentProposalInstructions state={status} />
                             )}
                         />
-                        <ActiveProposal
-                            proposalStatus={challengeData.proposals.status}
-                        />
-                    
+                        <ActiveProposal proposalStatus={proposalData.status} />
                     </div>
                 )
             default:
                 break
         }
     }
-    if (challengeData.proposals && challengeData.proposals.accepted === true) {
-        switch (challengeData.student_challenge.status) {
+    if (proposalData && proposalData.accepted === true) {
+        switch (challengeData.status) {
             case 'not started':
             case 'rejected mentor':
             case 'rejected assessor':
@@ -94,7 +96,7 @@ export default function Main() {
                             <StudentSubmission />
                         </div>
                         <InstructionAndFeedback
-                            data={challengeData.student_challenge}
+                            data={challengeData}
                             Instructions={({ status }) => (
                                 <StudentSubmissionInstructions state={status} />
                             )}
@@ -109,7 +111,7 @@ export default function Main() {
                 return (
                     <div className="space-y-4">
                         <InstructionAndFeedback
-                            data={challengeData.student_challenge}
+                            data={challengeData}
                             Instructions={({ status }) => (
                                 <StudentSubmissionInstructions state={status} />
                             )}
@@ -120,7 +122,9 @@ export default function Main() {
                                     LogEntryComponent={StudentLogEntries}
                                 />
                                 <div className="flex-1 flex flex-col gap-4">
-                                    <StudentReflection reflection={challengeData.student_challenge.reflection} />
+                                    <StudentReflection
+                                        reflection={challengeData.reflection}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -136,15 +140,19 @@ export default function Main() {
                         </p>
                         <div className="flex flex-col flex-1 gap-4">
                             <div className="flex flex-row max-lg:flex-col h-full gap-4"></div>
-                                <SubmittedActivityLogs
-                                    LogEntryComponent={StudentLogEntries}
+                            <SubmittedActivityLogs
+                                LogEntryComponent={StudentLogEntries}
+                            />
+                            <div className="flex-1 flex flex-col gap-4">
+                                <StudentReflection
+                                    reflection={challengeData.reflection}
                                 />
-                                <div className="flex-1 flex flex-col gap-4">
-                                    <StudentReflection reflection={challengeData.student_challenge.reflection} />
-                                </div>
                             </div>
+                        </div>
                     </div>
                 )
         }
     }
+
+    return <SubmitProposal />
 }

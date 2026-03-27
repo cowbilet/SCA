@@ -10,7 +10,7 @@ import { getUserByEmail } from '@/api/users/getUserByEmail'
 
 interface ProposalFormProps {
     values?: {
-        mentorEmail: string
+        mentorEmail?: string
         description: string
         goal: string
     }

@@ -11,3 +11,12 @@ export const useStudentsOptions = () => {
 export function useStudents() {
     return useQuery(useStudentsOptions())
 }
+
+export function useStudentById(studentId: string) {
+    return useQuery({
+        ...useStudentsOptions(),
+        select: (students) => {
+            return students.filter((student) => student.userId === studentId)[0]
+        },
+    })
+}

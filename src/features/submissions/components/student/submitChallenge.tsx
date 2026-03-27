@@ -10,7 +10,10 @@ import Dialog, {
 
 export function StudentSubmission() {
     const modalRef = useRef<HTMLDialogElement>(null)
-    const { award, challenge } = useParams({ from: '/student/$award/$challenge', strict: true })
+    const { award, challenge } = useParams({
+        from: '/student/$award/$challenge',
+        strict: true,
+    })
     const { mutate: submitChallenge } = useSubmission({
         award,
         challenge,
@@ -37,7 +40,11 @@ export function StudentSubmission() {
                     Please fill out the reflection below to submit your activity
                     for this challenge.
                 </p>
-                <form id="submission-form" className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                <form
+                    id="submission-form"
+                    className="flex flex-col gap-4"
+                    onSubmit={handleSubmit}
+                >
                     <label
                         htmlFor="reflection"
                         className="text-sm font-medium text-gray-700"

@@ -2,6 +2,7 @@ import { useParams } from '@tanstack/react-router'
 import Skeleton from 'react-loading-skeleton'
 import ReviewProposal from '@/features/proposals/components/advisorProposal.tsx/reviewProposal'
 import { useChallenge } from '@/hooks/useChallenge'
+import { useProposal } from '@/features/proposals/hooks/useProposal'
 import { AdvisorLogEntries } from '@/features/logs/components/advisors/advisorLogs'
 import {
     StandardActivityLogs,
@@ -20,34 +21,43 @@ export default function MainAdvisorStudentDash() {
     })
     const {
         data: challengeData,
-        isLoading,
-        isError,
+        isLoading: isChallengeLoading,
+        isError: isChallengeError,
     } = useChallenge(award, challenge, studentId)
-    if (isLoading) {
+    const {
+        data: proposalData,
+        isLoading: isProposalLoading,
+        isError: isProposalError,
+    } = useProposal(award, challenge, studentId)
+
+    if (isChallengeLoading || isProposalLoading) {
         return (
             <div className="space-y-4">
                 <Skeleton count={3} />
             </div>
         )
     }
-    if (isError || !challengeData) {
+    if (isChallengeError || isProposalError || !challengeData) {
         return <div>Error loading challenge data. Please try again later.</div>
     }
     // If the proposal has not been accepted yet let them review the proposal
-    if (challengeData.proposals && challengeData.proposals.accepted !== true) {
+    if (proposalData && proposalData.accepted !== true) {
         return (
             <div className="space-y-4">
                 <InstructionAndFeedback
-                    data={challengeData.proposals}
+                    data={proposalData}
                     Instructions={({ status }) => (
-                        <AdvisorProposalInstructions advisor={advisor} state={status} />
+                        <AdvisorProposalInstructions
+                            advisor={advisor}
+                            state={status}
+                        />
                     )}
                 />
                 <ReviewProposal />
             </div>
         )
     } else {
-        switch (challengeData.student_challenge.status) {
+        switch (challengeData.status) {
             case 'completed':
                 return <p>Challenge completed! No further action is needed.</p>
             case 'not started':
@@ -55,9 +65,14 @@ export default function MainAdvisorStudentDash() {
             case 'rejected mentor':
                 return (
                     <div className="space-y-4">
-                        <InstructionAndFeedback 
-                            Instructions={({ status }) => <AdvisorSubmissionInstructions state={status} advisor={advisor} />}
-                            data={challengeData.student_challenge} 
+                        <InstructionAndFeedback
+                            Instructions={({ status }) => (
+                                <AdvisorSubmissionInstructions
+                                    state={status}
+                                    advisor={advisor}
+                                />
+                            )}
+                            data={challengeData}
                         />
                         <StandardActivityLogs
                             LogEntryComponent={AdvisorLogEntries}
@@ -67,9 +82,14 @@ export default function MainAdvisorStudentDash() {
             default:
                 return (
                     <div className="space-y-4">
-                        <InstructionAndFeedback 
-                            Instructions={({ status }) => <AdvisorSubmissionInstructions state={status} advisor={advisor} />}
-                            data={challengeData.student_challenge} 
+                        <InstructionAndFeedback
+                            Instructions={({ status }) => (
+                                <AdvisorSubmissionInstructions
+                                    state={status}
+                                    advisor={advisor}
+                                />
+                            )}
+                            data={challengeData}
                         />
                         <div className="flex flex-col flex-1 gap-4">
                             <div className="flex flex-row max-lg:flex-col h-full gap-4">
@@ -77,8 +97,12 @@ export default function MainAdvisorStudentDash() {
                                     LogEntryComponent={AdvisorLogEntries}
                                 />
                                 <div className="flex-1 flex flex-col gap-4">
-                                    <StudentReflection reflection={challengeData.student_challenge.reflection} />
-                                    <SubmissionFeedback challengeData={challengeData} />
+                                    <StudentReflection
+                                        reflection={challengeData.reflection}
+                                    />
+                                    <SubmissionFeedback
+                                        challengeData={challengeData}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -87,4 +111,3 @@ export default function MainAdvisorStudentDash() {
         }
     }
 }
-

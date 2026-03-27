@@ -1,9 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import type { User } from '@/types/schemas/users'
-import {
-    dbGetMentorPendingProposals,
-    dbGetMentorStudents,
-} from '@/db/mentors.server'
+import { dbGetMentorStudents } from '@/db/mentors.server'
 
 import { restrictRoles } from '@/utils/auth'
 import { dbGetAssessorStudents } from '@/db/assessor.server'
