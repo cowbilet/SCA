@@ -1,9 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+    useMutation,
+    useQueryClient,
+} from '@tanstack/react-query'
 import { reviewProposal } from '../api/reviewProposal'
-import type { Proposal } from '@/types/schemas/proposal'
+import { proposalQueryOptions } from './useProposal'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
-import { queryKeys } from '@/hooks/queryKeys'
+import type { Proposal } from '@/types/schemas/proposal'
+import { usePendingOptions } from '@/hooks/usePending'
 
 export function useReviewProposal(
     studentId: string,
@@ -11,19 +15,21 @@ export function useReviewProposal(
     challenge: Challenge,
 ) {
     const queryClient = useQueryClient()
-    const proposalKey = queryKeys.proposals.detail(award, challenge, studentId)
-    const pendingProposalsKey = queryKeys.pending.list()
+    const { queryKey: proposalKey } = proposalQueryOptions(award, challenge, studentId)
+    const { queryKey: pendingProposalsKey } = usePendingOptions()
+    const { queryKey: challengeKey } = proposalQueryOptions(award, challenge, studentId)
+    
     return useMutation({
         mutationKey: ['reviewProposal', studentId, award, challenge],
         mutationFn: (data: { notes: string; accepted: boolean }) =>
             reviewProposal({ data: { studentId, award, challenge, ...data } }),
-        onMutate: (data) => {
-            queryClient.cancelQueries({ queryKey: proposalKey })
-            queryClient.cancelQueries({ queryKey: pendingProposalsKey })
+        onMutate: async (data) => {
+            await queryClient.cancelQueries({ queryKey: proposalKey })
+            await queryClient.cancelQueries({ queryKey: pendingProposalsKey })
             const previousProposal =
-                queryClient.getQueryData<Proposal>(proposalKey)
+                queryClient.getQueryData(proposalKey)
             const previousPendingProposals =
-                queryClient.getQueryData<Array<Proposal>>(pendingProposalsKey)
+                queryClient.getQueryData(pendingProposalsKey)
             if (!previousProposal) return
             const newProposal = generateNewProposal(
                 previousProposal,
@@ -31,12 +37,7 @@ export function useReviewProposal(
                 data.notes,
             )
             queryClient.setQueryData(proposalKey, newProposal)
-            queryClient.setQueryData<Array<{
-                studentId: string,
-                award: Award,
-                challenge: Challenge,
-                type: 'log' | 'proposal' | 'submission',
-            }>>(
+            queryClient.setQueryData(
                 pendingProposalsKey,
                 (oldData) => {
                     if (!oldData) return oldData
@@ -64,9 +65,10 @@ export function useReviewProposal(
                 )
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: proposalKey })
-            queryClient.invalidateQueries({ queryKey: pendingProposalsKey })
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: proposalKey })
+            await queryClient.invalidateQueries({ queryKey: pendingProposalsKey })
+            await queryClient.invalidateQueries({ queryKey: challengeKey })
         },
     })
 }

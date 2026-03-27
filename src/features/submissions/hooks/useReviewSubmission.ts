@@ -3,7 +3,8 @@ import { reviewSubmission } from '../api/reviewSubmission'
 import type { StudentChallenge } from '@/types/schemas/challenges'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
-import { queryKeys } from '@/hooks/queryKeys'
+import { challengeQueryOptions } from '@/hooks/useChallenge'
+import { usePendingOptions } from '@/hooks/usePending'
 
 export function useReviewSubmission(
     studentId: string,
@@ -11,12 +12,9 @@ export function useReviewSubmission(
     challenge: Challenge,
 ) {
     const queryClient = useQueryClient()
-    const challengeKey = queryKeys.challenges.detail(
-        award,
-        challenge,
-        studentId,
-    )
-
+    const { queryKey: challengeKey } = challengeQueryOptions(award, challenge, studentId)
+    const { queryKey: pendingProposalsKey } = usePendingOptions()
+    
     return useMutation({
         mutationKey: ['reviewSubmission', studentId, award, challenge],
         mutationFn: (data: { notes: string; accepted: boolean }) =>
@@ -25,10 +23,9 @@ export function useReviewSubmission(
             }),
         onMutate: async (data) => {
             await queryClient.cancelQueries({ queryKey: challengeKey })
-
+            await queryClient.cancelQueries({ queryKey: pendingProposalsKey })
             const previousChallenge =
-                queryClient.getQueryData<StudentChallenge>(challengeKey)
-
+                queryClient.getQueryData(challengeKey)
             if (!previousChallenge) {
                 return { previousChallenge }
             }
@@ -38,7 +35,6 @@ export function useReviewSubmission(
                 data.accepted,
                 data.notes,
             )
-
             queryClient.setQueryData(challengeKey, newChallenge)
 
             return { previousChallenge }

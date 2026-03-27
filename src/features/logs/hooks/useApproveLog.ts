@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { approveLog } from '../api/approveLog'
-import type { LogEntry } from '@/types/schemas/log'
+import { logsQueryOptions } from './useLogs'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
-import { queryKeys } from '@/hooks/queryKeys'
 
 export function useApproveLog(
     logId: string,
@@ -12,12 +11,9 @@ export function useApproveLog(
     studentId: string,
 ) {
     const queryClient = useQueryClient()
-    const pendingLogsKey = queryKeys.logs.byStatus(
-        award,
-        challenge,
-        studentId,
-        'pending',
-    )
+    const { queryKey: pendingLogsKey } = logsQueryOptions(award, challenge, studentId, 'pending')
+    const { queryKey: approvedKey } = logsQueryOptions(award, challenge, studentId, 'approved')
+    const { queryKey: rejectedKey } = logsQueryOptions(award, challenge, studentId, 'rejected')
     return useMutation({
         mutationFn: async ({
             approved,
@@ -27,7 +23,7 @@ export function useApproveLog(
             feedback?: string
         }) => approveLog({ data: { logId, approved, feedback } }),
         onMutate: ({ approved, feedback }) => {
-            const logs = queryClient.getQueryData<Array<LogEntry> | undefined>(
+            const logs = queryClient.getQueryData(
                 pendingLogsKey,
             )
             if (!logs) return
@@ -36,30 +32,18 @@ export function useApproveLog(
             const log = logs[logIndex]
             queryClient.setQueryData(pendingLogsKey, [
                 ...logs.slice(0, logIndex),
-                { ...log, approved, feedback },
+                { ...log, approved, feedback: feedback ?? null },
                 ...logs.slice(logIndex + 1),
             ])
             // Add the log to the appropriate approved/rejected query
-            const targetQueryKey = approved
-                ? queryKeys.logs.byStatus(
-                      award,
-                      challenge,
-                      studentId,
-                      'approved',
-                  )
-                : queryKeys.logs.byStatus(
-                      award,
-                      challenge,
-                      studentId,
-                      'rejected',
-                  )
-            const targetLogs = queryClient.getQueryData<
-                Array<LogEntry> | undefined
-            >(targetQueryKey)
+            const targetQueryKey = approved ? approvedKey : rejectedKey
+            const targetLogs = queryClient.getQueryData(
+                targetQueryKey,
+            )
             if (targetLogs) {
                 queryClient.setQueryData(targetQueryKey, [
                     ...targetLogs,
-                    { ...log, approved, feedback },
+                    { ...log, approved, feedback: feedback ?? null },
                 ])
             }
             return { previousLogs: logs }
@@ -71,11 +55,13 @@ export function useApproveLog(
         },
         onSettled: () => {
             queryClient.invalidateQueries({
-                queryKey: queryKeys.logs.allByStudent(
-                    award,
-                    challenge,
-                    studentId,
-                ),
+                queryKey: pendingLogsKey,
+            })
+            queryClient.invalidateQueries({
+                queryKey: approvedKey,
+            })
+            queryClient.invalidateQueries({
+                queryKey: rejectedKey,
             })
         },
     })

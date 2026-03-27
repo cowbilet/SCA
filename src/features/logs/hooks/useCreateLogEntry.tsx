@@ -1,10 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+    useMutation,
+    useQueryClient,
+} from '@tanstack/react-query'
 import { createLog } from '../api/createLog'
+import { logsQueryOptions } from './useLogs'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
 import type { LogEntry } from '@/types/schemas/log'
 import { useSession } from '@/integrations/better-auth/authClient'
-import { queryKeys } from '@/hooks/queryKeys'
 
 export function useCreateLogEntry({
     award,
@@ -16,6 +19,7 @@ export function useCreateLogEntry({
     const queryClient = useQueryClient()
     const { data } = useSession()
     const studentId = data?.user.id
+    const { queryKey: pendingLogsKey } = logsQueryOptions(award, challenge, studentId ?? '', 'pending')
     return useMutation({
         mutationFn: async ({
             date,
@@ -26,12 +30,6 @@ export function useCreateLogEntry({
         }) => createLog({ data: { award, challenge, description, date } }),
         onMutate: async (newLog) => {
             if (!studentId) return
-            const pendingLogsKey = queryKeys.logs.byStatus(
-                award,
-                challenge,
-                studentId,
-                'pending',
-            )
             await queryClient.cancelQueries({ queryKey: pendingLogsKey })
 
             const previousLogs = queryClient.getQueryData(pendingLogsKey)
@@ -49,7 +47,7 @@ export function useCreateLogEntry({
             }
             queryClient.setQueryData(
                 pendingLogsKey,
-                (oldData: Array<LogEntry> | null) => {
+                (oldData) => {
                     if (!oldData) return [optimisticLog]
                     return [...oldData, optimisticLog]
                 },
@@ -57,29 +55,15 @@ export function useCreateLogEntry({
 
             return { previousLogs }
         },
-        onError: async (_error, _newLog, context) => {
+        onError: (_error, _newLog, context) => {
             if (!studentId) return
-            const pendingLogsKey = queryKeys.logs.byStatus(
-                award,
-                challenge,
-                studentId,
-                'pending',
-            )
-            await queryClient.cancelQueries({ queryKey: pendingLogsKey })
             if (context?.previousLogs) {
                 queryClient.setQueryData(pendingLogsKey, context.previousLogs)
             }
         },
         onSettled: async () => {
             if (!studentId) return
-            await queryClient.invalidateQueries({
-                queryKey: queryKeys.logs.byStatus(
-                    award,
-                    challenge,
-                    studentId,
-                    'pending',
-                ),
-            })
+            await queryClient.invalidateQueries({ queryKey: pendingLogsKey })
         },
     })
 }

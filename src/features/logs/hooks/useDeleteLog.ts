@@ -1,9 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-
+import {
+    useMutation,
+    useQueryClient,
+} from '@tanstack/react-query'
 import { deleteLog } from '../api/deleteLog'
+import { logsQueryOptions } from './useLogs'
 import type { LogEntry } from '@/types/schemas/log'
 import { useSession } from '@/integrations/better-auth/authClient'
-import { queryKeys } from '@/hooks/queryKeys'
 
 export function useDeleteLog({ oldLog }: { oldLog: LogEntry }) {
     const queryClient = useQueryClient()
@@ -15,51 +17,32 @@ export function useDeleteLog({ oldLog }: { oldLog: LogEntry }) {
             : oldLog.approved === false
               ? 'rejected'
               : 'approved'
+    const { queryKey: logsKey } = logsQueryOptions(oldLog.award, oldLog.challenge, studentId ?? '', state)
     return useMutation({
         mutationFn: async () => deleteLog({ data: { logId: oldLog.logId } }),
         onMutate: async () => {
             if (!studentId) return
-            const logsKey = queryKeys.logs.byStatus(
-                oldLog.award,
-                oldLog.challenge,
-                studentId,
-                state,
-            )
             await queryClient.cancelQueries({ queryKey: logsKey })
 
             const previousLogs = queryClient.getQueryData(logsKey)
             queryClient.setQueryData(
                 logsKey,
-                (oldData: Array<LogEntry> | null) => {
+                (oldData) => {
                     if (!oldData) return [oldLog]
                     return oldData.filter((log) => log.logId !== oldLog.logId)
                 },
             )
             return { previousLogs }
         },
-        onError: async (_error, _newLog, context) => {
+        onError: (_error, _newLog, context) => {
             if (!studentId) return
-            const logsKey = queryKeys.logs.byStatus(
-                oldLog.award,
-                oldLog.challenge,
-                studentId,
-                state,
-            )
-            await queryClient.cancelQueries({ queryKey: logsKey })
             if (context?.previousLogs) {
                 queryClient.setQueryData(logsKey, context.previousLogs)
             }
         },
         onSettled: async () => {
             if (!studentId) return
-            await queryClient.invalidateQueries({
-                queryKey: queryKeys.logs.byStatus(
-                    oldLog.award,
-                    oldLog.challenge,
-                    studentId,
-                    state,
-                ),
-            })
+            await queryClient.invalidateQueries({ queryKey: logsKey })
         },
     })
 }

@@ -46,11 +46,13 @@ export default function Main() {
     if (isChallengeError || isProposalError) {
         return <div>Error loading challenge data. Please try again later.</div>
     }
-    // If there is no challenge data this means that the user has not started yet
-    if (!challengeData) {
+    // If there is no proposal data this means that the user has not started yet
+    // Technically we should be getting the challenge data, however I do not want to deal with the state management of optimistically creating that
+    if (!proposalData) {
         return <SubmitProposal />
     }
-    if (proposalData && proposalData.accepted !== true) {
+
+    if (proposalData.accepted !== true) {
         switch (proposalData.status) {
             case 'not started':
                 return (
@@ -84,7 +86,10 @@ export default function Main() {
                 break
         }
     }
-    if (proposalData && proposalData.accepted === true) {
+    if (!challengeData) {
+        return <div>Error loading challenge data. Please try again later.</div>
+    }
+    if (proposalData.accepted === true) {
         switch (challengeData.status) {
             case 'not started':
             case 'rejected mentor':

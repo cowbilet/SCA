@@ -5,12 +5,12 @@ export const CreateProposalSchema = z.object({
     description: z
         .string()
         .trim()
-        .min(20, 'Description must be at least 20 characters')
+        .min(1, 'Description is required')
         .max(1000, 'Description must be 1000 characters or less'),
     goal: z
         .string()
         .trim()
-        .min(10, 'Goal must be at least 10 characters')
+        .min(1, 'Goals are required')
         .max(1000, 'Goal must be 1000 characters or less'),
 })
 
@@ -18,6 +18,6 @@ export const ReviewProposalFeedbackSchema = z.object({
     feedback: z
         .string()
         .trim()
-        .min(5, 'Feedback must be at least 5 characters')
+        .min(1, 'Feedback is required')
         .max(1000, 'Feedback must be 1000 characters or less'),
 })

@@ -1,17 +1,28 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { createUserProposal } from '../api/createUserProposal'
+import { proposalQueryOptions } from './useProposal'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
 import type { Proposal } from '@/types/schemas/proposal'
 import { useSession } from '@/integrations/better-auth/authClient'
-import { queryKeys } from '@/hooks/queryKeys'
+import { challengeQueryOptions } from '@/hooks/useChallenge'
 
 export function useCreateChallenge(award?: Award, challenge?: Challenge) {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { data: user } = useSession()
     const id = user?.user.id
+    const keys =
+        award && challenge && id
+            ? {
+                  proposalKey: proposalQueryOptions(award, challenge, id)
+                      .queryKey,
+                  challengeKey: challengeQueryOptions(award, challenge, id)
+                      .queryKey,
+              }
+            : null
+
     return useMutation({
         mutationFn: (data: {
             mentorEmail: string
@@ -19,25 +30,20 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
             goal: string
         }) => createUserProposal({ data: { ...data, award, challenge } }),
         onMutate: async (newProposal) => {
-            if (!award || !challenge || !id) {
+            if (!award || !challenge || !id || !keys) {
                 throw new Error(
                     'Award, challenge, and user ID must be provided',
                 )
             }
-            const challengeKey = queryKeys.challenges.detail(
-                award,
-                challenge,
-                id,
-            )
-            const proposalKey = queryKeys.proposals.detail(award, challenge, id)
+            const { proposalKey, challengeKey } = keys
             await queryClient.cancelQueries({ queryKey: proposalKey })
-
-            const previousProposal = queryClient.getQueryData<Proposal | null>(
+            await queryClient.cancelQueries({ queryKey: challengeKey })
+            const previousProposal = queryClient.getQueryData(
                 proposalKey,
             )
 
             const optimisticProposal: Proposal = {
-                studentId: '',
+                studentId: id,
                 award,
                 challenge,
                 mentorEmail: newProposal.mentorEmail,
@@ -49,7 +55,7 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
                 status: 'pending mentor',
             }
 
-            queryClient.setQueryData<Proposal | null>(
+            queryClient.setQueryData(
                 proposalKey,
                 optimisticProposal,
             )
@@ -57,10 +63,10 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
             return { previousProposal }
         },
         onError: async (_error, _newProposal, context) => {
-            if (!award || !challenge || !id) {
+            if (!award || !challenge || !id || !keys) {
                 return
             }
-            const proposalKey = queryKeys.proposals.detail(award, challenge, id)
+            const { proposalKey } = keys
 
             await queryClient.cancelQueries({ queryKey: proposalKey })
 
@@ -77,12 +83,12 @@ export function useCreateChallenge(award?: Award, challenge?: Challenge) {
             }
         },
         onSuccess: async (data) => {
-            if (!award || !challenge || !id) {
+            if (!award || !challenge || !id || !keys) {
                 throw new Error(
                     'Award, challenge, and user ID must be provided',
                 )
             }
-            const proposalKey = queryKeys.proposals.detail(award, challenge, id)
+            const { proposalKey } = keys
 
             await queryClient.setQueryData(proposalKey, data)
 

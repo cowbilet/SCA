@@ -10,10 +10,9 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
+import type { QueryClient } from '@tanstack/react-query'
 import favicon from '@/public/logo.svg'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-import type { QueryClient } from '@tanstack/react-query'
 
 interface MyRouterContext {
     queryClient: QueryClient
