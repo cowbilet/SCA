@@ -29,7 +29,7 @@ export default function ReviewProposal() {
         (isMentor && proposal.status === 'pending mentor') ||
         (!isMentor && proposal.status === 'pending assessor')
     return (
-        <div className="flex flex-row gap-4 max-lg:flex-col">
+        <div className="flex flex-row gap-4 flex-1 max-lg:flex-col">
             <Card className="flex-1 p-0! flex flex-col">
                 <CardHeader variant="neutral">
                     <BookOpen className="h-5 w-5 text-amber-600" />

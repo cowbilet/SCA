@@ -51,18 +51,22 @@ export default function FeedbackForm({
                 e.preventDefault()
                 form.handleSubmit()
             }}
-            className={className}
+            className={clsx(
+                'flex flex-col h-full',
+                className,
+                isLoading && 'opacity-50 cursor-not-allowed',
+            )}
             {...props}
         >
             <form.Field name="feedback">
                 {(field) => (
-                    <div className="flex flex-col">
+                    <div className="flex flex-col h-full">
                         <textarea
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
                             className={clsx(
-                                'w-full border-2 border-gray-400 p-2 rounded-lg mb-4',
+                                'w-full border-2 border-gray-400 p-2 rounded-lg mb-4 flex-1',
                                 {
                                     isLoading: 'opacity-50 cursor-not-allowed',
                                     isError: 'border-red-500',
@@ -88,28 +92,31 @@ export default function FeedbackForm({
                 <p className="text-red-500 text-sm mb-3">{submitError}</p>
             )}
             {isError && <p className="text-red-500 text-sm mb-3">{error}</p>}
-            <button
-                id="reject"
-                type="submit"
-                onClick={() => setDecision(false)}
-                className={clsx(
-                    'bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150',
-                    { isLoading: 'opacity-50 cursor-not-allowed' },
-                )}
-            >
-                Reject
-            </button>
-            <button
-                id="approve"
-                type="submit"
-                onClick={() => setDecision(true)}
-                className={clsx(
-                    'bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2',
-                    { isLoading: 'opacity-50 cursor-not-allowed' },
-                )}
-            >
-                Approve
-            </button>
+            <div className="flex flex-row justify-end">
+                <button
+                    id="reject"
+                    type="submit"
+                    onClick={() => setDecision(false)}
+                    className={clsx(
+                        'bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150 w',
+                        { isLoading: 'opacity-50 cursor-not-allowed' },
+                    )}
+                >
+                    Reject
+                </button>
+                <button
+                    id="approve"
+                    type="submit"
+                    onClick={() => setDecision(true)}
+                    className={clsx(
+                        'bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 ml-2',
+                        { isLoading: 'opacity-50 cursor-not-allowed' },
+                    )}
+                >
+                    Approve
+                </button>
+
+            </div>
         </form>
     )
 }

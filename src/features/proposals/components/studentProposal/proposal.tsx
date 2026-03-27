@@ -67,7 +67,7 @@ export function ActiveProposal({
     return (
         <Card className="h-full flex flex-col p-0!">
             <CardHeader variant="neutral">
-                <BookOpen className="h-5 w-5 text-gray-600" />
+                <BookOpen className="h-5 w-5 text-amber-600" />
                 <h2 className="text-lg font-semibold">Your Proposal</h2>
             </CardHeader>
             <div className="p-4 flex-1 overflow-y-auto">

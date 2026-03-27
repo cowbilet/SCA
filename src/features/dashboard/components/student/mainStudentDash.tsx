@@ -38,7 +38,7 @@ export default function Main() {
 
     if (isChallengeLoading || isProposalLoading) {
         return (
-            <div className="space-y-4">
+            <div className="h-full flex flex-col gap-4">
                 <Skeleton count={3} />
             </div>
         )
@@ -54,7 +54,7 @@ export default function Main() {
         switch (proposalData.status) {
             case 'not started':
                 return (
-                    <div className="space-y-4">
+                    <div className="h-full flex flex-col gap-4">
                         <InstructionAndFeedback
                             data={proposalData}
                             Instructions={({ status }) => (
@@ -70,7 +70,7 @@ export default function Main() {
             case 'rejected mentor':
             case 'rejected assessor':
                 return (
-                    <div className="space-y-4">
+                    <div className="h-full flex flex-col gap-4">
                         <InstructionAndFeedback
                             data={proposalData}
                             Instructions={({ status }) => (
@@ -90,7 +90,7 @@ export default function Main() {
             case 'rejected mentor':
             case 'rejected assessor':
                 return (
-                    <div className="space-y-4">
+                    <div className="h-full flex flex-col gap-4">
                         <div className="flex flex-row items-center justify-start gap-4">
                             <CreateActivity />
                             <StudentSubmission />
@@ -109,7 +109,7 @@ export default function Main() {
             case 'pending mentor':
             case 'pending assessor':
                 return (
-                    <div className="space-y-4">
+                    <div className="h-full flex flex-col gap-4">
                         <InstructionAndFeedback
                             data={challengeData}
                             Instructions={({ status }) => (
@@ -132,7 +132,7 @@ export default function Main() {
                 )
             case 'completed':
                 return (
-                    <div className="space-y-4">
+                    <div className="h-full flex flex-col gap-4">
                         <p>
                             You did it! Your submission has been marked as
                             completed. You can still view your activity logs

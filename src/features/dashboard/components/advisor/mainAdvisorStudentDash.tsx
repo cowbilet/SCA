@@ -32,7 +32,7 @@ export default function MainAdvisorStudentDash() {
 
     if (isChallengeLoading || isProposalLoading) {
         return (
-            <div className="space-y-4">
+            <div className="h-full flex flex-col gap-4">
                 <Skeleton count={3} />
             </div>
         )
@@ -43,7 +43,7 @@ export default function MainAdvisorStudentDash() {
     // If the proposal has not been accepted yet let them review the proposal
     if (proposalData && proposalData.accepted !== true) {
         return (
-            <div className="space-y-4">
+            <div className="h-full flex flex-col flex-1 gap-4">
                 <InstructionAndFeedback
                     data={proposalData}
                     Instructions={({ status }) => (
@@ -64,7 +64,7 @@ export default function MainAdvisorStudentDash() {
             case 'rejected assessor':
             case 'rejected mentor':
                 return (
-                    <div className="space-y-4">
+                    <div className="h-full flex flex-col flex-1 gap-4">
                         <InstructionAndFeedback
                             Instructions={({ status }) => (
                                 <AdvisorSubmissionInstructions
@@ -81,7 +81,7 @@ export default function MainAdvisorStudentDash() {
                 )
             default:
                 return (
-                    <div className="space-y-4">
+                    <div className="h-full flex flex-col flex-1 gap-4">
                         <InstructionAndFeedback
                             Instructions={({ status }) => (
                                 <AdvisorSubmissionInstructions

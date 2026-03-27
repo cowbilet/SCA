@@ -2969,16 +2969,6 @@ packages:
       crossws:
         optional: true
 
-  h3@2.0.1-rc.20:
-    resolution: {integrity: sha512-28ljodXuUp0fZovdiSRq4G9OgrxCztrJe5VdYzXAB7ueRvI7pIUqLU14Xi3XqdYJ/khXjfpUOOD2EQa6CmBgsg==}
-    engines: {node: '>=20.11.1'}
-    hasBin: true
-    peerDependencies:
-      crossws: ^0.4.1
-    peerDependenciesMeta:
-      crossws:
-        optional: true
-
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
     engines: {node: '>= 0.4'}
@@ -7208,13 +7198,6 @@ snapshots:
     optionalDependencies:
       crossws: 0.4.4(srvx@0.11.13)
 
-  h3@2.0.1-rc.20(crossws@0.4.4(srvx@0.11.13)):
-    dependencies:
-      rou3: 0.8.1
-      srvx: 0.11.13
-    optionalDependencies:
-      crossws: 0.4.4(srvx@0.11.13)
-
   has-bigints@1.1.0: {}
 
   has-flag@4.0.0: {}
@@ -7668,7 +7651,7 @@ snapshots:
       crossws: 0.4.4(srvx@0.11.13)
       db0: 0.3.4(@electric-sql/pglite@0.3.15)(drizzle-orm@0.45.1(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.1)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@types/pg@8.20.0)(kysely@0.28.14)(mysql2@3.15.3)(pg@8.20.0)(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)))(mysql2@3.15.3)
       env-runner: 0.1.6
-      h3: 2.0.1-rc.20(crossws@0.4.4(srvx@0.11.13))
+      h3: 2.0.1-rc.16(crossws@0.4.4(srvx@0.11.13))
       hookable: 6.1.0
       nf3: 0.3.14
       ocache: 0.1.4

@@ -6,6 +6,7 @@ import { challengeSchema } from '@/types/schemas/challenges'
 import { awardSchema } from '@/types/schemas/award'
 import { dbGetStudentChallenge } from '@/db/challenges.server'
 import { futureDate } from '@/types/schemas/log'
+import { dbGetProposal } from '@/db/proposals.server'
 
 export const createLog = createServerFn({ method: 'POST' })
     .inputValidator(
@@ -24,7 +25,12 @@ export const createLog = createServerFn({ method: 'POST' })
             award,
             challenge,
         )
-        if (!challengeData || challengeData.status !== 'completed') {
+        const proposalData = await dbGetProposal(
+            student.userId,
+            award,
+            challenge
+        )
+        if (!proposalData || proposalData.status !== 'completed') {
             throw new Error("You don't have a proposal for this challenge")
         }
         const logEntry = await dbCreateLogEntry(
