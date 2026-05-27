@@ -27,7 +27,7 @@ export const location = pgEnum('location', [
     'SA',
     'NAT',
 ])
-export const role = pgEnum('role', ['student', 'mentor', 'assessor'])
+export const role = pgEnum('role', ['student', 'mentor', 'assessor', 'admin'])
 export const status = pgEnum('application_states', [
     'not started',
     'withdrawn',

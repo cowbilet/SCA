@@ -1,5 +1,7 @@
 import { z } from 'zod'
-import { location, role } from '@/db/schema'
+import { location } from '@/db/schema'
+
+export const publicSignupRoles = ['student', 'mentor'] as const
 
 export const LoginSchema = z.object({
     email: z.email('Enter a valid email address'),
@@ -14,6 +16,6 @@ export const SignupSchema = z.object({
         .max(100, 'Name must be 100 characters or less'),
     email: z.email('Enter a valid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
-    role: z.enum(role.enumValues, 'Invalid role selection'),
+    role: z.enum(publicSignupRoles, 'Invalid role selection'),
     state: z.enum(location.enumValues, 'Invalid state selection'),
 })

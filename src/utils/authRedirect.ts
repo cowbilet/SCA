@@ -1,4 +1,4 @@
-type SessionRole = 'student' | 'mentor' | 'assessor'
+type SessionRole = 'student' | 'mentor' | 'assessor' | 'admin'
 
 export function getRoleRedirect(role?: string | null) {
     if (role === 'student') {
@@ -19,9 +19,18 @@ export function getRoleRedirect(role?: string | null) {
         }
     }
 
+    if (role === 'admin') {
+        return { to: '/admin' as const }
+    }
+
     return { to: '/login' as const }
 }
 
 export function isSessionRole(role: unknown): role is SessionRole {
-    return role === 'student' || role === 'mentor' || role === 'assessor'
+    return (
+        role === 'student' ||
+        role === 'mentor' ||
+        role === 'assessor' ||
+        role === 'admin'
+    )
 }

@@ -3,6 +3,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { db } from '@/db/index.server'
 import 'dotenv/config'
 // import { location, role } from "@/db/schema.server";
+import { publicSignupRoles } from '@/types/schemas/auth'
 import { tanstackStartCookies } from 'better-auth/tanstack-start'
 
 export const auth = betterAuth({
@@ -30,7 +31,10 @@ export const auth = betterAuth({
             role: {
                 type: 'string',
                 required: true,
-                // validate: (value: string) => Object.values(role.enumValues).includes(value as typeof role.enumValues[number]),
+                validate: (value: string) =>
+                    publicSignupRoles.includes(
+                        value as (typeof publicSignupRoles)[number],
+                    ),
             },
             // name: {
             //     type: "string",

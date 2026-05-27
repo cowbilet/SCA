@@ -27,7 +27,7 @@ export const ensureSession = createServerFn({ method: 'GET' }).handler(
         return session
     },
 )
-const restrictRoleSchema = z.array(z.enum([...role.enumValues, 'assessor']))
+const restrictRoleSchema = z.array(z.enum(role.enumValues))
 export const restrictRoles = createServerFn({ method: 'GET' })
     .inputValidator(restrictRoleSchema)
     .handler(async ({ data: roles }) => {

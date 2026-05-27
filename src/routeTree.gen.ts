@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as StudentRouteRouteImport } from './routes/student/route'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AdvisorRouteRouteImport } from './routes/$advisor/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudentAwardRouteRouteImport } from './routes/student/$award/route'
@@ -35,6 +36,11 @@ const LoginRoute = LoginRouteImport.update({
 const StudentRouteRoute = StudentRouteRouteImport.update({
   id: '/student',
   path: '/student',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdvisorRouteRoute = AdvisorRouteRouteImport.update({
@@ -88,6 +94,7 @@ const AdvisorStudentIdAwardChallengeRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$advisor': typeof AdvisorRouteRouteWithChildren
+  '/admin': typeof AdminRouteRoute
   '/student': typeof StudentRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$advisor': typeof AdvisorRouteRouteWithChildren
+  '/admin': typeof AdminRouteRoute
   '/student': typeof StudentRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$advisor': typeof AdvisorRouteRouteWithChildren
+  '/admin': typeof AdminRouteRoute
   '/student': typeof StudentRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$advisor'
+    | '/admin'
     | '/student'
     | '/login'
     | '/signup'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$advisor'
+    | '/admin'
     | '/student'
     | '/login'
     | '/signup'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$advisor'
+    | '/admin'
     | '/student'
     | '/login'
     | '/signup'
@@ -174,6 +186,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdvisorRouteRoute: typeof AdvisorRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRoute
   StudentRouteRoute: typeof StudentRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/student'
       fullPath: '/student'
       preLoaderRoute: typeof StudentRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$advisor': {
@@ -336,6 +356,7 @@ const StudentRouteRouteWithChildren = StudentRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdvisorRouteRoute: AdvisorRouteRouteWithChildren,
+  AdminRouteRoute: AdminRouteRoute,
   StudentRouteRoute: StudentRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
