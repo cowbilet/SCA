@@ -21,7 +21,7 @@ const headerVariantStyles: Record<CardHeaderVariant, string> = {
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
     return (
         <div
-            className={clsx('bg-white rounded-lg shadow p-4', className)}
+            className={clsx('bg-white rounded-lg shadow', className)}
             {...props}
         >
             {props.children}
