@@ -12,3 +12,4 @@ count.txt
 drizzle
 .vinxi
 todos.json
+.pnpm-store/*
