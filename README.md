@@ -17,6 +17,40 @@ To build this application for production:
 pnpm build
 ```
 
+## Docker
+
+This repository includes a production Docker image for the TanStack Start/Nitro server and a Compose setup with PostgreSQL.
+
+### Required environment variables
+
+- `DATABASE_URL`
+- `BETTER_AUTH_SECRET`
+- `PUBLIC_BETTER_AUTH_URL`
+
+### Local stack
+
+Start PostgreSQL and the app with the production compose file:
+
+```bash
+docker compose up --build
+```
+
+Run migrations against the Compose database:
+
+```bash
+docker compose --profile tools run --rm migrate
+```
+
+### Development with Docker
+
+Use the dev overlay for hot reload:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
+
+The app listens on port `3000` and the database is available on the default Postgres port `5432`.
+
 ## Testing
 
 This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
