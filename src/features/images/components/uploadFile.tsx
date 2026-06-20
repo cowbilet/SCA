@@ -1,5 +1,5 @@
 import { useParams } from '@tanstack/react-router'
-import { usePresignedFileUpload } from "../hooks/usePresignedFileUpload";
+import { useUploadFile } from "../hooks/useFileUpload";
 import { allowedFileTypes } from '../types/file';
 import type { AllowedFileTypes} from '../types/file';
 
@@ -8,7 +8,7 @@ export function UploadFile() {
         from: '/student/$award/$challenge',
         strict: true,
     })
-    const { mutate: getUploadUrl } = usePresignedFileUpload(award, challenge)
+    const { mutate: uploadFile } = useUploadFile(award, challenge)
     return (
         <div>
             <input
@@ -16,11 +16,10 @@ export function UploadFile() {
                 onChange={(e) => {
                     const file = e.target.files?.[0]
                     if (file && file.type in allowedFileTypes) {
-                        getUploadUrl(file.type as AllowedFileTypes)
+                        uploadFile({ file })
                     }
                 }}
             />
-
         </div>
     )
 }

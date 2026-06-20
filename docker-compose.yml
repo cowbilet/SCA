@@ -34,7 +34,6 @@ services:
                 condition: service_healthy
         ports:
             - '3000:3000'
-
     garage:
         image: dxflrs/garage:v2.3.0
         command: ['/garage', 'server', '--single-node', '--default-bucket']

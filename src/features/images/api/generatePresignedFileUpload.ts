@@ -20,8 +20,9 @@ export const generatePresignedFileUpload = createServerFn({ method: 'GET' }).inp
     async ({ data }: { data: z.infer<typeof getPresignedURLSchema> }): Promise<string> => {
         const student = await restrictRoles({ data: ['student'] }) 
         return getSignedUrl(s3Client, new PutObjectCommand({
-            Bucket: 'southern-cross-record-book',
+            Bucket: 'uploads',
             Key: `${student.userId}/${data.award}/${data.challenge}/${crypto.randomUUID()}.${allowedFileTypes[data.fileType]}`,
+            ContentType: data.fileType,
         }), {
             expiresIn: 3600
         })

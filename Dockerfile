@@ -3,7 +3,7 @@ WORKDIR /app
 
 FROM base AS deps
 RUN npm install -g pnpm
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
 RUN pnpm install --frozen-lockfile --ignore-scripts 
 
 FROM deps AS build
@@ -16,6 +16,8 @@ WORKDIR /app
 RUN npm install -g pnpm
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=build /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=build /app/tsconfig.json ./tsconfig.json
 COPY --from=build /app/.output ./.output
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]
