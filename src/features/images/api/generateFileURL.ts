@@ -23,9 +23,22 @@ export const getFiles = createServerFn({ method: 'GET' }).inputValidator(getPres
             Bucket: 'uploads',
             Prefix: `${data.studentId}/${data.award}/${data.challenge}/`
         })
-        const response = await s3Client.send(command)
-        const existingFiles = response.Contents || []
-        console.log('Existing files:', existingFiles)
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 5000)
+
+        try {
+        const response = await s3Client.send(command, { abortSignal: controller.signal })
+        clearTimeout(timeout)
+        console.log('S3 response:', response)
+        } catch (err) {
+        clearTimeout(timeout)
+        console.error('S3 call failed:', err)
+        throw err
+        }
+        // const response = await s3Client.send(command)
+        // console.log('S3 response:', response)
+        // const existingFiles = response.Contents || []
+        // console.log('Existing files:', existingFiles)
         return "hi"
     },
 )

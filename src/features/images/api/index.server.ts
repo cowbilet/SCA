@@ -1,8 +1,7 @@
 import { S3Client } from "@aws-sdk/client-s3";
 
-
 export const s3Client = new S3Client({
-    endpoint: "http://localhost:3900", // Your Garage endpoint
+    endpoint: "http://garage:3900", // Your Garage endpoint
     region: "garage",                  // Default region string for Garage
     credentials: {
         accessKeyId: "GKchange-me",     // Generated via `garage key create`
