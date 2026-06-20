@@ -12,16 +12,10 @@ services:
             VITE_APP_TITLE: Southern Cross Record Book
         volumes:
             - app-node_modules:/app/node_modules
+            - .:/app
         depends_on:
             db:
                 condition: service_healthy
-        develop:
-            watch:
-                - action: sync
-                  path: ./src
-                  target: /app/src
-                - action: rebuild
-                  path: ./package.json
 
 volumes:
     app-node_modules:

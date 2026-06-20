@@ -19,6 +19,5 @@ export const getRouter = () => {
     })
 
     setupRouterSsrQueryIntegration({ router, queryClient })
-
     return router
 }
