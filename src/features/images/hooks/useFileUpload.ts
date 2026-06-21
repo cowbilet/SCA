@@ -1,19 +1,18 @@
 import { useMutation } from "@tanstack/react-query";    
-import { generatePresignedFileUpload  } from "../api/generatePresignedFileUpload";
-import type { AllowedFileTypes } from "../types/file";
+import { getFileUploadURL } from "../api/getFileUploadURL";
 import type { Award } from "@/types/awards";
 import type { Challenge } from "@/types/challenges";
 
 export function useUploadFile(award: Award, challenge: Challenge) {
     return useMutation({
-        mutationFn: async ({ file } : { file: File }) => {
+        mutationFn: async ({ file, logId } : { file: File, logId: string }) => {
             // TODO: Make this a guard util or something
-            const fileType = file.type as AllowedFileTypes
-            const url = await generatePresignedFileUpload({data: {award, challenge, fileType}})
+            const fileName = file.name
+            const url = await getFileUploadURL({data: {award, challenge, fileName, logId}})
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': fileType,
+                    'Content-Type': file.type,
                 },
                 body: file,
             })

@@ -12,6 +12,7 @@ type ActivityFormValues = {
 export default function ActivityForm({
     log,
     onValidSubmit,
+    children,
     ...props
 }: {
     log?: LogEntry
@@ -100,6 +101,7 @@ export default function ActivityForm({
                     {error}
                 </div>
             )}
+            {children}
         </form>
     )
 }
