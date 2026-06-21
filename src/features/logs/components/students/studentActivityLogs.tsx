@@ -9,6 +9,7 @@ import type { LogEntry } from '@/types/schemas/log'
 import { LogEntryScaffold } from '@/features/logs/components/activityLogs'
 
 import { Route } from '@/routes/student/route'
+import { ViewFiles } from '@/features/images/components/viewFiles'
 
 export function StudentLogEntries({
     type,
@@ -50,6 +51,7 @@ function StudentLogEntry({ log }: { log: LogEntry }) {
                     <>
                         <EditActivity log={log} />
                         <DeleteActivity log={log} />
+                        <ViewFiles log={log} />
                     </>
                 )}
             </div>

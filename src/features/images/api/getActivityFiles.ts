@@ -17,7 +17,7 @@ const getPresignedURLSchema = z.object({
     logId: z.uuid(),
 })
 export const getFiles = createServerFn({ method: 'GET' }).inputValidator(getPresignedURLSchema).handler(
-    async ({ data }: { data: z.infer<typeof getPresignedURLSchema> }): Promise<string> => {
+    async ({ data }: { data: z.infer<typeof getPresignedURLSchema> }): Promise<Array<string>> => {
         const logEntry = await dbGetLogEntry(data.logId)
         if (!logEntry) {
             throw new Error('Log entry not found')
@@ -29,7 +29,7 @@ export const getFiles = createServerFn({ method: 'GET' }).inputValidator(getPres
         })
         const files = await ServerS3Client.send(command)
         const fileURLs = await Promise.all((files.Contents || []).map(file => generateFileURL(file.Key!)))
-        return JSON.stringify(fileURLs)
+        return fileURLs
     },
 )
 function generateFileURL(key: string) {

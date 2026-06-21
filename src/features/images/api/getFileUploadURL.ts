@@ -33,7 +33,7 @@ export const getFileUploadURL = createServerFn({ method: 'GET' }).inputValidator
         
         return getSignedUrl(PublicS3Client, new PutObjectCommand({
             Bucket: 'uploads',
-            Key: `${data.logId}/${data.award}/${data.challenge}/${crypto.randomUUID()}.${data.fileName.split('.').pop()}`,
+            Key: `${data.logId}/${data.award}/${data.challenge}/${data.fileName}`,
             ContentType: data.fileName.split('.').pop(),
         }), {
             expiresIn: 3600
