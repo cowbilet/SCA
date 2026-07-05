@@ -33,7 +33,7 @@ export default function CreateActivityForm({
                 }}
                 {...props}
             >
-                <UploadFile onFilesChange={setSelectedFiles} />
+                <UploadFile files={selectedFiles} onFilesChange={setSelectedFiles} />
             </ActivityForm>
         </>
     )

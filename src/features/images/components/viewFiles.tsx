@@ -34,7 +34,7 @@ function ViewFilesDialog({log}: {log: LogEntry}) {
             <DialogHeader>
                 <h2 className="text-lg font-semibold">View Files</h2>
             </DialogHeader>
-            <DialogBody>
+            <DialogBody className='flex-col flex'>
                 {files?.map((file) => (
                     <a
                         key={file}

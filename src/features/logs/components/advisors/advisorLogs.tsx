@@ -4,8 +4,8 @@ import { Check, X } from 'lucide-react'
 import { useLogs } from '../../hooks/useLogs'
 import { useApproveLog } from '../../hooks/useApproveLog'
 import type { LogEntry } from '@/types/schemas/log'
+import { ViewFiles } from "@/features/images/components/viewFiles"
 import { LogEntryScaffold } from '@/features/logs/components/activityLogs'
-import { ViewFiles } from '@/features/images/components/viewFiles'
 
 export function AdvisorLogEntries({
     type,
@@ -74,9 +74,9 @@ function MentorLogEntry({ log }: { log: LogEntry }) {
                         >
                             <X />
                         </button>
-                        <ViewFiles log={log} />
                     </>
                 )}
+                <ViewFiles log={log} />
             </div>
         </LogEntryScaffold>
     )

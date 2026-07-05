@@ -10,10 +10,11 @@ export const editLog = createServerFn({ method: 'POST' })
             description: z.string().min(1),
             date: z.coerce.date(),
             approved: z.boolean().optional().nullable(),
+            files: z.array(z.string()).optional(),
         }),
     )
     .handler(async ({ data }) => {
-        const { logId, description, date, approved } = data
+        const { logId, description, date, approved, files } = data
         const log = await dbGetLogEntry(logId)
         if (!log) {
             throw new Error('Log entry not found')
@@ -28,7 +29,13 @@ export const editLog = createServerFn({ method: 'POST' })
         if (log.approved === false && approved) {
             throw new Error('Cannot change a rejected log entry to approved')
         }
-        const logEntry = await dbEditLogEntry(logId, date, description, approved)
+        const logEntry = await dbEditLogEntry(
+            logId,
+            date,
+            description,
+            approved,
+            files,
+        )
         if (!logEntry) {
             throw new Error('Failed to edit log entry')
         }

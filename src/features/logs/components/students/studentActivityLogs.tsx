@@ -51,9 +51,9 @@ function StudentLogEntry({ log }: { log: LogEntry }) {
                     <>
                         <EditActivity log={log} />
                         <DeleteActivity log={log} />
-                        <ViewFiles log={log} />
                     </>
                 )}
+                <ViewFiles log={log} />
             </div>
         </LogEntryScaffold>
     )

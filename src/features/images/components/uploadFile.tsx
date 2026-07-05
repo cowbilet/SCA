@@ -2,15 +2,15 @@ import clsx from 'clsx'
 import {
     forwardRef,
     useId,
-    useState,
 } from 'react'
 import { allowedFileTypes } from '../types/file'
 import type { ChangeEvent, ComponentPropsWithoutRef } from 'react'
 
 type UploadFileProps = ComponentPropsWithoutRef<'input'> & {
+    files: Array<File>
     label?: string
     description?: string
-    onFilesChange?: (files: Array<File>) => void
+    onFilesChange: (files: Array<File>) => void
 }
 
 type SelectedFileChipProps = {
@@ -102,6 +102,7 @@ export const UploadFile = forwardRef<HTMLInputElement, UploadFileProps>(
         {
             className,
             id,
+            files,
             label = 'Upload files',
             description = 'Choose one or more files to attach to this entry.',
             accept = Object.keys(allowedFileTypes).join(','),
@@ -114,29 +115,26 @@ export const UploadFile = forwardRef<HTMLInputElement, UploadFileProps>(
     ) {
         const generatedId = useId()
         const inputId = id ?? generatedId
-        const [selectedFiles, setSelectedFiles] = useState<Array<File>>([])
 
         const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-            const files = Array.from(event.currentTarget.files ?? [])
-            if (!files.length) {
+            const selectedFiles = Array.from(event.currentTarget.files ?? [])
+            if (!selectedFiles.length) {
                 onChange?.(event)
                 return
             }
 
-            const nextFiles = [...selectedFiles, ...files]
-            setSelectedFiles(nextFiles)
-            onFilesChange?.(nextFiles)
+            const nextFiles = [...files, ...selectedFiles]
+            onFilesChange(nextFiles)
 
             event.currentTarget.value = ''
             onChange?.(event)
         }
 
         const removeFile = (fileIndex: number) => {
-            const nextFiles = selectedFiles.filter(
+            const nextFiles = files.filter(
                 (_, currentFileIndex) => currentFileIndex !== fileIndex,
             )
-            setSelectedFiles(nextFiles)
-            onFilesChange?.(nextFiles)
+            onFilesChange(nextFiles)
         }
 
         return (
@@ -159,7 +157,7 @@ export const UploadFile = forwardRef<HTMLInputElement, UploadFileProps>(
                 />
 
                 <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50/80 p-3">
-                    <UploadFileList files={selectedFiles} onRemove={removeFile} />
+                    <UploadFileList files={files} onRemove={removeFile} />
                 </div>
             </div>
         )

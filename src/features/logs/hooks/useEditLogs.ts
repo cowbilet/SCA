@@ -4,6 +4,7 @@ import {
 } from '@tanstack/react-query'
 import { editLog } from '../api/editLog'
 import type { LogEntry } from '@/types/schemas/log'
+import { uploadFilesForLog } from '@/features/images/hooks/useFileUpload'
 import { useSession } from '@/integrations/better-auth/authClient'
 
 type LogStatus = 'pending' | 'approved' | 'rejected'
@@ -35,11 +36,30 @@ export function useEditLog({ oldLog }: { oldLog: LogEntry }) {
             date,
             description,
             approved,
+            files,
+            newFiles = [],
         }: {
             date: string
             description: string
             approved?: boolean | null
-        }) => editLog({ data: { logId: oldLog.logId, date, description, approved } }),
+            files?: Array<string>
+            newFiles?: Array<File>
+        }) => {
+            const logEntry = await editLog({
+                data: { logId: oldLog.logId, date, description, approved, files },
+            })
+
+            if (newFiles.length > 0) {
+                await uploadFilesForLog({
+                    award: oldLog.award,
+                    challenge: oldLog.challenge,
+                    files: newFiles,
+                    logId: oldLog.logId,
+                })
+            }
+
+            return logEntry
+        },
         onMutate: async (newLog) => {
             if (!studentId) return
             await queryClient.cancelQueries({ queryKey: logsPrefixKey })
@@ -55,6 +75,7 @@ export function useEditLog({ oldLog }: { oldLog: LogEntry }) {
                     newLog.approved === undefined
                         ? oldLog.approved
                         : newLog.approved,
+                files: newLog.files ?? oldLog.files,
             }
 
             const oldStatus = statusFromApproved(oldLog.approved)
@@ -95,6 +116,9 @@ export function useEditLog({ oldLog }: { oldLog: LogEntry }) {
         onSettled: async () => {
             if (!studentId) return
             await queryClient.invalidateQueries({ queryKey: logsPrefixKey })
+            await queryClient.invalidateQueries({
+                queryKey: ['files', oldLog.award, oldLog.challenge, oldLog.logId],
+            })
         },
     })
 }

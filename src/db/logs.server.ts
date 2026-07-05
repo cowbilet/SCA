@@ -68,10 +68,17 @@ export async function dbEditLogEntry(
     date: Date,
     description: string,
     approved?: boolean | null,
+    files?: Array<string>,
 ) {
+    const updates = {
+        date: date.toISOString(),
+        description,
+        approved,
+        ...(files !== undefined ? { files } : {}),
+    }
     const updatedLog = await db
         .update(logs)
-        .set({ date: date.toISOString(), description, approved })
+        .set(updates)
         .where(eq(logs.logId, logId))
         .returning()
     if (updatedLog.length === 0) {
