@@ -107,6 +107,7 @@ export const logs = pgTable(
         approved: boolean(),
         feedback: text(),
         evidence: text().notNull(),
+        files: text().array().notNull().default([]),
     },
     (table) => [
         foreignKey({

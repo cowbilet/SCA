@@ -34,6 +34,7 @@ export const createLog = createServerFn({ method: 'POST' })
             date,
             description,
             '',
+            [],
         )
         if (!logEntry) {
             throw new Error('Failed to create log entry')

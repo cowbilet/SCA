@@ -1,9 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { GetObjectCommand, ListObjectsCommand } from '@aws-sdk/client-s3'
+import { GetObjectCommand } from '@aws-sdk/client-s3'
 import { z } from 'zod'
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { PublicS3Client, ServerS3Client } from './index.server'
+import { PublicS3Client } from './index.server'
 import { restrictStudentData } from '@/utils/auth'
 import { dbGetLogEntry } from '@/db/logs.server'
 
@@ -23,12 +23,13 @@ export const getFiles = createServerFn({ method: 'GET' }).inputValidator(getPres
             throw new Error('Log entry not found')
         }
         await restrictStudentData({data: logEntry.studentId})
-        const command = new ListObjectsCommand({
-            Bucket: 'uploads',
-            Prefix: `${data.logId}/${data.award}/${data.challenge}/`
-        })
-        const files = await ServerS3Client.send(command)
-        const fileURLs = await Promise.all((files.Contents || []).map(file => generateFileURL(file.Key!)))
+        const fileURLs = await Promise.all(
+            logEntry.files.map((fileName) =>
+                generateFileURL(
+                    `${data.logId}/${data.award}/${data.challenge}/${fileName}`,
+                ),
+            ),
+        )
         return fileURLs
     },
 )

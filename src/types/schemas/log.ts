@@ -29,5 +29,6 @@ export const LogEntrySchema = z.object({
     approved: z.boolean().nullable(),
     feedback: z.string().nullable(),
     evidence: z.string(),
+    files: z.array(z.string()),
 })
 export type LogEntry = z.infer<typeof LogEntrySchema>

@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { logs } from './schema'
 import { db } from './index.server'
 import type { Award } from '@/types/awards'
@@ -27,6 +27,7 @@ export async function dbCreateLogEntry(
     date: Date,
     description: string,
     evidence: string,
+    files: Array<string> = [],
 ) {
     const logEntry = await db
         .insert(logs)
@@ -37,6 +38,7 @@ export async function dbCreateLogEntry(
             date: date.toISOString(),
             description,
             evidence,
+            files,
         })
         .returning()
     if (logEntry.length === 0) {
@@ -77,6 +79,23 @@ export async function dbEditLogEntry(
     }
     return updatedLog[0]
 }
+
+export async function dbAddLogFile(logId: string, fileName: string) {
+    const updatedLog = await db
+        .update(logs)
+        .set({
+            files: sql`case when ${fileName} = any(${logs.files}) then ${logs.files} else array_append(${logs.files}, ${fileName}) end`,
+        })
+        .where(eq(logs.logId, logId))
+        .returning()
+
+    if (updatedLog.length === 0) {
+        return null
+    }
+
+    return updatedLog[0]
+}
+
 export async function dbApproveLogEntry(
     logId: string,
     approved: boolean,

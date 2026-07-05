@@ -3,10 +3,12 @@ import {
     useQueryClient,
 } from '@tanstack/react-query'
 import { createLog } from '../api/createLog'
+import { deleteLog } from '../api/deleteLog'
 import { logsQueryOptions } from './useLogs'
 import type { Award } from '@/types/awards'
 import type { Challenge } from '@/types/challenges'
 import type { LogEntry } from '@/types/schemas/log'
+import { uploadFilesForLog } from '@/features/images/hooks/useFileUpload'
 import { useSession } from '@/integrations/better-auth/authClient'
 
 export function useCreateLogEntry({
@@ -24,10 +26,31 @@ export function useCreateLogEntry({
         mutationFn: async ({
             date,
             description,
+            files = [],
         }: {
             date: string
             description: string
-        }) => createLog({ data: { award, challenge, description, date } }),
+            files?: Array<File>
+        }) => {
+            const logEntry = await createLog({ data: { award, challenge, description, date } })
+
+            if (files.length === 0) {
+                return logEntry
+            }
+
+            try {
+                await uploadFilesForLog({
+                    award,
+                    challenge,
+                    files,
+                    logId: logEntry.logId,
+                })
+                return logEntry
+            } catch (error) {
+                await deleteLog({ data: { logId: logEntry.logId } })
+                throw error
+            }
+        },
         onMutate: async (newLog) => {
             if (!studentId) return
             await queryClient.cancelQueries({ queryKey: pendingLogsKey })
@@ -44,6 +67,7 @@ export function useCreateLogEntry({
                 approved: null,
                 feedback: '',
                 evidence: '',
+                files: [],
             }
             queryClient.setQueryData(
                 pendingLogsKey,

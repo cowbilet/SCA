@@ -123,24 +123,20 @@ export const UploadFile = forwardRef<HTMLInputElement, UploadFileProps>(
                 return
             }
 
-            setSelectedFiles((currentFiles) => {
-                const nextFiles = [...currentFiles, ...files]
-                onFilesChange?.(nextFiles)
-                return nextFiles
-            })
+            const nextFiles = [...selectedFiles, ...files]
+            setSelectedFiles(nextFiles)
+            onFilesChange?.(nextFiles)
 
             event.currentTarget.value = ''
             onChange?.(event)
         }
 
         const removeFile = (fileIndex: number) => {
-            setSelectedFiles((currentFiles) => {
-                const nextFiles = currentFiles.filter(
-                    (_, currentFileIndex) => currentFileIndex !== fileIndex,
-                )
-                onFilesChange?.(nextFiles)
-                return nextFiles
-            })
+            const nextFiles = selectedFiles.filter(
+                (_, currentFileIndex) => currentFileIndex !== fileIndex,
+            )
+            setSelectedFiles(nextFiles)
+            onFilesChange?.(nextFiles)
         }
 
         return (

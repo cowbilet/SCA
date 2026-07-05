@@ -1,8 +1,6 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { File } from 'lucide-react';
 import { useFiles } from '../hooks/useLogFiles';
-import type { Challenge } from '@/types/challenges';
-import type { Award } from '@/types/awards';
 import type { LogEntry } from '@/types/schemas/log';
 import Dialog, {
     DialogBody,
@@ -12,6 +10,13 @@ import Dialog, {
 
 
 export function ViewFiles({log}: {log: LogEntry}) {
+    if (log.files.length === 0) {
+        return null
+    }
+    return <ViewFilesDialog log={log} />
+}
+
+function ViewFilesDialog({log}: {log: LogEntry}) {
     const modalRef = useRef<HTMLDialogElement>(null)
     const { data: files } = useFiles(log.award, log.challenge, log.logId, true)
     return (
@@ -31,7 +36,12 @@ export function ViewFiles({log}: {log: LogEntry}) {
             </DialogHeader>
             <DialogBody>
                 {files?.map((file) => (
-                    <a href={file} target="_blank" rel="noopener noreferrer">
+                    <a
+                        key={file}
+                        href={file}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         <File className="w-4 h-4 inline mr-2" />
                         {file.split('/').slice(-1)[0].split("?")[0]}
                     </a>
