@@ -1,5 +1,5 @@
 import { useParams } from '@tanstack/react-router'
-import {  useRef } from 'react'
+import { useState } from 'react'
 import { useCreateLogEntry } from '../../../../hooks/useCreateLogEntry'
 import ActivityForm from './activityForm'
 import type {ComponentProps} from 'react';
@@ -20,20 +20,21 @@ export default function CreateActivityForm({
         challenge,
     })
     const { mutateAsync: uploadFile } = useUploadFile(award, challenge)
-    const uploadRef = useRef<HTMLInputElement>(null);
+    const [selectedFiles, setSelectedFiles] = useState<Array<File>>([])
     return (
         <>
             <ActivityForm
                 onValidSubmit={async ({ date, description }) => {
                     const log = await createLogEntry({ date, description })
-                    for (const file of uploadRef.current?.files || []) {
+                    for (const file of selectedFiles) {
                         await uploadFile({ file, logId: log.logId })
                     }
+                    setSelectedFiles([])
                     onSubmit?.()
                 }}
                 {...props}
             >
-                <UploadFile ref={uploadRef} />
+                <UploadFile onFilesChange={setSelectedFiles} />
             </ActivityForm>
         </>
     )
