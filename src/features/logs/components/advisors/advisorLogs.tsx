@@ -5,6 +5,7 @@ import { useLogs } from '../../hooks/useLogs'
 import { useApproveLog } from '../../hooks/useApproveLog'
 import type { LogEntry } from '@/types/schemas/log'
 import { LogEntryScaffold } from '@/features/logs/components/activityLogs'
+import { ViewFiles } from '@/features/images/components/viewFiles'
 
 export function AdvisorLogEntries({
     type,
@@ -73,6 +74,7 @@ function MentorLogEntry({ log }: { log: LogEntry }) {
                         >
                             <X />
                         </button>
+                        <ViewFiles log={log} />
                     </>
                 )}
             </div>
