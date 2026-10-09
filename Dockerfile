@@ -7,6 +7,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
 RUN pnpm install --frozen-lockfile --ignore-scripts 
 
 FROM deps AS build
+ENV NODE_OPTIONS=--max-old-space-size=768
 COPY . .
 RUN pnpm build
 
