@@ -26,7 +26,6 @@ export const getFileUploadURL = createServerFn({ method: 'GET' }).inputValidator
         if (!logEntry || logEntry.studentId !== student.userId) {
             throw new Error('Unauthorized')
         }
-        console.log(data.fileName.split('.').pop()!)
         if (!Object.values(allowedFileTypes).includes(data.fileName.split('.').pop()!)) {
             throw new Error('File type not allowed')
         }
